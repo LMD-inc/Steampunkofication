@@ -1,0 +1,14 @@
+{
+	"type": "code",
+	"name": "Steampunkofication",
+	"modid": "steampunkofication",
+	"version": "0.1.0",
+
+	"description": "Steampunk. More.",
+	"website": "https://github.com/LMD-inc/Steampunkofication",
+	"authors": ["simplewepro"],
+
+	"dependencies": {
+		"game": "1.14.10"
+	}
+}
