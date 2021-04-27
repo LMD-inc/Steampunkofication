@@ -1,0 +1,42 @@
+{
+	"code": "creativeboiler",
+	"class": "BoilerBlock",
+	"entityclass": "BEBoiler",
+	"entityBehaviors": [{ "name": "Animatable" }],
+	"creativeinventory": {
+		"general": ["*-east"],
+		"SPF": ["*-east"]
+	},
+	"attributes": {
+		"capacitance": 10000,
+		"maxPressure": 100,
+		"genSteam": 100,
+		"distributionFaces": ["north"]
+	},
+	"variantgroups": [
+		{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+	],
+	"behaviors": [
+		{
+			"name": "HorizontalOrientable",
+			"properties": { "dropBlockFace": "east" }
+		}
+	],
+	"blockmaterial": "Metal",
+	"drawtype": "cube",
+	"textures": {
+		"all": { "base": "block/gold_block" }
+	},
+	"resistance": 1,
+	"sideAo": { "all": false },
+	"sidesolid": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"sounds": {
+		"place": "game:block/anvil",
+		"walk": "game:walk/stone"
+	}
+}
