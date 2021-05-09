@@ -1,6 +1,8 @@
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
+using Steampunkofication.src;
+using Steampunkofication.src.Boiler;
 
 [assembly: ModInfo("Steampunkofication",
   Description = "Steampunk. More.",
@@ -13,7 +15,10 @@ namespace Steampunkofication
   {
     public override void Start(ICoreAPI api)
     {
+      base.Start(api);
 
+      api.RegisterBlockClass("Boiler", typeof(Boiler));
+      api.RegisterBlockEntityClass("BEBoiler", typeof(BEBoiler));
     }
 
     public override void StartClientSide(ICoreClientAPI api)
