@@ -1,6 +1,7 @@
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
+using Steampunkofication.src;
 using Steampunkofication.src.Boiler;
 
 [assembly: ModInfo("Steampunkofication",
@@ -16,7 +17,7 @@ namespace Steampunkofication
     {
       base.Start(api);
 
-      api.RegisterBlockClass("BoilerBlock", typeof(BoilerBlock));
+      api.RegisterBlockClass("Boiler", typeof(Boiler));
       api.RegisterBlockEntityClass("BEBoiler", typeof(BEBoiler));
     }
 
