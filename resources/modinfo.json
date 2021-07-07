@@ -9,6 +9,6 @@
 	"authors": ["simplewepro"],
 
 	"dependencies": {
-		"game": "1.14.10"
+		"game": "1.15.0"
 	}
 }
