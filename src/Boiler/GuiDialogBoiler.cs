@@ -75,16 +75,15 @@ namespace Steampunkofication.src.Boiler
 
         BEBoiler beboiler = capi.World.BlockAccessor.GetBlockEntity(BlockEntityPosition) as BEBoiler;
         float itemsPerLitre = 1f;
-        int capacityWater = beboiler.CapacityLitresWater;
 
         WaterTightContainableProps props = BlockLiquidContainerBase.GetInContainerProps(liquidSlot.Itemstack);
         if (props != null)
         {
           itemsPerLitre = props.ItemsPerLitre;
-          capacityWater = Math.Max(capacityWater, props.MaxStackSize);
+          capacity = Math.Max(capacity, props.MaxStackSize);
         }
 
-        float fullnessRelative = liquidSlot.StackSize / itemsPerLitre / capacityWater;
+        float fullnessRelative = liquidSlot.StackSize / itemsPerLitre / capacity;
 
         double offY = (1 - fullnessRelative) * currentBounds.InnerHeight;
 
