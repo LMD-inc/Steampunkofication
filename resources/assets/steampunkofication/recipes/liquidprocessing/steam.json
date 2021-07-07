@@ -1,0 +1,5 @@
+{
+	"code": "steam",
+	"ingredients": [{ "type": "item", "code": "waterportion", "quantity": 1 }],
+	"output": { "type": "item", "code": "steamportion", "stackSize": 1 }
+}

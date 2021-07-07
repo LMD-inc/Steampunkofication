@@ -19,6 +19,7 @@ namespace Steampunkofication.src.Boiler
     public override string InventoryClassName => "boiler";
     public virtual string DialogTitle => Lang.Get("Boiler");
     public override InventoryBase Inventory => inventory;
+    private long tickListenerId;
 
     #endregion
 
@@ -48,7 +49,7 @@ namespace Steampunkofication.src.Boiler
 
       if (api.Side == EnumAppSide.Server)
       {
-        RegisterGameTickListener(ProduceSteam, 1000);
+        tickListenerId = RegisterGameTickListener(ProduceSteam, 1000);
       }
     }
 
@@ -144,8 +145,8 @@ namespace Steampunkofication.src.Boiler
 
     public ItemStack waterStack
     {
-      get { return inventory[0].Itemstack; }
-      set { inventory[0].Itemstack = value; inventory[0].MarkDirty(); }
+      get { return inventory[1].Itemstack; }
+      set { inventory[1].Itemstack = value; inventory[1].MarkDirty(); }
     }
 
     public ItemStack steamStack
@@ -163,13 +164,23 @@ namespace Steampunkofication.src.Boiler
         if (!waterSlot.Empty)
         {
           // TODO: fing how to proper check for emptiness
-          if (/*is burning && */ waterSlot.Itemstack.StackSize > 0)
+          if (/*is burning && */ waterStack.StackSize > 0)
           {
+            if (steamStack?.StackSize >= CapacityLitresSteam)
+            {
+              // Boom?
+              return;
+            }
+
             waterSlot.TakeOut(1);
 
             if (steamSlot.Empty)
             {
-              // TODO: Handle empty slot to lock itemtype stored
+              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("steampunkofication:steamportion")), 1);
+            }
+            else
+            {
+              steamStack.StackSize += 1;
             }
 
             MarkDirty(true);
@@ -181,6 +192,17 @@ namespace Steampunkofication.src.Boiler
       invDialog?.Update();
 
       return;
+    }
+
+    public override void OnBlockRemoved()
+    {
+      base.OnBlockRemoved();
+
+      invDialog?.TryClose();
+      invDialog?.Dispose();
+      invDialog = null;
+
+      UnregisterGameTickListener(tickListenerId);
     }
   }
 }
