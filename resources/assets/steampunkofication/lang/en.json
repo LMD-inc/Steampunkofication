@@ -1,6 +1,6 @@
 {
-	"block-boiler": "Steam boiler",
-	"block-creativeboiler-east": "Creative Boiler",
+	"block-boiler-east": "Steam boiler",
 	"block-pipe-copper": "Copper Pipe",
-	"block-pipe-brass": "Brass Pipe"
+	"block-pipe-brass": "Brass Pipe",
+	"game:tabname-sfk-steamworks": "[SFK] Steamworks"
 }
