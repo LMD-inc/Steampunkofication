@@ -1,25 +1,47 @@
+using System;
+
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
 namespace Steampunkofication.src.Boiler
 {
-  public class BEBoiler : BlockEntityContainer
+  public class BEBoiler : BlockEntityContainer, IHeatSource
   {
+    ILoadedSound ambientSound;
     public int CapacityLitresWater { get; set; } = 50;
     public int CapacityLitresSteam { get; set; } = 100;
     GuiDialogBoiler invDialog;
     internal BoilerInventory inventory;
     BlockBoiler ownBlock;
 
+    public float prevFurnaceTemperature = 20;
+    public float furnaceTemperature = 20;
+    public int maxTemperature;
+    public float fuelBurnTime;
+    public float maxFuelBurnTime;
+    public float smokeLevel;
+    public bool canIgniteFuel;
+    public double extinguishedTotalHours;
+    public int steamProductionCoefitient => 1; // To use float coefitient need to think on portions logic and balance;
+    bool clientSidePrevBurning;
+    bool shouldRedraw;
+
     #region Config
 
     public override string InventoryClassName => "boiler";
     public virtual string DialogTitle => Lang.Get("Boiler");
     public override InventoryBase Inventory => inventory;
-    private long tickListenerId;
+
+    public virtual bool BurnsAllFuell => true;
+    public virtual float HeatModifier => 1f;
+    public virtual float BurnDurationModifier => 1f;
+    public virtual int enviromentTemperature() => 20;
+    public virtual float SoundLevel => 0.66f;
 
     #endregion
 
@@ -49,8 +71,39 @@ namespace Steampunkofication.src.Boiler
 
       if (api.Side == EnumAppSide.Server)
       {
-        tickListenerId = RegisterGameTickListener(ProduceSteam, 1000);
+        RegisterGameTickListener(OnBurnTick, 100);
+        RegisterGameTickListener(On500msTick, 500);
+        RegisterGameTickListener(ProduceSteam, 1000);
       }
+    }
+
+    public void ToggleAmbientSounds(bool on)
+    {
+      if (Api.Side != EnumAppSide.Client) return;
+
+      if (on)
+      {
+        if (ambientSound == null || !ambientSound.IsPlaying)
+        {
+          ambientSound = ((IClientWorldAccessor)Api.World).LoadSound(new SoundParams()
+          {
+            Location = new AssetLocation("sounds/environment/fireplace.ogg"),
+            ShouldLoop = true,
+            Position = Pos.ToVec3f().Add(0.5f, 0.25f, 0.5f),
+            DisposeOnFinish = false,
+            Volume = SoundLevel
+          });
+
+          ambientSound.Start();
+        }
+      }
+      else
+      {
+        ambientSound?.Stop();
+        ambientSound?.Dispose();
+        ambientSound = null;
+      }
+
     }
 
     private void OnSlotModified(int slotId)
@@ -63,6 +116,199 @@ namespace Steampunkofication.src.Boiler
         }
       }
     }
+
+    #region Burning
+
+    public bool IsBurning => this.fuelBurnTime > 0;
+    public int getInventoryStackLimit() => 64;
+
+    private void OnBurnTick(float dt)
+    {
+      if (Api is ICoreClientAPI)
+      {
+        return;
+      }
+
+      // Use up fuel
+      if (fuelBurnTime > 0)
+      {
+        bool lowFuelConsumption = Math.Abs(furnaceTemperature - maxTemperature) < 50 && waterSlot.Empty;
+
+        fuelBurnTime -= dt / (lowFuelConsumption ? 3 : 1);
+
+        if (fuelBurnTime <= 0)
+        {
+          fuelBurnTime = 0;
+          maxFuelBurnTime = 0;
+          if (!canSmelt()) // This check avoids light flicker when a piece of fuel is consumed and more is available
+          {
+            setBlockState("extinct");
+            extinguishedTotalHours = Api.World.Calendar.TotalHours;
+          }
+        }
+      }
+
+      if (!IsBurning && Block.Variant["burnstate"] == "extinct" && Api.World.Calendar.TotalHours - extinguishedTotalHours > 2)
+      {
+        canIgniteFuel = false;
+        setBlockState("cold");
+      }
+
+      // Furnace is burning: Heat furnace
+      if (IsBurning)
+      {
+        furnaceTemperature = changeTemperature(furnaceTemperature, maxTemperature, dt);
+      }
+
+      // Furnace is not burning and can burn: Ignite the fuel
+      if (!IsBurning && canIgniteFuel && canSmelt())
+      {
+        igniteFuel();
+      }
+
+
+      if (canHeatWater())
+      {
+        heatWater(dt);
+      }
+
+      invDialog?.Update();
+    }
+
+    private void On500msTick(float dt)
+    {
+      if (Api is ICoreServerAPI && (IsBurning || prevFurnaceTemperature != furnaceTemperature))
+      {
+        MarkDirty();
+      }
+
+      prevFurnaceTemperature = furnaceTemperature;
+    }
+    public float changeTemperature(float fromTemp, float toTemp, float dt)
+    {
+      float diff = Math.Abs(fromTemp - toTemp);
+
+      dt = dt + dt * (diff / 28);
+
+
+      if (diff < dt)
+      {
+        return toTemp;
+      }
+
+      if (fromTemp > toTemp)
+      {
+        dt = -dt;
+      }
+
+      if (Math.Abs(fromTemp - toTemp) < 1)
+      {
+        return toTemp;
+      }
+
+      return fromTemp + dt;
+    }
+
+
+    private bool canSmelt()
+    {
+      CombustibleProperties fuelCopts = fuelCombustibleOpts;
+      if (fuelCopts == null) return false;
+
+      return BurnsAllFuell && fuelCopts.BurnTemperature * HeatModifier > 0;
+    }
+
+    private bool canHeatWater() => !waterSlot.Empty;
+
+    public void heatWater(float dt)
+    {
+      float oldTemp = WaterStackTemp;
+      float nowTemp = oldTemp;
+      float meltingPoint = 100; // Water boiling temperature. Patch and get from Collectible.GetTemperature if not only water would be used.
+
+      // Only Heat. Cooling happens already in the itemstack
+      if (oldTemp < furnaceTemperature)
+      {
+        float f = (1 + GameMath.Clamp((furnaceTemperature - oldTemp) / 30, 0, 1.6f)) * dt;
+        if (nowTemp >= meltingPoint) f /= 11;
+
+        float newTemp = changeTemperature(oldTemp, furnaceTemperature, f);
+        // TODO: think about temperature functions.
+        // int maxTemp = 400?
+        // if (maxTemp > 0)
+        // {
+        //   newTemp = Math.Min(maxTemp, newTemp);
+        // }
+
+        if (oldTemp != newTemp)
+        {
+          WaterStackTemp = newTemp;
+          nowTemp = newTemp;
+        }
+      }
+    }
+
+    public float WaterStackTemp
+    {
+      get
+      {
+        return GetTemp(waterStack);
+      }
+      set
+      {
+        SetTemp(waterStack, value);
+      }
+    }
+
+    float GetTemp(ItemStack stack)
+    {
+      if (stack == null) return enviromentTemperature();
+
+      return stack.Collectible.GetTemperature(Api.World, stack);
+    }
+
+    void SetTemp(ItemStack stack, float value)
+    {
+      if (stack == null) return;
+
+      stack.Collectible.SetTemperature(Api.World, stack, value);
+    }
+
+    public void igniteFuel()
+    {
+      igniteWithFuel(fuelStack);
+
+      fuelStack.StackSize -= 1;
+
+      if (fuelStack.StackSize <= 0)
+      {
+        fuelStack = null;
+      }
+    }
+
+
+
+    public void igniteWithFuel(IItemStack stack)
+    {
+      CombustibleProperties fuelCopts = stack.Collectible.CombustibleProps;
+
+      maxFuelBurnTime = fuelBurnTime = fuelCopts.BurnDuration * BurnDurationModifier;
+      maxTemperature = (int)(fuelCopts.BurnTemperature * HeatModifier);
+      smokeLevel = fuelCopts.SmokeLevel;
+      setBlockState("lit");
+    }
+
+    public void setBlockState(string state)
+    {
+      AssetLocation loc = Block.CodeWithVariant("burnstate", state);
+      Block block = Api.World.GetBlock(loc);
+      if (block == null) return;
+
+      Api.World.BlockAccessor.ExchangeBlock(block.Id, Pos);
+      this.Block = block;
+    }
+
+    #endregion
 
     #region Events
 
@@ -101,7 +347,9 @@ namespace Steampunkofication.src.Boiler
       {
         if (invDialog == null)
         {
-          invDialog = new GuiDialogBoiler(DialogTitle, Inventory, Pos, Api as ICoreClientAPI);
+          SyncedTreeAttribute dtree = new SyncedTreeAttribute();
+
+          invDialog = new GuiDialogBoiler(DialogTitle, Inventory, Pos, dtree, Api as ICoreClientAPI);
           invDialog.OnClosed += () =>
           {
             invDialog = null;
@@ -122,13 +370,69 @@ namespace Steampunkofication.src.Boiler
 
     #endregion
 
+    void SetDialogValues(ITreeAttribute dialogTree)
+    {
+      dialogTree.SetFloat("furnaceTemperature", furnaceTemperature);
+
+      dialogTree.SetInt("maxTemperature", maxTemperature);
+      dialogTree.SetFloat("maxFuelBurnTime", maxFuelBurnTime);
+      dialogTree.SetFloat("fuelBurnTime", fuelBurnTime);
+
+      if (waterStack != null)
+      {
+        dialogTree.SetFloat("waterTemperature", WaterStackTemp);
+      }
+      else
+      {
+        dialogTree.RemoveAttribute("waterTemperature");
+      }
+    }
+
+    public override void ToTreeAttributes(ITreeAttribute tree)
+    {
+      base.ToTreeAttributes(tree);
+      ITreeAttribute invtree = new TreeAttribute();
+      Inventory.ToTreeAttributes(invtree);
+      tree["inventory"] = invtree;
+
+      tree.SetFloat("furnaceTemperature", furnaceTemperature);
+      tree.SetInt("maxTemperature", maxTemperature);
+      tree.SetFloat("fuelBurnTime", fuelBurnTime);
+      tree.SetFloat("maxFuelBurnTime", maxFuelBurnTime);
+      tree.SetDouble("extinguishedTotalHours", extinguishedTotalHours);
+      tree.SetBool("canIgniteFuel", canIgniteFuel);
+    }
+
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
     {
       base.FromTreeAttributes(tree, worldForResolving);
+      Inventory.FromTreeAttributes(tree.GetTreeAttribute("inventory"));
+
+      if (Api != null)
+      {
+        Inventory.AfterBlocksLoaded(Api.World);
+      }
+
+      furnaceTemperature = tree.GetFloat("furnaceTemperature");
+      maxTemperature = tree.GetInt("maxTemperature");
+      fuelBurnTime = tree.GetFloat("fuelBurnTime");
+      maxFuelBurnTime = tree.GetFloat("maxFuelBurnTime");
+      extinguishedTotalHours = tree.GetDouble("extinguishedTotalHours");
+      canIgniteFuel = tree.GetBool("canIgniteFuel", true);
 
       if (Api?.Side == EnumAppSide.Client)
       {
         invDialog?.Update();
+
+        if (invDialog != null) SetDialogValues(invDialog.Attributes);
+
+        if (Api?.Side == EnumAppSide.Client && (clientSidePrevBurning != IsBurning || shouldRedraw))
+        {
+          ToggleAmbientSounds(IsBurning);
+          clientSidePrevBurning = IsBurning;
+          MarkDirty(true);
+          shouldRedraw = false;
+        }
       }
     }
 
@@ -155,6 +459,15 @@ namespace Steampunkofication.src.Boiler
       set { inventory[2].Itemstack = value; inventory[2].MarkDirty(); }
     }
 
+    public CombustibleProperties fuelCombustibleOpts => getCombustibleOpts(0);
+
+    public CombustibleProperties getCombustibleOpts(int slotid)
+    {
+      ItemSlot slot = inventory[slotid];
+      if (slot.Itemstack == null) return null;
+      return slot.Itemstack.Collectible.CombustibleProps;
+    }
+
     #endregion
 
     private void ProduceSteam(float dt)
@@ -163,8 +476,7 @@ namespace Steampunkofication.src.Boiler
       {
         if (!waterSlot.Empty)
         {
-          // TODO: fing how to proper check for emptiness
-          if (/*is burning && */ waterStack.StackSize > 0)
+          if (waterStack.StackSize > 0 && WaterStackTemp > 100)
           {
             if (steamStack?.StackSize >= CapacityLitresSteam)
             {
@@ -172,15 +484,18 @@ namespace Steampunkofication.src.Boiler
               return;
             }
 
-            waterSlot.TakeOut(1);
+            int consumed = ((int)Math.Round(1 + WaterStackTemp / 500));
+            int produced = consumed * steamProductionCoefitient; // Need for future to use coefficient
+
+            waterSlot.TakeOut(consumed);
 
             if (steamSlot.Empty)
             {
-              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("steampunkofication:steamportion")), 1);
+              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("steampunkofication:steamportion")), produced);
             }
             else
             {
-              steamStack.StackSize += 1;
+              steamStack.StackSize += produced;
             }
 
             MarkDirty(true);
@@ -198,11 +513,30 @@ namespace Steampunkofication.src.Boiler
     {
       base.OnBlockRemoved();
 
+      if (ambientSound != null)
+      {
+        ambientSound.Stop();
+        ambientSound.Dispose();
+      }
+
       invDialog?.TryClose();
       invDialog?.Dispose();
       invDialog = null;
 
-      UnregisterGameTickListener(tickListenerId);
+      // UnregisterGameTickListener(tickListenerId);
+    }
+
+    ~BEBoiler()
+    {
+      if (ambientSound != null)
+      {
+        ambientSound.Dispose();
+      }
+    }
+
+    public float GetHeatStrength(IWorldAccessor world, BlockPos heatSourcePos, BlockPos heatReceiverPos)
+    {
+      return IsBurning ? 7 : 0;
     }
   }
 }

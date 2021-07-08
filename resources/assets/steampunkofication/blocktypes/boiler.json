@@ -3,7 +3,12 @@
 	"class": "Boiler",
 	"entityClass": "BEBoiler",
 	"entityBehaviors": [{ "name": "HorizontalOrientable" }],
-	"behaviors": [{ "name": "Container" }],
+	"behaviors": [
+		{ "name": "HorizontalOrientable" },
+		{ "name": "Container" },
+		{ "name": "Ignitable" },
+		{ "name": "HeatSource" }
+	],
 	"attributes": {
 		"capacityLitresWater": 50,
 		"capacityLitresSteam": 100
