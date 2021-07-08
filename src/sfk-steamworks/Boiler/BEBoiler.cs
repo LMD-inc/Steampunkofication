@@ -8,7 +8,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
-namespace Steampunkofication.src.Boiler
+namespace SFK.Steamworks.Boiler
 {
   public class BEBoiler : BlockEntityContainer, IHeatSource
   {

@@ -4,7 +4,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.GameContent;
 
-namespace Steampunkofication.src.Boiler
+namespace SFK.Steamworks.Boiler
 {
   class BoilerInventory : InventoryBase, ISlotProvider
   {
