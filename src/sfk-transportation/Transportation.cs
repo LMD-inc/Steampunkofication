@@ -1,23 +1,20 @@
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
-using Steampunkofication.src.Boiler;
 
-[assembly: ModInfo("Steampunkofication",
-  Description = "Steampunk. More.",
+[assembly: ModInfo("[SFK] Transportation",
+  Description = "Steampunk. More. Soon with pipes included!",
+  Version = "0.1.0",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new[] { "simplewepro" })]
 
-namespace Steampunkofication
+namespace SFK.Transportation
 {
-  public class SteampunkoficationMod : ModSystem
+  public class TransportationMod : ModSystem
   {
     public override void Start(ICoreAPI api)
     {
       base.Start(api);
-
-      api.RegisterBlockClass("Boiler", typeof(BlockBoiler));
-      api.RegisterBlockEntityClass("BEBoiler", typeof(BEBoiler));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

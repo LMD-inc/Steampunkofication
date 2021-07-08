@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build (Debug)",
+			"group": { "kind": "build", "isDefault": true },
+			"presentation": { "reveal": "silent" },
+			"problemMatcher": "$msCompile",
+
+			"type": "process",
+			"command": "dotnet",
+			"args": ["build", "SFK.sln", "-c", "Debug"]
+		},
+		{
+			"label": "Build (Release)",
+			"group": "build",
+			"presentation": { "reveal": "silent" },
+			"problemMatcher": "$msCompile",
+
+			"type": "process",
+			"command": "dotnet",
+			"args": ["build", "SFK.sln", "-c", "Release"]
+		},
+		{
+      "label": "Pack",
+      "type": "shell",
+      "command": [
+        "rm -rf build;",
+        "mkdir -p build;",
+        "mkdir build/${workspaceFolderBasename};",
+        "cp -r resources/* build/${workspaceFolderBasename};",
+        "cp -r bin/Debug/net461/* build/${workspaceFolderBasename};"
+      ],
+      "presentation": {
+        "reveal": "silent"
+      },
+      "problemMatcher": []
+    },
+	]
+}
