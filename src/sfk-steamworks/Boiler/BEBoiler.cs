@@ -491,7 +491,7 @@ namespace SFK.Steamworks.Boiler
 
             if (steamSlot.Empty)
             {
-              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("steampunkofication:steamportion")), produced);
+              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("sfk-steamworks:steamportion")), produced);
             }
             else
             {

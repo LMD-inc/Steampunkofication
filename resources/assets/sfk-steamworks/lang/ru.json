@@ -1,6 +1,6 @@
 {
-	"block-boiler-east": "Паровой котёл",
-	"block-creativeboiler-east": "Творческий паровой котёл",
+	"block-boiler-*": "Паровой котёл",
 	"block-pipe-copper": "Медная труба",
+	"steamporion": "Пар",
 	"game:tabname-sfk-steamworks": "[SFK] Steamworks"
 }
