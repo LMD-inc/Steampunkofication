@@ -8,7 +8,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
-namespace Steampunkofication.src.Boiler
+namespace SFK.Steamworks.Boiler
 {
   public class BEBoiler : BlockEntityContainer, IHeatSource
   {
@@ -491,7 +491,7 @@ namespace Steampunkofication.src.Boiler
 
             if (steamSlot.Empty)
             {
-              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("steampunkofication:steamportion")), produced);
+              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("sfk-steamworks:steamportion")), produced);
             }
             else
             {

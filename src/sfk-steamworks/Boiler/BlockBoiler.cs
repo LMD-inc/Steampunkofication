@@ -5,7 +5,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
-namespace Steampunkofication.src.Boiler
+namespace SFK.Steamworks.Boiler
 {
   public class BlockBoiler : BlockLiquidContainerBase
   {

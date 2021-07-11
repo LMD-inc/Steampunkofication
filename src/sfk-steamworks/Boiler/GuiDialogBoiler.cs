@@ -8,7 +8,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
-namespace Steampunkofication.src.Boiler
+namespace SFK.Steamworks.Boiler
 {
   public class GuiDialogBoiler : GuiDialogBlockEntity
   {
