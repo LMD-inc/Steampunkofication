@@ -1,4 +1,5 @@
 
+using SFK.API;
 using System;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
@@ -49,7 +50,7 @@ namespace SFK.Steamworks.Boiler
     {
       if (i == 0) return new ItemSlotSurvival(this); // Fuel
       if (i == 1) return new ItemSlotLiquidOnly(this, 50); // Water
-      return new ItemSlotLiquidOnly(this, 100); // Steam
+      return new ItemSlotGasOnly(this, 100); // Steam
     }
   }
 }

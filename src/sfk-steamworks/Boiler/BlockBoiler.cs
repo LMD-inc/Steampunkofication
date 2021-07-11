@@ -96,12 +96,12 @@ namespace SFK.Steamworks.Boiler
     {
       base.OnLoaded(api);
 
-      if (Attributes?["capacityLitresWater"].Exists == true)
+      if (Attributes?["capacityLitresInput"].Exists == true)
       {
         /* This prop needed for world interactions e.g. put water from bucket into boiler.
          * BlockLiquidContainerBase uses capacityLitres by default, so overriding.
          */
-        capacityLitresFromAttributes = Attributes["capacityLitresWater"].AsInt(50);
+        capacityLitresFromAttributes = Attributes["capacityLitresInput"].AsInt(50);
       }
 
       if (api.Side != EnumAppSide.Client) return;

@@ -1,5 +1,6 @@
 using System;
 
+using SFK.API;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -13,8 +14,8 @@ namespace SFK.Steamworks.Boiler
   public class BEBoiler : BlockEntityContainer, IHeatSource
   {
     ILoadedSound ambientSound;
-    public int CapacityLitresWater { get; set; } = 50;
-    public int CapacityLitresSteam { get; set; } = 100;
+    public int CapacityLitresInput { get; set; } = 50;
+    public int CapacityLitresOutput { get; set; } = 100;
     GuiDialogBoiler invDialog;
     internal BoilerInventory inventory;
     BlockBoiler ownBlock;
@@ -57,23 +58,23 @@ namespace SFK.Steamworks.Boiler
 
       ownBlock = Block as BlockBoiler;
 
-      if (ownBlock?.Attributes?["capacityLitresWater"].Exists == true)
+      if (ownBlock?.Attributes?["capacityLitresInput"].Exists == true)
       {
-        CapacityLitresWater = ownBlock.Attributes["capacityLitresWater"].AsInt(50);
-        (inventory[1] as ItemSlotLiquidOnly).CapacityLitres = CapacityLitresWater;
+        CapacityLitresInput = ownBlock.Attributes["capacityLitresInput"].AsInt(50);
+        (inventory[1] as ItemSlotLiquidOnly).CapacityLitres = CapacityLitresInput;
       }
 
-      if (ownBlock?.Attributes?["capacityLitresSteam"].Exists == true)
+      if (ownBlock?.Attributes?["capacityLitresOutput"].Exists == true)
       {
-        CapacityLitresSteam = ownBlock.Attributes["capacityLitresSteam"].AsInt(100);
-        (inventory[2] as ItemSlotLiquidOnly).CapacityLitres = CapacityLitresSteam;
+        CapacityLitresOutput = ownBlock.Attributes["capacityLitresOutput"].AsInt(100);
+        (inventory[2] as ItemSlotGasOnly).CapacityLitres = CapacityLitresOutput;
       }
 
       if (api.Side == EnumAppSide.Server)
       {
         RegisterGameTickListener(OnBurnTick, 100);
         RegisterGameTickListener(On500msTick, 500);
-        RegisterGameTickListener(ProduceSteam, 1000);
+        RegisterGameTickListener(ProduceTick, 1000);
       }
     }
 
@@ -132,7 +133,7 @@ namespace SFK.Steamworks.Boiler
       // Use up fuel
       if (fuelBurnTime > 0)
       {
-        bool lowFuelConsumption = Math.Abs(furnaceTemperature - maxTemperature) < 50 && waterSlot.Empty;
+        bool lowFuelConsumption = Math.Abs(furnaceTemperature - maxTemperature) < 50 && inputSlot.Empty;
 
         fuelBurnTime -= dt / (lowFuelConsumption ? 3 : 1);
 
@@ -167,9 +168,9 @@ namespace SFK.Steamworks.Boiler
       }
 
 
-      if (canHeatWater())
+      if (canHeatInput())
       {
-        heatWater(dt);
+        heatInput(dt);
       }
 
       invDialog?.Update();
@@ -218,11 +219,11 @@ namespace SFK.Steamworks.Boiler
       return BurnsAllFuell && fuelCopts.BurnTemperature * HeatModifier > 0;
     }
 
-    private bool canHeatWater() => !waterSlot.Empty;
+    private bool canHeatInput() => !inputSlot.Empty;
 
-    public void heatWater(float dt)
+    public void heatInput(float dt)
     {
-      float oldTemp = WaterStackTemp;
+      float oldTemp = InputStackTemp;
       float nowTemp = oldTemp;
       float meltingPoint = 100; // Water boiling temperature. Patch and get from Collectible.GetTemperature if not only water would be used.
 
@@ -242,21 +243,21 @@ namespace SFK.Steamworks.Boiler
 
         if (oldTemp != newTemp)
         {
-          WaterStackTemp = newTemp;
+          InputStackTemp = newTemp;
           nowTemp = newTemp;
         }
       }
     }
 
-    public float WaterStackTemp
+    public float InputStackTemp
     {
       get
       {
-        return GetTemp(waterStack);
+        return GetTemp(inputStack);
       }
       set
       {
-        SetTemp(waterStack, value);
+        SetTemp(inputStack, value);
       }
     }
 
@@ -378,13 +379,13 @@ namespace SFK.Steamworks.Boiler
       dialogTree.SetFloat("maxFuelBurnTime", maxFuelBurnTime);
       dialogTree.SetFloat("fuelBurnTime", fuelBurnTime);
 
-      if (waterStack != null)
+      if (inputStack != null)
       {
-        dialogTree.SetFloat("waterTemperature", WaterStackTemp);
+        dialogTree.SetFloat("inputTemperature", InputStackTemp);
       }
       else
       {
-        dialogTree.RemoveAttribute("waterTemperature");
+        dialogTree.RemoveAttribute("inputTemperature");
       }
     }
 
@@ -439,21 +440,21 @@ namespace SFK.Steamworks.Boiler
     #region Helper getters
 
     public ItemSlot fuelSlot => inventory[0];
-    public ItemSlot waterSlot => inventory[1];
-    public ItemSlot steamSlot => inventory[2];
+    public ItemSlot inputSlot => inventory[1];
+    public ItemSlot outputSlot => inventory[2];
     public ItemStack fuelStack
     {
       get { return inventory[0].Itemstack; }
       set { inventory[0].Itemstack = value; inventory[0].MarkDirty(); }
     }
 
-    public ItemStack waterStack
+    public ItemStack inputStack
     {
       get { return inventory[1].Itemstack; }
       set { inventory[1].Itemstack = value; inventory[1].MarkDirty(); }
     }
 
-    public ItemStack steamStack
+    public ItemStack outputStack
     {
       get { return inventory[2].Itemstack; }
       set { inventory[2].Itemstack = value; inventory[2].MarkDirty(); }
@@ -470,32 +471,37 @@ namespace SFK.Steamworks.Boiler
 
     #endregion
 
-    private void ProduceSteam(float dt)
+    private void ProduceTick(float dt)
     {
       if (Api?.Side == EnumAppSide.Server)
       {
-        if (!waterSlot.Empty)
+        if (!inputSlot.Empty)
         {
-          if (waterStack.StackSize > 0 && WaterStackTemp > 100)
+          // If Boiler would be able to process not only water better to use BoilerRecipe here
+          if (inputStack?.Item.Code.ToString() == "game:waterportion"
+            // just in case.
+            && outputStack?.Item?.Code.ToString() == "sfk-steamworks:steamportion"
+            && inputStack.StackSize > 0
+            && InputStackTemp > 100)
           {
-            if (steamStack?.StackSize >= CapacityLitresSteam)
+            if (outputStack?.StackSize >= CapacityLitresOutput)
             {
               // Boom?
               return;
             }
 
-            int consumed = ((int)Math.Round(1 + WaterStackTemp / 500));
+            int consumed = ((int)Math.Round(1 + InputStackTemp / 500));
             int produced = consumed * steamProductionCoefitient; // Need for future to use coefficient
 
-            waterSlot.TakeOut(consumed);
+            inputSlot.TakeOut(consumed);
 
-            if (steamSlot.Empty)
+            if (outputSlot.Empty)
             {
-              steamSlot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("sfk-steamworks:steamportion")), produced);
+              outputStack = new ItemStack(Api.World.GetItem(new AssetLocation("sfk-steamworks:steamportion")), produced);
             }
             else
             {
-              steamStack.StackSize += produced;
+              outputStack.StackSize += produced;
             }
 
             MarkDirty(true);

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Steamworks", "src\sfk-steam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transportation", "src\sfk-transportation\Transportation.csproj", "{E18B4B9C-C6A2-401E-9AFD-1D5688A868AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\sfk-api\Api.csproj", "{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,9 +48,22 @@ Global
 		{E18B4B9C-C6A2-401E-9AFD-1D5688A868AF}.Release|x64.Build.0 = Release|Any CPU
 		{E18B4B9C-C6A2-401E-9AFD-1D5688A868AF}.Release|x86.ActiveCfg = Release|Any CPU
 		{E18B4B9C-C6A2-401E-9AFD-1D5688A868AF}.Release|x86.Build.0 = Release|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Debug|x64.Build.0 = Debug|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Debug|x86.Build.0 = Debug|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Release|x64.ActiveCfg = Release|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Release|x64.Build.0 = Release|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Release|x86.ActiveCfg = Release|Any CPU
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6539A019-1A1B-47C4-9BA4-7F1EF3629FE6} = {70FB7428-78E3-4827-A4BE-E9EDF9977F44}
 		{E18B4B9C-C6A2-401E-9AFD-1D5688A868AF} = {70FB7428-78E3-4827-A4BE-E9EDF9977F44}
+		{8DDC7E32-63B3-4144-9960-6E47A7D26BCF} = {70FB7428-78E3-4827-A4BE-E9EDF9977F44}
 	EndGlobalSection
 EndGlobal
