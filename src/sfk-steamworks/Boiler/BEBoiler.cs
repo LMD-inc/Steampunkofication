@@ -493,7 +493,6 @@ namespace SFK.Steamworks.Boiler
             int consumed = ((int)Math.Round(1 + InputStackTemp / 500));
             int produced = consumed * steamProductionCoefitient; // Need for future to use coefficient
 
-            inputSlot.TakeOut(consumed);
 
             if (outputSlot.Empty)
             {
@@ -501,8 +500,11 @@ namespace SFK.Steamworks.Boiler
             }
             else
             {
+              if (outputStack?.Item?.Code.ToString() != "sfk-steamworks:steamportion") return;
               outputStack.StackSize += produced;
             }
+
+            inputSlot.TakeOut(consumed);
 
             MarkDirty(true);
             Api.World.BlockAccessor.MarkBlockEntityDirty(Pos);
