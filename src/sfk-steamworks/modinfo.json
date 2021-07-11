@@ -6,9 +6,10 @@
 
 	"description": "Steampunk. More.",
 	"website": "https://github.com/LMD-inc/Steampunkofication",
-	"authors": ["simplewepro"],
+	"authors": ["LMD inc."],
 
 	"dependencies": {
-		"game": "1.15.0"
+		"game": "1.15.0",
+		"sfk-api": "0.1.0"
 	}
 }

@@ -15,6 +15,7 @@
 				"--addModPath",
 				"${workspaceFolder}/bin/sfk-steamworks/net461/",
 				"${workspaceFolder}/bin/sfk-transportation/net461/",
+				"${workspaceFolder}/bin/sfk-api/net461/",
 				"--addOrigin",
 				"${workspaceFolder}/resources/assets/"
 			],
@@ -35,6 +36,7 @@
 				"--addModPath",
 				"${workspaceFolder}/bin/sfk-steamworks/net461/",
 				"${workspaceFolder}/bin/sfk-transportation/net461/",
+				"${workspaceFolder}/bin/sfk-api/net461/",
 				"--addOrigin",
 				"${workspaceFolder}/resources/assets/"
 			],

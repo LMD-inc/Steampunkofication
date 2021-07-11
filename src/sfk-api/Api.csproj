@@ -4,8 +4,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <TargetFramework>net461</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyName>sfk-steamworks</AssemblyName>
-    <RootNamespace>SFK.Steamworks</RootNamespace>
+    <AssemblyName>sfk-api</AssemblyName>
+    <RootNamespace>SFK.API</RootNamespace>
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -15,8 +15,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\sfk-steamworks</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Debug\sfk-steamworks\</IntermediateOutputPath>
+    <OutputPath>..\..\bin\sfk-api</OutputPath>
+    <IntermediateOutputPath>..\..\obj\Debug\sfk-api\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,8 +26,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\sfk-steamworks</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Release\sfk-steamworks\</IntermediateOutputPath>
+    <OutputPath>..\..\bin\sfk-api</OutputPath>
+    <IntermediateOutputPath>..\..\obj\Release\sfk-api\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -59,13 +59,6 @@
       <HintPath>$(VINTAGE_STORY)/Lib/cairo-sharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\sfk-api\Api.csproj">
-        <Name>sfk-api</Name>
-        <Private>False</Private>
-      </ProjectReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">

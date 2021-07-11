@@ -10,8 +10,8 @@
 		{ "name": "HeatSource" }
 	],
 	"attributes": {
-		"capacityLitresWater": 50,
-		"capacityLitresSteam": 100
+		"capacityLitresInput": 50,
+		"capacityLitresOutput": 100
 	},
 	"variantgroups": [
 		{

@@ -39,8 +39,8 @@ namespace SFK.Steamworks.Boiler
       ElementBounds boilerBounds = ElementBounds.Fixed(0, 0, 240, 200);
 
       ElementBounds fuelSlotBounds = ElementStdBounds.SlotGrid(EnumDialogArea.None, 0, 140, 1, 1);
-      ElementBounds waterFullnessMeterBounds = ElementBounds.Fixed(120, 30, 40, 200);
-      ElementBounds steamFullnessMeterBounds = ElementBounds.Fixed(180, 30, 40, 200);
+      ElementBounds inputFullnessMeterBounds = ElementBounds.Fixed(120, 30, 40, 200);
+      ElementBounds outputFullnessMeterBounds = ElementBounds.Fixed(180, 30, 40, 200);
 
       // 2. Around all that is 10 pixel padding
       ElementBounds bgBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding);
@@ -60,12 +60,12 @@ namespace SFK.Steamworks.Boiler
               .AddItemSlotGrid(Inventory, SendInvPacket, 1, new int[] { 0 }, fuelSlotBounds, "fuelSlot")
               .AddDynamicText("", CairoFont.WhiteDetailText(), EnumTextOrientation.Left, fuelSlotBounds.RightCopy(5, 16).WithFixedSize(60, 30), "fueltemp")
 
-              .AddInset(waterFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
-              .AddDynamicCustomDraw(waterFullnessMeterBounds, createFullnessMeterDraw(1, 50), "waterBar")
-              .AddDynamicText("", CairoFont.WhiteDetailText(), EnumTextOrientation.Center, waterFullnessMeterBounds.BelowCopy(-10, 5).WithFixedSize(60, 30), "watertemp")
+              .AddInset(inputFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
+              .AddDynamicCustomDraw(inputFullnessMeterBounds, createFullnessMeterDraw(1, 50), "inputBar")
+              .AddDynamicText("", CairoFont.WhiteDetailText(), EnumTextOrientation.Center, inputFullnessMeterBounds.BelowCopy(-10, 5).WithFixedSize(60, 30), "inputtemp")
 
-              .AddInset(steamFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
-              .AddDynamicCustomDraw(steamFullnessMeterBounds, createFullnessMeterDraw(2, 100), "steamBar")
+              .AddInset(outputFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
+              .AddDynamicCustomDraw(outputFullnessMeterBounds, createFullnessMeterDraw(2, 100), "outputBar")
           .EndChildElements()
           .Compose()
       ;
@@ -75,8 +75,8 @@ namespace SFK.Steamworks.Boiler
 
     public void Update()
     {
-      SingleComposer.GetCustomDraw("waterBar").Redraw();
-      SingleComposer.GetCustomDraw("steamBar").Redraw();
+      SingleComposer.GetCustomDraw("inputBar").Redraw();
+      SingleComposer.GetCustomDraw("outputBar").Redraw();
     }
 
     #region Drawings
@@ -148,19 +148,19 @@ namespace SFK.Steamworks.Boiler
       if (!IsOpened()) return;
 
       float ftemp = Attributes.GetFloat("furnaceTemperature");
-      float wtemp = Attributes.GetFloat("waterTemperature");
+      float wtemp = Attributes.GetFloat("inputTemperature");
 
       string fuelTemp = ftemp.ToString("#");
-      string waterTemp = wtemp.ToString("#");
+      string inputTemp = wtemp.ToString("#");
 
       fuelTemp += fuelTemp.Length > 0 ? "°C" : "";
-      waterTemp += waterTemp.Length > 0 ? "°C" : "";
+      inputTemp += inputTemp.Length > 0 ? "°C" : "";
 
       if (ftemp > 0 && ftemp <= 20) fuelTemp = Lang.Get("Cold");
-      if (wtemp > 0 && wtemp <= 20) waterTemp = Lang.Get("Cold");
+      if (wtemp > 0 && wtemp <= 20) inputTemp = Lang.Get("Cold");
 
       SingleComposer.GetDynamicText("fueltemp").SetNewText(fuelTemp);
-      SingleComposer.GetDynamicText("watertemp").SetNewText(waterTemp);
+      SingleComposer.GetDynamicText("inputtemp").SetNewText(inputTemp);
 
       if (capi.ElapsedMilliseconds - lastRedrawMs > 500)
       {

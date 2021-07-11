@@ -6,7 +6,7 @@ using Vintagestory.API.Server;
   Description = "Steampunk. More. Soon with pipes included!",
   Version = "0.1.0",
   Website = "https://github.com/LMD-inc/Steampunkofication",
-  Authors = new[] { "simplewepro" })]
+  Authors = new[] { "LMD inc." })]
 
 namespace SFK.Transportation
 {
