@@ -480,7 +480,7 @@ namespace SFK.Steamworks.Boiler
           // If Boiler would be able to process not only water better to use BoilerRecipe here
           if (inputStack?.Item.Code.ToString() == "game:waterportion"
             // just in case.
-            && outputStack?.Item?.Code.ToString() == "sfk-steamworks:steamportion"
+            && (outputSlot.Empty || outputStack?.Item?.Code.ToString() == "sfk-steamworks:steamportion")
             && inputStack.StackSize > 0
             && InputStackTemp > 100)
           {
