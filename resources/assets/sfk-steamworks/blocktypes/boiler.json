@@ -2,7 +2,6 @@
 	"code": "boiler",
 	"class": "Boiler",
 	"entityClass": "BEBoiler",
-	"entityBehaviors": [{ "name": "HorizontalOrientable" }],
 	"behaviors": [
 		{ "name": "HorizontalOrientable" },
 		{ "name": "Container" },
@@ -20,15 +19,15 @@
 		}
 	],
 	"creativeinventoryByType": {
-		"*-east": { "general": ["*"], "sfk-steamworks": ["*"] }
+		"*-north": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
 	"shape": {
 		"base": "boiler",
 		"rotateYByType": {
-			"*-north": 0,
-			"*-east": 270,
-			"*-south": 180,
-			"*-west": 90
+			"*-north": 180,
+			"*-east": 90,
+			"*-south": 0,
+			"*-west": 270
 		}
 	},
 	"blockmaterial": "metal",
@@ -46,9 +45,9 @@
 	},
 	"resistance": 3.5,
 	"sounds": {
-		"place": "block/anvil",
-		"break": "block/anvil",
-		"hit": "block/anvil",
+		"place": "game:block/anvil",
+		"break": "game:block/anvil",
+		"hit": "game:block/anvil",
 		"walk": "game:walk/stone"
 	}
 }

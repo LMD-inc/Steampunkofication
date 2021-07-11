@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 using SFK.API;
 using Vintagestory.API.Client;
@@ -342,7 +343,7 @@ namespace SFK.Steamworks.Boiler
       }
     }
 
-    public void OnBlockInteract(IPlayer byPlayer)
+    public bool OnBlockInteract(IPlayer byPlayer)
     {
       if (Api.Side == EnumAppSide.Client)
       {
@@ -367,6 +368,8 @@ namespace SFK.Steamworks.Boiler
       {
         byPlayer.InventoryManager.OpenInventory(inventory);
       }
+
+      return true;
     }
 
     #endregion
@@ -530,8 +533,11 @@ namespace SFK.Steamworks.Boiler
       invDialog?.TryClose();
       invDialog?.Dispose();
       invDialog = null;
+    }
 
-      // UnregisterGameTickListener(tickListenerId);
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
+    {
+      sb.Clear();
     }
 
     ~BEBoiler()
