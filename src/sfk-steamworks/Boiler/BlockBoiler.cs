@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SFK.API;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -13,6 +14,8 @@ namespace SFK.Steamworks.Boiler
     #region Multiblock
     BlockFacing orientation;
 
+    public BlockFacing Orientation => orientation;
+
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
     {
       if (!CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
@@ -20,22 +23,25 @@ namespace SFK.Steamworks.Boiler
         return false;
       }
 
-      if (base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode))
+      bool handled = base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
+
+      if (handled)
       {
         PlaceFakeBlock(world, blockSel.Position);
         return true;
       }
+
       return false;
     }
 
     private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos)
     {
       orientation = BlockFacing.FromCode(world.BlockAccessor.GetBlock(pos).LastCodePart());
-      Block toPlaceBlock = world.GetBlock(new AssetLocation("sfk-steamworks:mpboiler"));
+      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:mpboiler-{orientation}"));
 
       world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos.AddCopy(orientation));
 
-      if (world.BlockAccessor.GetBlockEntity(pos.AddCopy(orientation)) is BEMPMultiblock be) be.Principal = pos;
+      if (world.BlockAccessor.GetBlockEntity(pos.AddCopy(orientation)) is BEMPMultiblockGasFlow be) be.Principal = pos;
     }
 
     #endregion
@@ -192,7 +198,7 @@ namespace SFK.Steamworks.Boiler
       BlockFacing baseBlockFacing = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(pos).LastCodePart());
       Block mpBlock = api.World.BlockAccessor.GetBlock(pos.AddCopy(baseBlockFacing));
 
-      if (mpBlock.Code.Path == "mpboiler")
+      if (mpBlock.Code.Path == $"mpboiler-{baseBlockFacing}")
       {
         world.BlockAccessor.SetBlock(0, pos.AddCopy(baseBlockFacing));
       }

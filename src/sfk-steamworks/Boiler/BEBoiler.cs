@@ -211,7 +211,6 @@ namespace SFK.Steamworks.Boiler
       return fromTemp + dt;
     }
 
-
     private bool canSmelt()
     {
       CombustibleProperties fuelCopts = fuelCombustibleOpts;
@@ -288,8 +287,6 @@ namespace SFK.Steamworks.Boiler
       }
     }
 
-
-
     public void igniteWithFuel(IItemStack stack)
     {
       CombustibleProperties fuelCopts = stack.Collectible.CombustibleProps;
@@ -309,6 +306,10 @@ namespace SFK.Steamworks.Boiler
       Api.World.BlockAccessor.ExchangeBlock(block.Id, Pos);
       this.Block = block;
     }
+
+    #endregion
+
+    #region Steam transfer
 
     #endregion
 

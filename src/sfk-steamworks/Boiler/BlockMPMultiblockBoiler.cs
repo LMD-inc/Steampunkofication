@@ -2,6 +2,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent.Mechanics;
+using SFK.API;
 
 namespace SFK.Steamworks.Boiler
 {
@@ -16,7 +17,7 @@ namespace SFK.Steamworks.Boiler
     {
       IWorldAccessor world = player?.Entity?.World;
       if (world == null) world = api.World;
-      BEMPMultiblock be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMPMultiblock;
+      BEMPMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMPMultiblockGasFlow;
       if (be == null || be.Principal == null) return 1f;  //never break
       Block principalBlock = world.BlockAccessor.GetBlock(be.Principal);
       BlockSelection bs = blockSel.Clone();
@@ -31,7 +32,7 @@ namespace SFK.Steamworks.Boiler
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1f)
     {
-      BEMPMultiblock be = world.BlockAccessor.GetBlockEntity(pos) as BEMPMultiblock;
+      BEMPMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(pos) as BEMPMultiblockGasFlow;
       if (be == null || be.Principal == null)
       {
         // being broken by other game code (including on breaking the pulverizer base block): standard block breaking treatment
@@ -58,7 +59,7 @@ namespace SFK.Steamworks.Boiler
 
     public override Cuboidf GetParticleBreakBox(IBlockAccessor blockAccess, BlockPos pos, BlockFacing facing)
     {
-      BEMPMultiblock be = blockAccess.GetBlockEntity(pos) as BEMPMultiblock;
+      BEMPMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMPMultiblockGasFlow;
       if (be == null || be.Principal == null)
       {
         return base.GetParticleBreakBox(blockAccess, pos, facing);
@@ -71,7 +72,7 @@ namespace SFK.Steamworks.Boiler
     public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing)
     {
       IBlockAccessor blockAccess = capi.World.BlockAccessor;
-      BEMPMultiblock be = blockAccess.GetBlockEntity(pos) as BEMPMultiblock;
+      BEMPMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMPMultiblockGasFlow;
       if (be == null || be.Principal == null)
       {
         return 0;
@@ -82,7 +83,7 @@ namespace SFK.Steamworks.Boiler
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
     {
-      BEMPMultiblock bem = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMPMultiblock;
+      BEMPMultiblockGasFlow bem = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMPMultiblockGasFlow;
       if (bem != null)
       {
         BlockEntity be = world.BlockAccessor.GetBlockEntity(bem.Principal);

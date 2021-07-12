@@ -24,17 +24,33 @@
 	"shape": {
 		"base": "boiler",
 		"rotateYByType": {
-			"*-north": 180,
-			"*-east": 90,
-			"*-south": 0,
-			"*-west": 270
+			"*-north": 0,
+			"*-east": 270,
+			"*-south": 180,
+			"*-west": 90
 		}
 	},
+	"heldTpIdleAnimation": "holdunderarm",
 	"blockmaterial": "metal",
 	"drawtype": "json",
 	"textures": {
-		"copper": {
-			"base": "game:item/resource/plate/copper"
+		"brass1": {
+			"base": "game:block/metal/sheet/brass1"
+		},
+		"brass2": {
+			"base": "game:block/metal/sheet/brass1"
+		},
+		"brass5": {
+			"base": "game:block/metal/sheet/brass1"
+		},
+		"fire1": {
+			"base": "game:block/clay/brick/fire1"
+		},
+		"fire2": {
+			"base": "game:block/clay/brick/fire1"
+		},
+		"fire3": {
+			"base": "game:block/clay/brick/fire1"
 		}
 	},
 	"sidesolid": {

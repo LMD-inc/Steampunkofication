@@ -1,23 +1,17 @@
 {
-	"code": "mpboiler",
-	"class": "MultiblockBoiler",
-	"entityClass": "MPMultiblockGasFlow",
-	"behaviors": [{ "name": "HorizontalOrientable" }],
-	"variantgroups": [
-		{
-			"code": "side",
-			"loadFromProperties": "abstract/horizontalorientation"
-		}
-	],
+	"code": "steamengine",
+	"class": "Block",
+	"entityClass": "GasFlow",
 	"attributes": {
-		"pushGasFacesByType": {
-			"mpboiler-east": ["east"],
-			"mpboiler-west": ["west"],
-			"mpboiler-north": ["north"],
-			"mpboiler-south": ["south"]
-		}
+		"pullGasFaces": ["east", "west", "north", "south"],
+		"pushGasFaces": ["east", "west", "north", "south"],
+		"acceptGasFromFaces": ["east", "west", "north", "south"]
 	},
-	"shape": { "base": "game:block/basic/nothing" },
+	"creativeinventory": {
+		"general": ["*"],
+		"sfk-steamworks": ["*"]
+	},
+	"shape": { "base": "game:block/basic/block" },
 	"blockmaterial": "metal",
 	"drops": [],
 	"sidesolid": {
