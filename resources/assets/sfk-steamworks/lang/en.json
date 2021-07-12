@@ -1,5 +1,6 @@
 {
 	"block-boiler-*": "Steam boiler",
+	"block-mpboiler": "Steam boiler",
 	"block-pipe-copper": "Copper Pipe",
 	"block-pipe-brass": "Brass Pipe",
 	"steamporion": "Steam",
