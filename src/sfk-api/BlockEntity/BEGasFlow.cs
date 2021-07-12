@@ -175,8 +175,6 @@ namespace SFK.API
     {
       BlockPos InputPosition = Pos.AddCopy(inputFace);
 
-      System.Console.WriteLine($"[SFK]: {Api.World.BlockAccessor.GetBlockEntity(InputPosition)}");
-
       if (Api.World.BlockAccessor.GetBlockEntity(InputPosition) is BlockEntityGasFlow beContainer)
       {
         //do not both push and pull across the same chute-chute connection
@@ -192,6 +190,8 @@ namespace SFK.API
 
         if (sourceSlot != null && targetSlot != null && (beFlow == null || targetSlot.Empty))
         {
+          if (sourceSlot.StackSize >= targetSlot.StackSize) return;
+
           ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, (int)gasFlowAccum);
 
           int qmoved = sourceSlot.TryPutInto(targetSlot, ref op);
@@ -237,6 +237,8 @@ namespace SFK.API
 
         if (targetSlot != null && (beFlow == null || targetSlot.Empty) && targetSlot is ItemSlotGasOnly)
         {
+          if (targetSlot.StackSize >= sourceSlot.StackSize) return false;
+
           int quantity = (int)gasFlowAccum;
           ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity);
 

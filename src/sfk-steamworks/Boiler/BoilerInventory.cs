@@ -60,7 +60,7 @@ namespace SFK.Steamworks.Boiler
       {
         BlockBoiler block = Api.World.BlockAccessor.GetBlock(Pos) as BlockBoiler;
         // Water input face
-        if (atBlockFace == block.Orientation)
+        if (atBlockFace == block.Orientation.Opposite)
         {
           return slots[1];
         }
@@ -73,7 +73,7 @@ namespace SFK.Steamworks.Boiler
         }
       }
 
-      return slots[0];
+      return null;
     }
 
     public override ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)

@@ -10,23 +10,6 @@ namespace SFK.API
   {
     internal BlockPos principal;
     public BlockPos Principal { get; set; }
-    // {
-    //   get
-    //   {
-    //     return principal;
-    //   }
-    //   set
-    //   {
-    //     principal = value;
-    //     System.Console.WriteLine($"[SFK]: setter Principal: {Principal}");
-    //     BlockEntityContainer becp = Api.World?.BlockAccessor.GetBlockEntity(Principal) as BlockEntityContainer;
-
-    //     if (becp != null)
-    //     {
-    //       inventory = becp.Inventory as InventoryGeneric;
-    //     }
-    //   }
-    // }
     public override InventoryBase Inventory
     {
       get
