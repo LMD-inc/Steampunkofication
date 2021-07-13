@@ -1,14 +1,52 @@
 using System.Collections.Generic;
+using SFK.API;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
+using Vintagestory.GameContent.Mechanics;
 
 namespace SFK.Steamworks.Boiler
 {
   public class BlockBoiler : BlockLiquidContainerBase
   {
+    #region Multiblock
+    BlockFacing orientation;
+
+    public BlockFacing Orientation => orientation;
+
+    public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
+    {
+      if (!CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
+      {
+        return false;
+      }
+
+      bool handled = base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
+
+      if (handled)
+      {
+        PlaceFakeBlock(world, blockSel.Position);
+        return true;
+      }
+
+      return false;
+    }
+
+    private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos)
+    {
+      orientation = BlockFacing.FromCode(world.BlockAccessor.GetBlock(pos).LastCodePart());
+      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:mpboiler-{orientation}"));
+
+      world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos.AddCopy(orientation));
+
+      if (world.BlockAccessor.GetBlockEntity(pos.AddCopy(orientation)) is BEMPMultiblockGasFlow be) be.Principal = pos;
+    }
+
+    #endregion
+
+    #region Liquid Container
     /*  Returning id of water slot, since this used only for player interaction,
      *  inheriting from BlockLiquidContainerBase.
      *
@@ -24,7 +62,9 @@ namespace SFK.Steamworks.Boiler
     {
       return 1;
     }
+    #endregion
 
+    #region Ignitable
     public override EnumIgniteState OnTryIgniteBlock(EntityAgent byEntity, BlockPos pos, float secondsIgniting)
     {
       BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
@@ -45,6 +85,10 @@ namespace SFK.Steamworks.Boiler
 
       handling = EnumHandling.PreventDefault;
     }
+
+    #endregion
+
+    #region Events
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
     {
@@ -104,6 +148,7 @@ namespace SFK.Steamworks.Boiler
         capacityLitresFromAttributes = Attributes["capacityLitresInput"].AsInt(50);
       }
 
+      // World interaction help
       if (api.Side != EnumAppSide.Client) return;
 
       interactions = ObjectCacheUtil.GetOrCreate(api, "boilerInteractions", () =>
@@ -147,6 +192,21 @@ namespace SFK.Steamworks.Boiler
                     };
               });
     }
+
+    public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+    {
+      BlockFacing baseBlockFacing = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(pos).LastCodePart());
+      Block mpBlock = api.World.BlockAccessor.GetBlock(pos.AddCopy(baseBlockFacing));
+
+      if (mpBlock.Code.Path == $"mpboiler-{baseBlockFacing}")
+      {
+        world.BlockAccessor.SetBlock(0, pos.AddCopy(baseBlockFacing));
+      }
+
+      base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+    }
+
+    #endregion
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
     {

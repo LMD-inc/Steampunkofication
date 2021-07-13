@@ -3,6 +3,7 @@ using SFK.API;
 using System;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
 namespace SFK.Steamworks.Boiler
@@ -51,6 +52,33 @@ namespace SFK.Steamworks.Boiler
       if (i == 0) return new ItemSlotSurvival(this); // Fuel
       if (i == 1) return new ItemSlotLiquidOnly(this, 50); // Water
       return new ItemSlotGasOnly(this, 100); // Steam
+    }
+
+    public override ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
+    {
+      if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
+      {
+        BlockBoiler block = Api.World.BlockAccessor.GetBlock(Pos) as BlockBoiler;
+        // Water input face
+        if (atBlockFace == block.Orientation.Opposite)
+        {
+          return slots[1];
+        }
+      }
+      else
+      {
+        if (atBlockFace == BlockFacing.UP)
+        {
+          return slots[0];
+        }
+      }
+
+      return null;
+    }
+
+    public override ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
+    {
+      return null;
     }
   }
 }

@@ -1,0 +1,40 @@
+{
+	"code": "mpboiler",
+	"class": "MultiblockBoiler",
+	"entityClass": "MPMultiblockGasFlow",
+	"behaviors": [{ "name": "HorizontalOrientable" }],
+	"variantgroups": [
+		{
+			"code": "side",
+			"loadFromProperties": "abstract/horizontalorientation"
+		}
+	],
+	"attributes": {
+		"pushGasFacesByType": {
+			"mpboiler-east": ["east"],
+			"mpboiler-west": ["west"],
+			"mpboiler-north": ["north"],
+			"mpboiler-south": ["south"]
+		}
+	},
+	"shape": { "base": "game:block/basic/nothing" },
+	"blockmaterial": "metal",
+	"drops": [],
+	"sidesolid": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"rainPermeable": true,
+	"resistance": 3.5,
+	"sounds": {
+		"place": "game:block/anvil",
+		"walk": "game:walk/stone",
+		"hit": "game:block/anvil",
+		"break": "game:block/anvil"
+	},
+	"lightAbsorption": 0,
+	"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+	"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
+}

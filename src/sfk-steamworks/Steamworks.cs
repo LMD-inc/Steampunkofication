@@ -19,6 +19,8 @@ namespace SFK.Steamworks
 
       api.RegisterBlockClass("Boiler", typeof(BlockBoiler));
       api.RegisterBlockEntityClass("BEBoiler", typeof(BEBoiler));
+
+      api.RegisterBlockClass("MultiblockBoiler", typeof(BlockMPMultiblockBoiler));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

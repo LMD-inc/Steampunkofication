@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 using SFK.API;
 using Vintagestory.API.Client;
@@ -210,7 +211,6 @@ namespace SFK.Steamworks.Boiler
       return fromTemp + dt;
     }
 
-
     private bool canSmelt()
     {
       CombustibleProperties fuelCopts = fuelCombustibleOpts;
@@ -287,8 +287,6 @@ namespace SFK.Steamworks.Boiler
       }
     }
 
-
-
     public void igniteWithFuel(IItemStack stack)
     {
       CombustibleProperties fuelCopts = stack.Collectible.CombustibleProps;
@@ -308,6 +306,10 @@ namespace SFK.Steamworks.Boiler
       Api.World.BlockAccessor.ExchangeBlock(block.Id, Pos);
       this.Block = block;
     }
+
+    #endregion
+
+    #region Steam transfer
 
     #endregion
 
@@ -342,7 +344,7 @@ namespace SFK.Steamworks.Boiler
       }
     }
 
-    public void OnBlockInteract(IPlayer byPlayer)
+    public bool OnBlockInteract(IPlayer byPlayer)
     {
       if (Api.Side == EnumAppSide.Client)
       {
@@ -367,6 +369,8 @@ namespace SFK.Steamworks.Boiler
       {
         byPlayer.InventoryManager.OpenInventory(inventory);
       }
+
+      return true;
     }
 
     #endregion
@@ -530,8 +534,11 @@ namespace SFK.Steamworks.Boiler
       invDialog?.TryClose();
       invDialog?.Dispose();
       invDialog = null;
+    }
 
-      // UnregisterGameTickListener(tickListenerId);
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
+    {
+      sb.Clear();
     }
 
     ~BEBoiler()

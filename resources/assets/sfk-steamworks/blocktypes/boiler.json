@@ -2,7 +2,6 @@
 	"code": "boiler",
 	"class": "Boiler",
 	"entityClass": "BEBoiler",
-	"entityBehaviors": [{ "name": "HorizontalOrientable" }],
 	"behaviors": [
 		{ "name": "HorizontalOrientable" },
 		{ "name": "Container" },
@@ -20,7 +19,7 @@
 		}
 	],
 	"creativeinventoryByType": {
-		"*-east": { "general": ["*"], "sfk-steamworks": ["*"] }
+		"*-north": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
 	"shape": {
 		"base": "boiler",
@@ -31,11 +30,27 @@
 			"*-west": 90
 		}
 	},
+	"heldTpIdleAnimation": "holdunderarm",
 	"blockmaterial": "metal",
 	"drawtype": "json",
 	"textures": {
-		"copper": {
-			"base": "game:item/resource/plate/copper"
+		"brass1": {
+			"base": "game:block/metal/sheet/brass1"
+		},
+		"brass2": {
+			"base": "game:block/metal/sheet/brass1"
+		},
+		"brass5": {
+			"base": "game:block/metal/sheet/brass1"
+		},
+		"fire1": {
+			"base": "game:block/clay/brick/fire1"
+		},
+		"fire2": {
+			"base": "game:block/clay/brick/fire1"
+		},
+		"fire3": {
+			"base": "game:block/clay/brick/fire1"
 		}
 	},
 	"sidesolid": {
@@ -46,9 +61,9 @@
 	},
 	"resistance": 3.5,
 	"sounds": {
-		"place": "block/anvil",
-		"break": "block/anvil",
-		"hit": "block/anvil",
+		"place": "game:block/anvil",
+		"break": "game:block/anvil",
+		"hit": "game:block/anvil",
 		"walk": "game:walk/stone"
 	}
 }
