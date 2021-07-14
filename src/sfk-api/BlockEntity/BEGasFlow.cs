@@ -86,33 +86,30 @@ namespace SFK.API
         QuantitySlots = Block.Attributes["quantitySlots"].AsInt(QuantitySlots);
       }
 
-      if (inventory == null)
+      if (Inventory == null)
       {
-        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, 100));
+        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, 10));
 
         inventory.SlotModified += OnSlotModified;
-
-        inventory.OnGetAutoPushIntoSlot = GetAutoPushIntoSlot;
-        inventory.OnGetAutoPullFromSlot = GetAutoPullFromSlot;
       }
     }
 
-    private ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
+    public ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
     {
       if (GasPushFaces.Contains(atBlockFace))
       {
-        return Inventory[0];
+        return Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
       }
 
       return null;
     }
 
     // Return the slot where a chute may push items into. Return null if it shouldn't move items into this inventory.
-    private ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
+    public ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
     {
       if (GasPullFaces.Contains(atBlockFace) || AcceptGasFromFaces.Contains(atBlockFace))
       {
-        return Inventory[0];
+        return Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
       }
 
       return null;
@@ -122,7 +119,6 @@ namespace SFK.API
     {
       gasFlowAccum = Math.Min(gasFlowAccum + GasFlowRate, Math.Max(1, GasFlowRate * 2));
       if (gasFlowAccum < 1) return;
-
 
       if (GasPushFaces != null && GasPushFaces.Length > 0 && Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty) != null)
       {
@@ -169,8 +165,6 @@ namespace SFK.API
       }
     }
 
-
-
     private void TryPullFrom(BlockFacing inputFace)
     {
       BlockPos InputPosition = Pos.AddCopy(inputFace);
@@ -184,7 +178,7 @@ namespace SFK.API
           if (pushFaces?.Contains(inputFace.Opposite.Code) == true) return;
         }
 
-        ItemSlot sourceSlot = beContainer.Inventory.GetAutoPullFromSlot(inputFace.Opposite);
+        ItemSlot sourceSlot = beContainer.GetAutoPullFromSlot(inputFace.Opposite);
         ItemSlot targetSlot = sourceSlot == null ? null : Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
         BlockEntityGasFlow beFlow = beContainer as BlockEntityGasFlow;
 
@@ -224,7 +218,8 @@ namespace SFK.API
     private bool TryPushInto(BlockFacing outputFace)
     {
       BlockPos OutputPosition = Pos.AddCopy(outputFace);
-      if (Api.World.BlockAccessor.GetBlockEntity(OutputPosition) is BlockEntityContainer beContainer)
+
+      if (Api.World.BlockAccessor.GetBlockEntity(OutputPosition) is BlockEntityGasFlow beContainer)
       {
         ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty);
         if ((sourceSlot?.Itemstack?.StackSize ?? 0) == 0) return false;  //seems FirstOrDefault() method can sometimes give a slot with stacksize == 0, weird
@@ -232,11 +227,13 @@ namespace SFK.API
         int tubeDir = sourceSlot.Itemstack.Attributes.GetInt("tubeDir");
         sourceSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
 
-        ItemSlot targetSlot = beContainer.Inventory.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
+        ItemSlot targetSlot = beContainer.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
         BlockEntityGasFlow beFlow = beContainer as BlockEntityGasFlow;
 
-        if (targetSlot != null && (beFlow == null || targetSlot.Empty) && targetSlot is ItemSlotGasOnly)
+        if (targetSlot != null && targetSlot is ItemSlotGasOnly)
         {
+          if (!targetSlot.Empty && targetSlot.Itemstack.Item.Code != sourceSlot.Itemstack.Item.Code) return false;
+
           if (targetSlot.StackSize >= sourceSlot.StackSize) return false;
 
           int quantity = (int)gasFlowAccum;

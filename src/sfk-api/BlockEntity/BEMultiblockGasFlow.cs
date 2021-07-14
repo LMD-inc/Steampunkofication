@@ -1,4 +1,5 @@
 using System.Text;
+using System.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
@@ -6,18 +7,33 @@ using Vintagestory.GameContent;
 
 namespace SFK.API
 {
-  public class BEMPMultiblockGasFlow : BlockEntityGasFlow, IBEMPMultiblock
+  public class BEMultiblockGasFlow : BlockEntityGasFlow, IBEMPMultiblock
   {
     internal BlockPos principal;
-    public BlockPos Principal { get; set; }
+    public BlockPos Principal
+    {
+      get
+      {
+        if (principal != null || Block.GetBehavior<BlockBehaviorHorizontalOrientable>() == null) return principal;
+        return Pos.AddCopy(BlockFacing.FromCode(Block.LastCodePart()).Opposite);
+      }
+      set
+      {
+        principal = value;
+      }
+    }
+
     public override InventoryBase Inventory
     {
       get
       {
-        if (Principal != null)
+        InventoryBase principalInv = (Api?.World?.BlockAccessor.GetBlockEntity(Principal) as BlockEntityContainer)?.Inventory;
+
+        if (principalInv != null)
         {
-          return (Api?.World?.BlockAccessor.GetBlockEntity(Principal) as BlockEntityContainer)?.Inventory;
+          return principalInv;
         }
+
         return inventory;
       }
     }

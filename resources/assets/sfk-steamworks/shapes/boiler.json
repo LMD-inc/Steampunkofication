@@ -7,12 +7,12 @@
 	"textureHeight": 16,
 	"textureSizes": {},
 	"textures": {
-		"fire1": "fire1",
-		"fire2": "fire2",
-		"fire3": "fire3",
-		"brass5": "brass5",
-		"brass2": "brass2",
-		"brass1": "brass1"
+		"fire1": "game:block/clay/brick/fire1",
+		"fire2": "game:block/clay/brick/fire2",
+		"fire3": "game:block/clay/brick/fire3",
+		"brass5": "game:block/metal/sheet/brass5",
+		"brass2": "game:block/metal/sheet/brass2",
+		"brass1": "game:block/metal/sheet/brass1"
 	},
 	"elements": [
 		{

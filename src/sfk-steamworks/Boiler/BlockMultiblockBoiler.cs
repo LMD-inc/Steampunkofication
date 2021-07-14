@@ -1,12 +1,11 @@
 using Vintagestory.API.Common;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
-using Vintagestory.GameContent.Mechanics;
 using SFK.API;
 
 namespace SFK.Steamworks.Boiler
 {
-  public class BlockMPMultiblockBoiler : Block
+  public class BlockMultiblockBoiler : Block
   {
     public override bool IsReplacableBy(Block block)
     {
@@ -17,7 +16,7 @@ namespace SFK.Steamworks.Boiler
     {
       IWorldAccessor world = player?.Entity?.World;
       if (world == null) world = api.World;
-      BEMPMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMPMultiblockGasFlow;
+      BEMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMultiblockGasFlow;
       if (be == null || be.Principal == null) return 1f;  //never break
       Block principalBlock = world.BlockAccessor.GetBlock(be.Principal);
       BlockSelection bs = blockSel.Clone();
@@ -32,10 +31,10 @@ namespace SFK.Steamworks.Boiler
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1f)
     {
-      BEMPMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(pos) as BEMPMultiblockGasFlow;
+      BEMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(pos) as BEMultiblockGasFlow;
       if (be == null || be.Principal == null)
       {
-        // being broken by other game code (including on breaking the pulverizer base block): standard block breaking treatment
+        // being broken by other game code (including on breaking the boiler base block): standard block breaking treatment
         base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
         return;
       }
@@ -59,7 +58,7 @@ namespace SFK.Steamworks.Boiler
 
     public override Cuboidf GetParticleBreakBox(IBlockAccessor blockAccess, BlockPos pos, BlockFacing facing)
     {
-      BEMPMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMPMultiblockGasFlow;
+      BEMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMultiblockGasFlow;
       if (be == null || be.Principal == null)
       {
         return base.GetParticleBreakBox(blockAccess, pos, facing);
@@ -72,7 +71,7 @@ namespace SFK.Steamworks.Boiler
     public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing)
     {
       IBlockAccessor blockAccess = capi.World.BlockAccessor;
-      BEMPMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMPMultiblockGasFlow;
+      BEMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMultiblockGasFlow;
       if (be == null || be.Principal == null)
       {
         return 0;
@@ -83,7 +82,7 @@ namespace SFK.Steamworks.Boiler
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
     {
-      BEMPMultiblockGasFlow bem = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMPMultiblockGasFlow;
+      BEMultiblockGasFlow bem = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMultiblockGasFlow;
       if (bem != null)
       {
         BlockEntity be = world.BlockAccessor.GetBlockEntity(bem.Principal);

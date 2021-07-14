@@ -2,6 +2,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using SFK.Steamworks.Boiler;
+using SFK.Steamworks.SteamEngine;
 
 [assembly: ModInfo("[SFK] Steamworks",
   Description = "Steampunk. More. Now with machines!",
@@ -20,7 +21,12 @@ namespace SFK.Steamworks
       api.RegisterBlockClass("Boiler", typeof(BlockBoiler));
       api.RegisterBlockEntityClass("BEBoiler", typeof(BEBoiler));
 
-      api.RegisterBlockClass("MultiblockBoiler", typeof(BlockMPMultiblockBoiler));
+      api.RegisterBlockClass("MultiblockBoiler", typeof(BlockMultiblockBoiler));
+
+      api.RegisterBlockClass("SteamEngine", typeof(BlockSteamEngine));
+      api.RegisterBlockEntityBehaviorClass("MPSteamEngine", typeof(BEBehaviorMPSteamEngine));
+
+      api.RegisterBlockClass("MultiblockSteamEngine", typeof(BlockMultiblockSteamEngine));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

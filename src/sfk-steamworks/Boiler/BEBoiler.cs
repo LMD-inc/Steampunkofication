@@ -52,6 +52,7 @@ namespace SFK.Steamworks.Boiler
       inventory = new BoilerInventory(null, null);
       inventory.SlotModified += OnSlotModified;
     }
+
     public override void Initialize(ICoreAPI api)
     {
       base.Initialize(api);
@@ -309,10 +310,6 @@ namespace SFK.Steamworks.Boiler
 
     #endregion
 
-    #region Steam transfer
-
-    #endregion
-
     #region Events
 
     public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
@@ -539,6 +536,12 @@ namespace SFK.Steamworks.Boiler
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
     {
       sb.Clear();
+
+      if (!inputSlot.Empty)
+      {
+        sb.AppendLine("Contentns:");
+        sb.AppendLine($"{inputStack.StackSize} litres of {Lang.Get($"incontent-{inputStack.GetName()}")}");
+      }
     }
 
     ~BEBoiler()

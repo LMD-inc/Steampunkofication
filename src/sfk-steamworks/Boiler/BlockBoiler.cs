@@ -37,11 +37,9 @@ namespace SFK.Steamworks.Boiler
     private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos)
     {
       orientation = BlockFacing.FromCode(world.BlockAccessor.GetBlock(pos).LastCodePart());
-      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:mpboiler-{orientation}"));
+      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:boiler-mp-{orientation}"));
 
       world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos.AddCopy(orientation));
-
-      if (world.BlockAccessor.GetBlockEntity(pos.AddCopy(orientation)) is BEMPMultiblockGasFlow be) be.Principal = pos;
     }
 
     #endregion
@@ -198,7 +196,7 @@ namespace SFK.Steamworks.Boiler
       BlockFacing baseBlockFacing = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(pos).LastCodePart());
       Block mpBlock = api.World.BlockAccessor.GetBlock(pos.AddCopy(baseBlockFacing));
 
-      if (mpBlock.Code.Path == $"mpboiler-{baseBlockFacing}")
+      if (mpBlock.Code.Path == $"boiler-mp-{baseBlockFacing}")
       {
         world.BlockAccessor.SetBlock(0, pos.AddCopy(baseBlockFacing));
       }
