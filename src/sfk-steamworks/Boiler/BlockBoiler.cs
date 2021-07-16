@@ -1,20 +1,16 @@
+using System.Text;
 using System.Collections.Generic;
-using SFK.API;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
-using Vintagestory.GameContent.Mechanics;
 
 namespace SFK.Steamworks.Boiler
 {
   public class BlockBoiler : BlockLiquidContainerBase
   {
     #region Multiblock
-    BlockFacing orientation;
-
-    public BlockFacing Orientation => orientation;
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
     {
@@ -23,25 +19,31 @@ namespace SFK.Steamworks.Boiler
         return false;
       }
 
+      // Can place second block
+      BlockFacing[] horVer = SuggestedHVOrientation(byPlayer, blockSel);
+      BlockPos secondPos = blockSel.Position.AddCopy(horVer[0]);
+      BlockSelection secondBlockSel = new BlockSelection() { Position = secondPos, Face = BlockFacing.UP };
+
+      if (!CanPlaceBlock(world, byPlayer, secondBlockSel, ref failureCode)) return false;
+
+      string code = horVer[0].Opposite.Code;
+
       bool handled = base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
 
       if (handled)
       {
-        PlaceFakeBlock(world, blockSel.Position);
+        PlaceFakeBlock(world, secondPos, horVer[0]);
         return true;
       }
 
       return false;
     }
 
-    private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos)
+    private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos, BlockFacing orientation)
     {
-      orientation = BlockFacing.FromCode(world.BlockAccessor.GetBlock(pos).LastCodePart());
-      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:mpboiler-{orientation}"));
+      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:boiler-mp-{orientation}"));
 
-      world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos.AddCopy(orientation));
-
-      if (world.BlockAccessor.GetBlockEntity(pos.AddCopy(orientation)) is BEMPMultiblockGasFlow be) be.Principal = pos;
+      world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos);
     }
 
     #endregion
@@ -62,6 +64,9 @@ namespace SFK.Steamworks.Boiler
     {
       return 1;
     }
+
+    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) { }
+
     #endregion
 
     #region Ignitable
@@ -89,6 +94,21 @@ namespace SFK.Steamworks.Boiler
     #endregion
 
     #region Events
+
+    public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handling)
+    {
+
+    }
+
+    public override int TryPutContent(IWorldAccessor world, ItemStack containerStack, ItemStack contentStack, int desiredItems)
+    {
+      return 0;
+    }
+
+    public override void OnHeldInteractStart(ItemSlot itemslot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handHandling)
+    {
+      base.OnHeldInteractStart(itemslot, byEntity, blockSel, entitySel, firstEvent, ref handHandling);
+    }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
     {
@@ -198,7 +218,7 @@ namespace SFK.Steamworks.Boiler
       BlockFacing baseBlockFacing = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(pos).LastCodePart());
       Block mpBlock = api.World.BlockAccessor.GetBlock(pos.AddCopy(baseBlockFacing));
 
-      if (mpBlock.Code.Path == $"mpboiler-{baseBlockFacing}")
+      if (mpBlock.Code.Path == $"boiler-mp-{baseBlockFacing}")
       {
         world.BlockAccessor.SetBlock(0, pos.AddCopy(baseBlockFacing));
       }

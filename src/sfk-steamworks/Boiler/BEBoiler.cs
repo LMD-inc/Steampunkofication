@@ -51,7 +51,11 @@ namespace SFK.Steamworks.Boiler
     {
       inventory = new BoilerInventory(null, null);
       inventory.SlotModified += OnSlotModified;
+
+      inventory.OnGetAutoPushIntoSlot = GetAutoPushIntoSlot;
+      inventory.OnGetAutoPullFromSlot = GetAutoPullFromSlot;
     }
+
     public override void Initialize(ICoreAPI api)
     {
       base.Initialize(api);
@@ -309,10 +313,6 @@ namespace SFK.Steamworks.Boiler
 
     #endregion
 
-    #region Steam transfer
-
-    #endregion
-
     #region Events
 
     public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
@@ -475,6 +475,32 @@ namespace SFK.Steamworks.Boiler
 
     #endregion
 
+    public ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
+    {
+      if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
+      {
+        // Water input face
+        if (atBlockFace == BlockFacing.FromCode(Block.LastCodePart()).Opposite)
+        {
+          return inputSlot;
+        }
+      }
+      else
+      {
+        if (atBlockFace == BlockFacing.UP)
+        {
+          return fuelSlot;
+        }
+      }
+
+      return null;
+    }
+
+    public ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
+    {
+      return null;
+    }
+
     private void ProduceTick(float dt)
     {
       if (Api?.Side == EnumAppSide.Server)
@@ -539,6 +565,12 @@ namespace SFK.Steamworks.Boiler
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
     {
       sb.Clear();
+
+      if (!inputSlot.Empty)
+      {
+        sb.AppendLine("Contentns:");
+        sb.AppendLine($"{inputStack.StackSize} litres of {Lang.Get($"incontent-{inputStack.GetName()}")}");
+      }
     }
 
     ~BEBoiler()

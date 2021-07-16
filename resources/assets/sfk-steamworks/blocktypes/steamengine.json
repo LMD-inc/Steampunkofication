@@ -1,17 +1,27 @@
 {
 	"code": "steamengine",
-	"class": "Block",
-	"entityClass": "GasFlow",
-	"attributes": {
-		"pullGasFaces": ["east", "west", "north", "south"],
-		"pushGasFaces": ["east", "west", "north", "south"],
-		"acceptGasFromFaces": ["east", "west", "north", "south"]
+	"class": "SteamEngine",
+	"entityClass": "GasContainer",
+	"behaviors": [{ "name": "HorizontalOrientable" }],
+	"entityBehaviors": [{ "name": "MPSteamEngine" }, { "name": "Animatable" }],
+	"variantgroups": [
+		{
+			"code": "side",
+			"loadFromProperties": "abstract/horizontalorientation"
+		}
+	],
+	"creativeinventoryByType": {
+		"*-east": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
-	"creativeinventory": {
-		"general": ["*"],
-		"sfk-steamworks": ["*"]
+	"shape": {
+		"base": "steamengine",
+		"rotateYByType": {
+			"*-north": 180,
+			"*-east": 90,
+			"*-south": 0,
+			"*-west": 270
+		}
 	},
-	"shape": { "base": "game:block/basic/block" },
 	"blockmaterial": "metal",
 	"drops": [],
 	"sidesolid": {
@@ -27,6 +37,17 @@
 		"walk": "game:walk/stone",
 		"hit": "game:block/anvil",
 		"break": "game:block/anvil"
+	},
+	"heldTpIdleAnimation": "holdunderarm",
+	"tpHandTransform": {
+		"translation": { "x": -1.1, "y": -0.7, "z": -0.6 },
+		"rotation": { "x": 14, "y": 180, "z": 14 },
+		"scale": 0.6
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": 0.15, "z": 1 },
+		"rotation": { "x": 0, "y": 45, "z": 0 },
+		"scale": 1.6
 	},
 	"lightAbsorption": 0,
 	"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },

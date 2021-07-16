@@ -1,7 +1,10 @@
 {
 	"block-boiler-*": "Паровой котёл",
-	"block-mpboiler-*": "Паровой котёл",
+	"block-boiler-mp-*": "Паровой котёл",
 	"block-pipe-copper": "Медная труба",
+
 	"steamporion": "Пар",
+	"item-steamporion": "Пар",
+
 	"game:tabname-sfk-steamworks": "[SFK] Steamworks"
 }

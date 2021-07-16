@@ -1,0 +1,79 @@
+
+using System.Linq;
+
+using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
+using Vintagestory.GameContent.Mechanics;
+using SFK.API;
+
+namespace SFK.Steamworks.SteamEngine
+{
+  public class BEBehaviorMPSteamEngine : BEBehaviorMPRotor
+  {
+    private bool isPowered;
+
+    protected override AssetLocation Sound => null;
+
+    protected override float Resistance => 0.3f;
+    protected override double AccelerationFactor => 1d;
+    protected override float TargetSpeed => isPowered ? 1f : 0;
+    protected override float TorqueFactor => isPowered ? 1.5f : 0;
+    public override float AngleRad => 0;
+    BlockEntityAnimationUtil animUtil => Blockentity.GetBehavior<BEBehaviorAnimatable>().animUtil;
+
+    public BEBehaviorMPSteamEngine(BlockEntity blockentity) : base(blockentity)
+    {
+    }
+
+    public override void Initialize(ICoreAPI api, JsonObject properties)
+    {
+      base.Initialize(api, properties);
+
+      if (api.World.Side == EnumAppSide.Client && animUtil != null)
+      {
+        float rotY = Block.Shape.rotateY;
+        animUtil.InitializeAnimator("sfk-steamworks:steamengine", new Vec3f(0, rotY, 0));
+      }
+
+      Blockentity.RegisterGameTickListener(CheckSteamPowered, 1000);
+    }
+
+    private void CheckSteamPowered(float dt)
+    {
+      ItemSlotGasOnly steamSlot = (Blockentity as BEGasContainer).Inventory.FirstOrDefault(slot =>
+      {
+        return !slot.Empty && slot.Itemstack?.Item?.Code.ToString() == "sfk-steamworks:steamportion";
+      }) as ItemSlotGasOnly;
+
+      if (steamSlot != null && steamSlot.StackSize > 0)
+      {
+        isPowered = true;
+        steamSlot.TakeOut(1); // Consumption
+
+        if (!animUtil.activeAnimationsByAnimCode.ContainsKey("work"))
+        {
+          animUtil.StartAnimation(new AnimationMetaData() { Animation = "work", Code = "work", Weight = 10 });
+        }
+      }
+      else
+      {
+        isPowered = false;
+        animUtil.StopAnimation("work");
+      }
+    }
+
+    public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor world)
+    {
+      isPowered = tree.GetBool("p");
+      base.FromTreeAttributes(tree, world);
+    }
+
+    public override void ToTreeAttributes(ITreeAttribute tree)
+    {
+      tree.SetBool("p", isPowered);
+      base.ToTreeAttributes(tree);
+    }
+  }
+}

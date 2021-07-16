@@ -31,28 +31,18 @@
 		}
 	},
 	"heldTpIdleAnimation": "holdunderarm",
+	"tpHandTransform": {
+		"translation": { "x": -1.1, "y": -0.7, "z": -0.6 },
+		"rotation": { "x": 14, "y": 0, "z": -14 },
+		"scale": 0.6
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": -0.15, "z": 1.3 },
+		"rotation": { "x": 0, "y": -135, "z": 0 },
+		"scale": 1.5
+	},
 	"blockmaterial": "metal",
 	"drawtype": "json",
-	"textures": {
-		"brass1": {
-			"base": "game:block/metal/sheet/brass1"
-		},
-		"brass2": {
-			"base": "game:block/metal/sheet/brass1"
-		},
-		"brass5": {
-			"base": "game:block/metal/sheet/brass1"
-		},
-		"fire1": {
-			"base": "game:block/clay/brick/fire1"
-		},
-		"fire2": {
-			"base": "game:block/clay/brick/fire1"
-		},
-		"fire3": {
-			"base": "game:block/clay/brick/fire1"
-		}
-	},
 	"sidesolid": {
 		"all": "false"
 	},

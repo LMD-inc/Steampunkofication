@@ -30,7 +30,7 @@
 			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
 			"args": [
 				"--playStyle",
-				"preset-creativeandbuild",
+				"creativeandbuild",
 				"--openWorld",
 				"[SFK] Testing world",
 				"--addModPath",
