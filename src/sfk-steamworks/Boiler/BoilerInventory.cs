@@ -54,31 +54,27 @@ namespace SFK.Steamworks.Boiler
       return new ItemSlotGasOnly(this, 100); // Steam
     }
 
-    public override ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
-    {
-      if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
-      {
-        BlockBoiler block = Api.World.BlockAccessor.GetBlock(Pos) as BlockBoiler;
-        // Water input face
-        if (atBlockFace == block.Orientation.Opposite)
-        {
-          return slots[1];
-        }
-      }
-      else
-      {
-        if (atBlockFace == BlockFacing.UP)
-        {
-          return slots[0];
-        }
-      }
-
-      return null;
-    }
+    public GetAutoPushIntoSlotDelegate OnGetAutoPushIntoSlot;
+    public GetAutoPullFromSlotDelegate OnGetAutoPullFromSlot;
 
     public override ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
     {
-      return null;
+      if (OnGetAutoPullFromSlot != null)
+      {
+        return OnGetAutoPullFromSlot(atBlockFace);
+      }
+
+      return base.GetAutoPullFromSlot(atBlockFace);
+    }
+
+    public override ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
+    {
+      if (OnGetAutoPushIntoSlot != null)
+      {
+        return OnGetAutoPushIntoSlot(atBlockFace, fromSlot);
+      }
+
+      return base.GetAutoPushIntoSlot(atBlockFace, fromSlot);
     }
   }
 }

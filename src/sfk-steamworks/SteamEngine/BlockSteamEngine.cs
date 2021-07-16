@@ -13,19 +13,22 @@ namespace SFK.Steamworks.SteamEngine
   {
 
     #region Multiblock
-    BlockFacing orientation;
-
-    public BlockFacing Orientation => orientation;
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
     {
-
       if (!CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
       {
         return false;
       }
 
-      orientation = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(blockSel.Position).LastCodePart());
+      // Can place second block
+      BlockFacing[] horVer = SuggestedHVOrientation(byPlayer, blockSel);
+      BlockPos secondPos = blockSel.Position.AddCopy(horVer[0]);
+      BlockSelection secondBlockSel = new BlockSelection() { Position = secondPos, Face = BlockFacing.UP };
+
+      if (!CanPlaceBlock(world, byPlayer, secondBlockSel, ref failureCode)) return false;
+
+      string code = horVer[0].Opposite.Code;
 
       foreach (BlockFacing face in BlockFacing.HORIZONTALS)
       {
@@ -43,6 +46,8 @@ namespace SFK.Steamworks.SteamEngine
             world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, blockSel.Position);
 
             block.DidConnectAt(world, pos, face.Opposite);
+
+            PlaceFakeBlock(world, secondPos, horVer[0]);
             WasPlaced(world, blockSel.Position, face);
 
             return true;
@@ -54,19 +59,19 @@ namespace SFK.Steamworks.SteamEngine
 
       if (handled)
       {
-        PlaceFakeBlock(world, blockSel.Position);
+        PlaceFakeBlock(world, secondPos, horVer[0]);
+        WasPlaced(world, blockSel.Position, null);
         return true;
       }
 
       return false;
     }
 
-    private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos)
+    private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos, BlockFacing orientation)
     {
-      orientation = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(pos).LastCodePart());
       Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:steamengine-mp-{orientation}"));
 
-      world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos.AddCopy(orientation));
+      world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos);
     }
 
     #endregion

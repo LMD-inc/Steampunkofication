@@ -51,6 +51,9 @@ namespace SFK.Steamworks.Boiler
     {
       inventory = new BoilerInventory(null, null);
       inventory.SlotModified += OnSlotModified;
+
+      inventory.OnGetAutoPushIntoSlot = GetAutoPushIntoSlot;
+      inventory.OnGetAutoPullFromSlot = GetAutoPullFromSlot;
     }
 
     public override void Initialize(ICoreAPI api)
@@ -471,6 +474,32 @@ namespace SFK.Steamworks.Boiler
     }
 
     #endregion
+
+    public ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
+    {
+      if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
+      {
+        // Water input face
+        if (atBlockFace == BlockFacing.FromCode(Block.LastCodePart()).Opposite)
+        {
+          return inputSlot;
+        }
+      }
+      else
+      {
+        if (atBlockFace == BlockFacing.UP)
+        {
+          return fuelSlot;
+        }
+      }
+
+      return null;
+    }
+
+    public ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
+    {
+      return null;
+    }
 
     private void ProduceTick(float dt)
     {
