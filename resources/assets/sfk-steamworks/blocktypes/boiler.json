@@ -19,7 +19,7 @@
 		}
 	],
 	"creativeinventoryByType": {
-		"*-west": { "general": ["*"], "sfk-steamworks": ["*"] }
+		"*-north": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
 	"shape": {
 		"base": "boiler",
@@ -35,6 +35,11 @@
 		"translation": { "x": -1.1, "y": -0.7, "z": -0.6 },
 		"rotation": { "x": 14, "y": 0, "z": -14 },
 		"scale": 0.6
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": -0.15, "z": 1.3 },
+		"rotation": { "x": 0, "y": -135, "z": 0 },
+		"scale": 1.5
 	},
 	"blockmaterial": "metal",
 	"drawtype": "json",
