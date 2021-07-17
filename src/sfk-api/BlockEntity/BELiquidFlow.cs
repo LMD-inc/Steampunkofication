@@ -10,27 +10,27 @@ using Vintagestory.GameContent;
 
 namespace SFK.API
 {
-  public class BlockEntityGasFlow : BlockEntityContainer
+  public class BlockEntityLiquidFlow : BlockEntityContainer
   {
     internal InventoryGeneric inventory;
     public override InventoryBase Inventory => inventory;
-    public string inventoryClassName = "gasholder";
+    public string inventoryClassName = "liquidholder";
     public override string InventoryClassName => inventoryClassName;
-    public string GasFlowObjectLangCode = "gasholder-contents";
+    public string LiquidFlowObjectLangCode = "liquidholder-contents";
 
-    public BlockFacing[] GasPullFaces = new BlockFacing[0];
-    public BlockFacing[] GasPushFaces = new BlockFacing[0];
-    public BlockFacing[] AcceptGasFromFaces = new BlockFacing[0];
+    public BlockFacing[] LiquidPullFaces = new BlockFacing[0];
+    public BlockFacing[] LiquidPushFaces = new BlockFacing[0];
+    public BlockFacing[] AcceptLiquidFromFaces = new BlockFacing[0];
 
     public int QuantitySlots = 1;
     public int[] CapacityLitresPerSlot = new int[1] { 10 };
-    protected float gasFlowRate = 1;
-    public virtual float GasFlowRate => gasFlowRate;
+    protected float liquidFlowRate = 1;
+    public virtual float LiquidFlowRate => liquidFlowRate;
     public BlockFacing LastReceivedFromDir;
-    int gasCheckRateMs;
-    float gasFlowAccum;
+    int liquidCheckRateMs;
+    float liquidFlowAccum;
 
-    public BlockEntityGasFlow() : base()
+    public BlockEntityLiquidFlow() : base()
     {
     }
 
@@ -43,7 +43,7 @@ namespace SFK.API
       if (api is ICoreServerAPI)
       {
         // Randomize movement a bit
-        RegisterDelayedCallback((dt) => RegisterGameTickListener(MoveGas, gasCheckRateMs), 10 + api.World.Rand.Next(200));
+        RegisterDelayedCallback((dt) => RegisterGameTickListener(MoveLiquid, liquidCheckRateMs), 10 + api.World.Rand.Next(200));
       }
     }
 
@@ -51,47 +51,47 @@ namespace SFK.API
     {
       if (Block?.Attributes != null)
       {
-        if (Block.Attributes["pullGasFaces"].Exists)
+        if (Block.Attributes["pullLiquidFaces"].Exists)
         {
-          string[] faces = Block.Attributes["pullGasFaces"].AsArray<string>(null);
-          GasPullFaces = new BlockFacing[faces.Length];
+          string[] faces = Block.Attributes["pullLiquidFaces"].AsArray<string>(null);
+          LiquidPullFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
-            GasPullFaces[i] = BlockFacing.FromCode(faces[i]);
+            LiquidPullFaces[i] = BlockFacing.FromCode(faces[i]);
           }
         }
 
-        if (Block.Attributes["pushGasFaces"].Exists)
+        if (Block.Attributes["pushLiquidFaces"].Exists)
         {
-          string[] faces = Block.Attributes["pushGasFaces"].AsArray<string>(null);
-          GasPushFaces = new BlockFacing[faces.Length];
+          string[] faces = Block.Attributes["pushLiquidFaces"].AsArray<string>(null);
+          LiquidPushFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
-            GasPushFaces[i] = BlockFacing.FromCode(faces[i]);
+            LiquidPushFaces[i] = BlockFacing.FromCode(faces[i]);
           }
         }
 
-        if (Block.Attributes["acceptGasFromFaces"].Exists)
+        if (Block.Attributes["acceptLiquidFromFaces"].Exists)
         {
-          string[] faces = Block.Attributes["acceptGasFromFaces"].AsArray<string>(null);
-          AcceptGasFromFaces = new BlockFacing[faces.Length];
+          string[] faces = Block.Attributes["acceptLiquidFromFaces"].AsArray<string>(null);
+          AcceptLiquidFromFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
-            AcceptGasFromFaces[i] = BlockFacing.FromCode(faces[i]);
+            AcceptLiquidFromFaces[i] = BlockFacing.FromCode(faces[i]);
           }
         }
 
-        gasFlowRate = Block.Attributes["gas-flowrate"].AsFloat(gasFlowRate);
-        gasCheckRateMs = Block.Attributes["gas-checkrateMs"].AsInt(200);
+        liquidFlowRate = Block.Attributes["liquid-flowrate"].AsFloat(liquidFlowRate);
+        liquidCheckRateMs = Block.Attributes["liquid-checkrateMs"].AsInt(200);
         inventoryClassName = Block.Attributes["inventoryClassName"].AsString(inventoryClassName);
-        GasFlowObjectLangCode = Block.Attributes["gasFlowObjectLangCode"].AsString(GasFlowObjectLangCode);
+        LiquidFlowObjectLangCode = Block.Attributes["liquidFlowObjectLangCode"].AsString(LiquidFlowObjectLangCode);
         QuantitySlots = Block.Attributes["quantitySlots"].AsInt(QuantitySlots);
         CapacityLitresPerSlot = Block.Attributes["capacityLitresPerSlot"].AsArray<int>(CapacityLitresPerSlot);
       }
 
       if (Inventory == null)
       {
-        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, CapacityLitresPerSlot[id]));
+        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotLiquidOnly(self, CapacityLitresPerSlot[id]));
 
         inventory.SlotModified += OnSlotModified;
       }
@@ -99,9 +99,9 @@ namespace SFK.API
 
     public ItemSlot GetAutoPullFromSlot(BlockFacing atBlockFace)
     {
-      if (GasPushFaces.Contains(atBlockFace))
+      if (LiquidPushFaces.Contains(atBlockFace))
       {
-        return Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
+        return Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly);
       }
 
       return null;
@@ -110,26 +110,26 @@ namespace SFK.API
     // Return the slot where a chute may push items into. Return null if it shouldn't move items into this inventory.
     public ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
     {
-      if (GasPullFaces.Contains(atBlockFace) || AcceptGasFromFaces.Contains(atBlockFace))
+      if (LiquidPullFaces.Contains(atBlockFace) || AcceptLiquidFromFaces.Contains(atBlockFace))
       {
-        return Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
+        return Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly);
       }
 
       return null;
     }
 
-    public void MoveGas(float dt)
+    public void MoveLiquid(float dt)
     {
-      gasFlowAccum = Math.Min(gasFlowAccum + GasFlowRate, Math.Max(1, GasFlowRate * 1));
-      if (gasFlowAccum < 1) return;
+      liquidFlowAccum = Math.Min(liquidFlowAccum + LiquidFlowRate, Math.Max(1, LiquidFlowRate * 1));
+      if (liquidFlowAccum < 1) return;
 
-      if (GasPushFaces != null && GasPushFaces.Length > 0 && Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty) != null)
+      if (LiquidPushFaces != null && LiquidPushFaces.Length > 0 && Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly && !slot.Empty) != null)
       {
-        ItemStack stack = Inventory.First(slot => slot is ItemSlotGasOnly && !slot.Empty).Itemstack;
+        ItemStack stack = Inventory.First(slot => slot is ItemSlotLiquidOnly && !slot.Empty).Itemstack;
 
-        BlockFacing outputFace = GasPushFaces[Api.World.Rand.Next(GasPushFaces.Length)];
+        BlockFacing outputFace = LiquidPushFaces[Api.World.Rand.Next(LiquidPushFaces.Length)];
         int dir = stack.Attributes.GetInt("tubeDir", -1);
-        BlockFacing desiredDir = dir >= 0 && GasPushFaces.Contains(BlockFacing.ALLFACES[dir]) ? BlockFacing.ALLFACES[dir] : null;
+        BlockFacing desiredDir = dir >= 0 && LiquidPushFaces.Contains(BlockFacing.ALLFACES[dir]) ? BlockFacing.ALLFACES[dir] : null;
 
         // If we have a desired dir, try to go there
         if (desiredDir != null)
@@ -160,9 +160,9 @@ namespace SFK.API
 
       }
 
-      if (GasPullFaces != null && GasPullFaces.Length > 0 && Inventory.Empty)
+      if (LiquidPullFaces != null && LiquidPullFaces.Length > 0 && Inventory.Empty)
       {
-        BlockFacing inputFace = GasPullFaces[Api.World.Rand.Next(GasPullFaces.Length)];
+        BlockFacing inputFace = LiquidPullFaces[Api.World.Rand.Next(LiquidPullFaces.Length)];
 
         TryPullFrom(inputFace);
       }
@@ -172,30 +172,43 @@ namespace SFK.API
     {
       BlockPos InputPosition = Pos.AddCopy(inputFace);
 
-      if (Api.World.BlockAccessor.GetBlockEntity(InputPosition) is BlockEntityGasFlow beGs)
+      BlockEntity beInput = Api.World.BlockAccessor.GetBlockEntity(InputPosition);
+
+      if (beInput is BlockEntityLiquidFlow || beInput is BlockEntityContainer)
       {
         // TODO: remap to gas and liquid pipes
         //do not both push and pull across the same chute-chute connection
-        if (beGs.Block is BlockChute chute)
+        if (beInput.Block is BlockChute chute)
         {
           string[] pushFaces = chute.Attributes["pushFaces"].AsArray<string>(null);
           if (pushFaces?.Contains(inputFace.Opposite.Code) == true) return;
         }
 
-        ItemSlot sourceSlot = beGs.GetAutoPullFromSlot(inputFace.Opposite);
-        ItemSlot targetSlot = sourceSlot == null ? null : Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
-        BlockEntityGasFlow beFlow = beGs as BlockEntityGasFlow;
+        ItemSlot sourceSlot;
 
-        if (sourceSlot != null && targetSlot != null && (beFlow == null || targetSlot.Empty))
+        if (beInput is BlockEntityLiquidFlow)
+        {
+          BlockEntityLiquidFlow beFlow = beInput as BlockEntityLiquidFlow;
+          sourceSlot = beFlow.GetAutoPullFromSlot(inputFace.Opposite);
+        }
+        else
+        {
+          BlockEntityContainer beFlow = beInput as BlockEntityContainer;
+          sourceSlot = beFlow.Inventory.GetAutoPullFromSlot(inputFace.Opposite);
+        }
+
+        ItemSlot targetSlot = sourceSlot == null ? null : Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly);
+
+        if (sourceSlot != null && targetSlot != null && (beInput == null || targetSlot.Empty))
         {
           if (sourceSlot.StackSize >= targetSlot.StackSize) return;
 
-          ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, (int)gasFlowAccum);
+          ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, (int)liquidFlowAccum);
 
           int qmoved = sourceSlot.TryPutInto(targetSlot, ref op);
           if (qmoved > 0)
           {
-            if (beFlow != null)
+            if (beInput != null)
             {
               targetSlot.Itemstack.Attributes.SetInt("tubeDir", inputFace.Opposite.Index);
             }
@@ -207,12 +220,12 @@ namespace SFK.API
             sourceSlot.MarkDirty();
             targetSlot.MarkDirty();
             MarkDirty(false);
-            beFlow?.MarkDirty();
+            beInput?.MarkDirty();
           }
 
           if (qmoved > 0 && Api.World.Rand.NextDouble() < 0.2)
           {
-            gasFlowAccum -= qmoved;
+            liquidFlowAccum -= qmoved;
           }
         }
       }
@@ -222,32 +235,44 @@ namespace SFK.API
     private bool TryPushInto(BlockFacing outputFace)
     {
       BlockPos OutputPosition = Pos.AddCopy(outputFace);
+      BlockEntity beOutput = Api.World.BlockAccessor.GetBlockEntity(OutputPosition);
 
-      if (Api.World.BlockAccessor.GetBlockEntity(OutputPosition) is BlockEntityGasFlow beContainer)
+      if (beOutput is BlockEntityLiquidFlow || beOutput is BlockEntityContainer)
       {
-        ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty);
+        ItemSlot targetSlot;
+        ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly && !slot.Empty);
+
         if ((sourceSlot?.Itemstack?.StackSize ?? 0) == 0) return false;  //seems FirstOrDefault() method can sometimes give a slot with stacksize == 0, weird
+
+        if (beOutput is BlockEntityLiquidFlow)
+        {
+          BlockEntityLiquidFlow beFlow = beOutput as BlockEntityLiquidFlow;
+          targetSlot = beFlow.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
+        }
+        else
+        {
+          BlockEntityContainer beFlow = beOutput as BlockEntityContainer;
+          targetSlot = beFlow.Inventory.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
+        }
 
         int tubeDir = sourceSlot.Itemstack.Attributes.GetInt("tubeDir");
         sourceSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
 
-        ItemSlot targetSlot = beContainer.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
-        BlockEntityGasFlow beFlow = beContainer as BlockEntityGasFlow;
 
-        if (targetSlot != null && targetSlot is ItemSlotGasOnly)
+        if (targetSlot != null && targetSlot is ItemSlotLiquidOnly)
         {
           if (!targetSlot.Empty && targetSlot.Itemstack.Item.Code != sourceSlot.Itemstack.Item.Code) return false;
 
           if (targetSlot.StackSize >= sourceSlot.StackSize) return false;
 
-          int quantity = (int)gasFlowAccum;
+          int quantity = (int)liquidFlowAccum;
           ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity);
 
           int qmoved = sourceSlot.TryPutInto(targetSlot, ref op);
 
           if (qmoved > 0)
           {
-            if (beFlow != null)
+            if (beOutput != null)
             {
               targetSlot.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
             }
@@ -259,9 +284,9 @@ namespace SFK.API
             sourceSlot.MarkDirty();
             targetSlot.MarkDirty();
             MarkDirty(false);
-            beFlow?.MarkDirty(false);
+            beOutput?.MarkDirty(false);
 
-            gasFlowAccum -= qmoved;
+            liquidFlowAccum -= qmoved;
 
             return true;
           }
@@ -278,14 +303,14 @@ namespace SFK.API
 
     private bool TrySpitOut(BlockFacing outputFace)
     {
-      if (!GasPushFaces.Contains(outputFace)) return false;
+      if (!LiquidPushFaces.Contains(outputFace)) return false;
 
       if (Api.World.BlockAccessor.GetBlock(Pos.AddCopy(outputFace)).Replaceable >= 6000)
       {
-        ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty);
+        ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly && !slot.Empty);
 
-        ItemStack stack = sourceSlot.TakeOut((int)gasFlowAccum);
-        gasFlowAccum -= stack.StackSize;
+        ItemStack stack = sourceSlot.TakeOut((int)liquidFlowAccum);
+        liquidFlowAccum -= stack.StackSize;
 
         stack.Attributes.RemoveAttribute("tubeDir");
 
@@ -370,7 +395,7 @@ namespace SFK.API
             if (slot.Empty) continue;
 
             // TODO: localize and pluralize
-            dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotGasOnly).CapacityLitres}");
+            dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotLiquidOnly).CapacityLitres}");
           }
         }
         else

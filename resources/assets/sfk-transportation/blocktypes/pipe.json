@@ -1,0 +1,271 @@
+{
+	"code": "pipe",
+	"classByType": {
+		"*-liquid-*": "LiquidPipe",
+		"*-gas-*": "GasPipe"
+	},
+	"entityclassByType": {
+		"*-liquid-*": "LiquidPipe",
+		"*-gas-*": "GasPipe"
+	},
+	"attributes": {
+		"gas-flowrate": 1,
+		"inventoryClassName": "gaspipe"
+	},
+	"variantgroups": [
+		{ "code": "movecontent", "states": ["liquid", "gas"] },
+		{
+			"code": "type",
+			"states": [
+				"empty",
+				"n",
+				"e",
+				"s",
+				"w",
+				"u",
+				"d",
+				"ne",
+				"ns",
+				"nw",
+				"nu",
+				"nd",
+				"es",
+				"ew",
+				"eu",
+				"ed",
+				"sw",
+				"su",
+				"sd",
+				"wu",
+				"wd",
+				"ud",
+				"nes",
+				"new",
+				"neu",
+				"ned",
+				"nsw",
+				"nsu",
+				"nsd",
+				"nwu",
+				"nwd",
+				"nud",
+				"esw",
+				"esu",
+				"esd",
+				"ewu",
+				"ewd",
+				"eud",
+				"swu",
+				"swd",
+				"sud",
+				"wud",
+				"nesw",
+				"nesu",
+				"nesd",
+				"newd",
+				"neud",
+				"nswu",
+				"nswd",
+				"nsud",
+				"nwud",
+				"eswu",
+				"eswd",
+				"ewud",
+				"swud",
+				"neswu",
+				"neswd",
+				"nesud",
+				"newud",
+				"nswud",
+				"eswud",
+				"neswud"
+			]
+		}
+	],
+	"creativeinventory": {
+		"general": ["*-ew"],
+		"sfk-transportation": ["*-ew"]
+	},
+	"shapebytype": {
+		"*-empty": { "base": "block/metal/gaspipe/base" },
+		"*-n": { "base": "block/metal/gaspipe/w", "rotateY": 270 },
+		"*-e": { "base": "block/metal/gaspipe/w", "rotateY": 180 },
+		"*-s": { "base": "block/metal/gaspipe/w", "rotateY": 90 },
+		"*-w": { "base": "block/metal/gaspipe/w", "rotateY": 0 },
+		"*-u": { "base": "block/metal/gaspipe/w", "rotateZ": 270 },
+		"*-d": { "base": "block/metal/gaspipe/w", "rotateZ": 90 },
+
+		"*-ns": { "base": "block/metal/gaspipe/ew", "rotateY": 90 },
+		"*-ew": { "base": "block/metal/gaspipe/ew", "rotateY": 0 },
+		"*-ud": { "base": "block/metal/gaspipe/ew", "rotateZ": 90 },
+
+		"*-ne": { "base": "block/metal/gaspipe/sw", "rotateY": 180 },
+		"*-nw": { "base": "block/metal/gaspipe/sw", "rotateY": 270 },
+		"*-nu": {
+			"base": "block/metal/gaspipe/sw",
+			"rotateY": 180,
+			"rotateZ": 270
+		},
+		"*-nd": { "base": "block/metal/gaspipe/sw", "rotateY": 180, "rotateZ": 90 },
+
+		"*-es": { "base": "block/metal/gaspipe/sw", "rotateY": 90 },
+		"*-eu": {
+			"base": "block/metal/gaspipe/sw",
+			"rotateY": 90,
+			"rotateZ": 270
+		},
+		"*-ed": { "base": "block/metal/gaspipe/sw", "rotateY": 90, "rotateZ": 90 },
+
+		"*-sw": { "base": "block/metal/gaspipe/sw" },
+		"*-su": {
+			"base": "block/metal/gaspipe/sw",
+			"rotateZ": 270
+		},
+		"*-sd": { "base": "block/metal/gaspipe/sw", "rotateZ": 90 },
+
+		"*-wu": {
+			"base": "block/metal/gaspipe/sw",
+			"rotateY": 270,
+			"rotateZ": 270
+		},
+		"*-wd": { "base": "block/metal/gaspipe/sw", "rotateY": 270, "rotateZ": 90 },
+
+		"*-nes": { "base": "block/metal/gaspipe/nsw", "rotateY": 180 },
+		"*-new": { "base": "block/metal/gaspipe/nsw", "rotateY": 270 },
+		"*-nsw": { "base": "block/metal/gaspipe/nsw" },
+		"*-nsu": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 180,
+			"rotateZ": 90
+		},
+		"*-nsd": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateZ": 90
+		},
+		"*-nud": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 90,
+			"rotateZ": 90
+		},
+		"*-esw": { "base": "block/metal/gaspipe/nsw", "rotateY": 90 },
+
+		"*-ewu": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 270,
+			"rotateY": 90
+		},
+		"*-ewd": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 90,
+			"rotateY": 90
+		},
+		"*-eud": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 90,
+			"rotateY": 180
+		},
+		"*-sud": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 270,
+			"rotateZ": 90
+		},
+		"*-wud": {
+			"base": "block/metal/gaspipe/nsw",
+			"rotateX": 90
+		},
+
+		"*-neu": { "base": "block/metal/gaspipe/neu" },
+		"*-ned": { "base": "block/metal/gaspipe/neu", "rotateZ": 270 },
+		"*-nwu": { "base": "block/metal/gaspipe/neu", "rotateY": 90 },
+		"*-nwd": { "base": "block/metal/gaspipe/neu", "rotateZ": 180 },
+		"*-esu": { "base": "block/metal/gaspipe/neu", "rotateY": 270 },
+		"*-esd": { "base": "block/metal/gaspipe/neu", "rotateX": 180 },
+		"*-swu": { "base": "block/metal/gaspipe/neu", "rotateY": 180 },
+		"*-swd": {
+			"base": "block/metal/gaspipe/neu",
+			"rotateY": 90,
+			"rotateZ": 180
+		},
+
+		"*-nesw": { "base": "block/metal/gaspipe/nesw", "rotateY": 0 },
+		"*-nsud": { "base": "block/metal/gaspipe/nesw", "rotateZ": 90 },
+		"*-ewud": { "base": "block/metal/gaspipe/nesw", "rotateX": 90 },
+
+		"*-nesu": { "base": "block/metal/gaspipe/nesu" },
+		"*-nesd": { "base": "block/metal/gaspipe/nesu", "rotateZ": 270 },
+		"*-newd": {
+			"base": "block/metal/gaspipe/nesu",
+			"rotateY": 90,
+			"rotateZ": 270
+		},
+		"*-neud": {
+			"base": "block/metal/gaspipe/nesu",
+			"rotateY": 90,
+			"rotateZ": 90
+		},
+		"*-nswu": { "base": "block/metal/gaspipe/nesu", "rotateZ": 90 },
+		"*-nswd": { "base": "block/metal/gaspipe/nesu", "rotateZ": 180 },
+		"*-nwud": {
+			"base": "block/metal/gaspipe/nesu",
+			"rotateX": 270,
+			"rotateZ": 90
+		},
+		"*-eswu": { "base": "block/metal/gaspipe/nesu", "rotateY": 270 },
+		"*-eswd": {
+			"base": "block/metal/gaspipe/nesu",
+			"rotateY": 270,
+			"rotateZ": 270
+		},
+		"*-swud": {
+			"base": "block/metal/gaspipe/nesu",
+			"rotateX": 90,
+			"rotateZ": 90
+		},
+
+		"*-neswu": { "base": "block/metal/gaspipe/neswu" },
+		"*-neswd": { "base": "block/metal/gaspipe/neswu", "rotateX": 180 },
+		"*-nesud": {
+			"base": "block/metal/gaspipe/neswu",
+			"rotateX": 90,
+			"rotateZ": 270
+		},
+		"*-newud": {
+			"base": "block/metal/gaspipe/neswu",
+			"rotateX": 90,
+			"rotateZ": 180
+		},
+		"*-nswud": {
+			"base": "block/metal/gaspipe/neswu",
+			"rotateX": 90,
+			"rotateZ": 90
+		},
+		"*-eswud": { "base": "block/metal/gaspipe/neswu", "rotateX": 90 },
+
+		"*-neswud": { "base": "block/metal/gaspipe/neswud" }
+	},
+	"blockmaterial": "Metal",
+	"lightAbsorption": 0,
+	"drawtype": "json",
+	"replaceable": 160,
+	"resistance": 1.75,
+	"sidesolid": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"sounds": {
+		"place": "block/chute",
+		"break": "block/chute",
+		"hit": "block/chute",
+		"walk": "game:walk/stone"
+	},
+	"guiTransform": {
+		"scale": 1.22
+	},
+	"textures": {
+		"brass": {
+			"base": "game:block/metal/plate/brass"
+		}
+	}
+}
