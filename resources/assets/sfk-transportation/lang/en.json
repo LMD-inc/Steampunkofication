@@ -1,5 +1,6 @@
 {
-	"block-gaspipe-*": "Gas Pipe",
+	"block-pipe-gas-*": "Gas Pipe",
+	"block-pipe-liquid-*": "Liquid Pipe",
 
 	"game:tabname-sfk-transportation": "[SFK] Transportation"
 }

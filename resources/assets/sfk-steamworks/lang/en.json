@@ -1,11 +1,10 @@
 {
 	"block-boiler-*": "Steam boiler",
 	"block-boiler-mp-*": "Steam boiler",
-	"block-pipe-copper": "Copper Pipe",
-	"block-pipe-brass": "Brass Pipe",
 
-	"steamporion": "Steam",
-	"item-steamporion": "Steam",
+	"block-steamengine-*": "Steam boiler",
+
+	"item-steamportion": "Steam",
 
 	"game:tabname-sfk-steamworks": "[SFK] Steamworks"
 }
