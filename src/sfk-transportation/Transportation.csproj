@@ -61,6 +61,13 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\sfk-api\Api.csproj">
+        <Name>sfk-api</Name>
+        <Private>False</Private>
+      </ProjectReference>
+  </ItemGroup>
+
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <None Include="UNLICENSE" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="**">

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
@@ -22,6 +23,7 @@ namespace SFK.API
     public BlockFacing[] AcceptGasFromFaces = new BlockFacing[0];
 
     public int QuantitySlots = 1;
+    public int[] CapacityLitresPerSlot = new int[1] { 10 };
     protected float gasFlowRate = 1;
     public virtual float GasFlowRate => gasFlowRate;
     public BlockFacing LastReceivedFromDir;
@@ -84,11 +86,12 @@ namespace SFK.API
         inventoryClassName = Block.Attributes["inventoryClassName"].AsString(inventoryClassName);
         GasFlowObjectLangCode = Block.Attributes["gasFlowObjectLangCode"].AsString(GasFlowObjectLangCode);
         QuantitySlots = Block.Attributes["quantitySlots"].AsInt(QuantitySlots);
+        CapacityLitresPerSlot = Block.Attributes["capacityLitresPerSlot"].AsArray<int>(CapacityLitresPerSlot);
       }
 
       if (Inventory == null)
       {
-        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, 10));
+        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, CapacityLitresPerSlot[id]));
 
         inventory.SlotModified += OnSlotModified;
       }
@@ -117,7 +120,7 @@ namespace SFK.API
 
     public void MoveGas(float dt)
     {
-      gasFlowAccum = Math.Min(gasFlowAccum + GasFlowRate, Math.Max(1, GasFlowRate * 2));
+      gasFlowAccum = Math.Min(gasFlowAccum + GasFlowRate, Math.Max(1, GasFlowRate * 1));
       if (gasFlowAccum < 1) return;
 
       if (GasPushFaces != null && GasPushFaces.Length > 0 && Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty) != null)
@@ -347,6 +350,33 @@ namespace SFK.API
       base.ToTreeAttributes(tree);
 
       tree.SetInt("lastReceivedFromDir", LastReceivedFromDir?.Index ?? -1);
+    }
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
+    {
+      dsc.Clear();
+
+      dsc.AppendLine(Block.Variant["type"]);
+
+      if (Api.World.EntityDebugMode)
+      {
+        if (!inventory.Empty)
+        {
+          dsc.AppendLine("Contents:");
+
+          foreach (ItemSlot slot in inventory)
+          {
+            if (slot.Empty) continue;
+
+            // TODO: localize and pluralize
+            dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotGasOnly).CapacityLitres}");
+          }
+        }
+        else
+        {
+          dsc.AppendLine("Empty");
+        }
+      }
     }
   }
 }

@@ -1,12 +1,18 @@
+using System;
 using Vintagestory.API.Common;
 
 namespace SFK.API
 {
   public class ItemSlotGasOnly : ItemSlot
   {
-    public float CapacityLitres;
+    public int CapacityLitres;
 
-    public ItemSlotGasOnly(InventoryBase inventory, float capacityLitres) : base(inventory)
+    public override int GetRemainingSlotSpace(ItemStack forItemstack)
+    {
+      return Math.Max(0, CapacityLitres - StackSize);
+    }
+
+    public ItemSlotGasOnly(InventoryBase inventory, int capacityLitres) : base(inventory)
     {
       this.CapacityLitres = capacityLitres;
     }

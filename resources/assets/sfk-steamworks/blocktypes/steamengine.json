@@ -14,7 +14,7 @@
 		"*-east": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
 	"shape": {
-		"base": "steamengine",
+		"base": "block/machine/steamengine",
 		"rotateYByType": {
 			"*-north": 180,
 			"*-east": 90,

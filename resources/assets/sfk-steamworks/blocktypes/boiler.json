@@ -22,7 +22,7 @@
 		"*-north": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
 	"shape": {
-		"base": "boiler",
+		"base": "block/machine/boiler",
 		"rotateYByType": {
 			"*-north": 0,
 			"*-east": 270,
