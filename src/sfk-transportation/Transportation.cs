@@ -2,7 +2,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
-using SFK.Transportation.GasPipe;
+using SFK.Transportation.Pipe;
 
 [assembly: ModInfo("[SFK] Transportation",
   Description = "Steampunk. More. Soon with pipes included!",
@@ -20,6 +20,9 @@ namespace SFK.Transportation
 
       api.RegisterBlockClass("GasPipe", typeof(BlockGasPipe));
       api.RegisterBlockEntityClass("GasPipe", typeof(BlockEntityGasPipe));
+
+      api.RegisterBlockClass("LiquidPipe", typeof(BlockLiquidPipe));
+      api.RegisterBlockEntityClass("LiquidPipe", typeof(BlockEntityLiquidPipe));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

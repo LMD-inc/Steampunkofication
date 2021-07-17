@@ -2,18 +2,18 @@ using SFK.API;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
-namespace SFK.Transportation.GasPipe
+namespace SFK.Transportation.Pipe
 {
-  public class BlockEntityGasPipe : BlockEntityGasFlow
+  public class BlockEntityLiquidPipe : BlockEntityLiquidFlow
   {
     public override void Initialize(ICoreAPI api)
     {
       base.Initialize(api);
 
-      InitGasFlowFromType();
+      InitLiquidFlowFromType();
     }
 
-    private void InitGasFlowFromType()
+    private void InitLiquidFlowFromType()
     {
       string type = Block.Variant["type"];
       BlockFacing[] faces = new BlockFacing[type.Length];
@@ -23,7 +23,7 @@ namespace SFK.Transportation.GasPipe
         faces[i] = BlockFacing.FromFirstLetter(type[i]);
       }
 
-      GasPullFaces = GasPushFaces = AcceptGasFromFaces = faces;
+      LiquidPullFaces = LiquidPushFaces = AcceptLiquidFromFaces = faces;
     }
   }
 }

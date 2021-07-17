@@ -1,12 +1,19 @@
 {
-	"code": "gaspipe",
-	"class": "GasPipe",
-	"entityclass": "GasPipe",
+	"code": "pipe",
+	"classByType": {
+		"*-liquid-*": "LiquidPipe",
+		"*-gas-*": "GasPipe"
+	},
+	"entityclassByType": {
+		"*-liquid-*": "LiquidPipe",
+		"*-gas-*": "GasPipe"
+	},
 	"attributes": {
 		"gas-flowrate": 1,
 		"inventoryClassName": "gaspipe"
 	},
 	"variantgroups": [
+		{ "code": "movecontent", "states": ["liquid", "gas"] },
 		{
 			"code": "type",
 			"states": [

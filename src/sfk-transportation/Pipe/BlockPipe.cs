@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Vintagestory.API.Common;
-using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace SFK.Transportation.GasPipe
+namespace SFK.Transportation.Pipe
 {
-  public class BlockGasPipe : Block
+  public class BlockPipe : Block
   {
     #region Connecting variants
 
@@ -30,7 +29,7 @@ namespace SFK.Transportation.GasPipe
       return "";
     }
 
-    public bool ShouldConnectAt(IWorldAccessor world, BlockPos ownPos, BlockFacing side)
+    public virtual bool ShouldConnectAt(IWorldAccessor world, BlockPos ownPos, BlockFacing side)
     {
       Block block = world.BlockAccessor.GetBlock(ownPos.AddCopy(side));
 
@@ -41,11 +40,7 @@ namespace SFK.Transportation.GasPipe
         return block.Attributes["pipeConnect"][side.Code].AsBool(true);
       }
 
-      return
-          block is BlockGasPipe ||
-          block.EntityClass == "GasFlow" ||
-          block.EntityClass == "MultiblockGasFlow"
-      ;
+      return block is BlockPipe;
     }
 
     #endregion
@@ -116,7 +111,7 @@ namespace SFK.Transportation.GasPipe
 
     public static Dictionary<string, KeyValuePair<string[], int>> AngleGroups = new Dictionary<string, KeyValuePair<string[], int>>();
 
-    static BlockGasPipe()
+    static BlockPipe()
     {
       AngleGroups["n"] = new KeyValuePair<string[], int>(OneDir, 0);
       AngleGroups["e"] = new KeyValuePair<string[], int>(OneDir, 1);
