@@ -1,6 +1,9 @@
-using SFK.API;
+using System.Linq;
+
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+
+using SFK.API;
 
 namespace SFK.Transportation.Pipe
 {
@@ -24,6 +27,38 @@ namespace SFK.Transportation.Pipe
       }
 
       LiquidPullFaces = LiquidPushFaces = AcceptLiquidFromFaces = faces;
+    }
+
+    public override void TryPullFrom(BlockFacing inputFace)
+    {
+      BlockPos InputPosition = Pos.AddCopy(inputFace);
+
+      if (Api.World.BlockAccessor.GetBlockEntity(InputPosition) is BlockEntityGasFlow beGs)
+      {
+        //do not both push and pull across the same pipe-pipe connection
+        if (beGs.Block is BlockLiquidPipe liquidPipe)
+        {
+          string[] pushFaces;
+
+          if (liquidPipe.Attributes["pushLiquidFaces"].Exists)
+          {
+            pushFaces = liquidPipe.Attributes["pushLiquidFaces"].AsArray<string>(null);
+          }
+          else
+          {
+            pushFaces = new string[LiquidPushFaces.Length];
+
+            for (int i = 0; i < LiquidPushFaces.Length; i++)
+            {
+              pushFaces[i] = LiquidPushFaces[i].Code;
+            }
+          }
+
+          if (pushFaces?.Contains(inputFace.Opposite.Code) == true) return;
+        }
+      }
+
+      base.TryPullFrom(inputFace);
     }
   }
 }

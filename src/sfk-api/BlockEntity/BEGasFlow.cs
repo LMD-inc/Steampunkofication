@@ -107,7 +107,7 @@ namespace SFK.API
       return null;
     }
 
-    // Return the slot where a chute may push items into. Return null if it shouldn't move items into this inventory.
+    // Return the slot where a pipe may push items into. Return null if it shouldn't move items into this inventory.
     public ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
     {
       if (GasPullFaces.Contains(atBlockFace) || AcceptGasFromFaces.Contains(atBlockFace))
@@ -168,20 +168,12 @@ namespace SFK.API
       }
     }
 
-    private void TryPullFrom(BlockFacing inputFace)
+    public virtual void TryPullFrom(BlockFacing inputFace)
     {
       BlockPos InputPosition = Pos.AddCopy(inputFace);
 
       if (Api.World.BlockAccessor.GetBlockEntity(InputPosition) is BlockEntityGasFlow beGs)
       {
-        // TODO: remap to gas and liquid pipes
-        //do not both push and pull across the same chute-chute connection
-        if (beGs.Block is BlockChute chute)
-        {
-          string[] pushFaces = chute.Attributes["pushFaces"].AsArray<string>(null);
-          if (pushFaces?.Contains(inputFace.Opposite.Code) == true) return;
-        }
-
         ItemSlot sourceSlot = beGs.GetAutoPullFromSlot(inputFace.Opposite);
         ItemSlot targetSlot = sourceSlot == null ? null : Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly);
         BlockEntityGasFlow beFlow = beGs as BlockEntityGasFlow;
@@ -357,27 +349,24 @@ namespace SFK.API
     {
       dsc.Clear();
 
-      dsc.AppendLine(Block.Variant["type"]);
-
-      if (Api.World.EntityDebugMode)
+#if DEBUG
+      if (!inventory.Empty)
       {
-        if (!inventory.Empty)
-        {
-          dsc.AppendLine("Contents:");
+        dsc.AppendLine("Contents:");
 
-          foreach (ItemSlot slot in inventory)
-          {
-            if (slot.Empty) continue;
-
-            // TODO: localize and pluralize
-            dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotGasOnly).CapacityLitres}");
-          }
-        }
-        else
+        foreach (ItemSlot slot in inventory)
         {
-          dsc.AppendLine("Empty");
+          if (slot.Empty) continue;
+
+          // TODO: localize and pluralize
+          dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotGasOnly).CapacityLitres}");
         }
       }
+      else
+      {
+        dsc.AppendLine("Empty");
+      }
+#endif
     }
   }
 }

@@ -168,7 +168,7 @@ namespace SFK.API
       }
     }
 
-    private void TryPullFrom(BlockFacing inputFace)
+    public virtual void TryPullFrom(BlockFacing inputFace)
     {
       BlockPos InputPosition = Pos.AddCopy(inputFace);
 
@@ -176,14 +176,6 @@ namespace SFK.API
 
       if (beInput is BlockEntityLiquidFlow || beInput is BlockEntityContainer)
       {
-        // TODO: remap to gas and liquid pipes
-        //do not both push and pull across the same chute-chute connection
-        if (beInput.Block is BlockChute chute)
-        {
-          string[] pushFaces = chute.Attributes["pushFaces"].AsArray<string>(null);
-          if (pushFaces?.Contains(inputFace.Opposite.Code) == true) return;
-        }
-
         ItemSlot sourceSlot;
 
         if (beInput is BlockEntityLiquidFlow)
@@ -382,27 +374,24 @@ namespace SFK.API
     {
       dsc.Clear();
 
-      dsc.AppendLine(Block.Variant["type"]);
-
-      if (Api.World.EntityDebugMode)
+#if DEBUG
+      if (!inventory.Empty)
       {
-        if (!inventory.Empty)
-        {
-          dsc.AppendLine("Contents:");
+        dsc.AppendLine("Contents:");
 
-          foreach (ItemSlot slot in inventory)
-          {
-            if (slot.Empty) continue;
-
-            // TODO: localize and pluralize
-            dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotLiquidOnly).CapacityLitres}");
-          }
-        }
-        else
+        foreach (ItemSlot slot in inventory)
         {
-          dsc.AppendLine("Empty");
+          if (slot.Empty) continue;
+
+          // TODO: localize and pluralize
+          dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotLiquidOnly).CapacityLitres}");
         }
       }
+      else
+      {
+        dsc.AppendLine("Empty");
+      }
+#endif
     }
   }
 }

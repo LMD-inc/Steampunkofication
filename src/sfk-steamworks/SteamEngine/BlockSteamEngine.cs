@@ -30,31 +30,6 @@ namespace SFK.Steamworks.SteamEngine
 
       string code = horVer[0].Opposite.Code;
 
-      foreach (BlockFacing face in BlockFacing.HORIZONTALS)
-      {
-        BlockPos pos = blockSel.Position.AddCopy(face);
-        IMechanicalPowerBlock block = world.BlockAccessor.GetBlock(pos) as IMechanicalPowerBlock;
-        if (block != null)
-        {
-          if (block.HasMechPowerConnectorAt(world, pos, face.Opposite))
-          {
-            //Prevent rotor back-to-back placement
-            // if (block is IMPPowered) return false;
-            // IMPPowered is internal class, investigate how to make same check.
-
-            Block toPlaceBlock = world.GetBlock(new AssetLocation(FirstCodePart() + "-" + face.Opposite.Code));
-            world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, blockSel.Position);
-
-            block.DidConnectAt(world, pos, face.Opposite);
-
-            PlaceFakeBlock(world, secondPos, horVer[0]);
-            WasPlaced(world, blockSel.Position, face);
-
-            return true;
-          }
-        }
-      }
-
       bool handled = base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
 
       if (handled)
