@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Linq;
 
 using SFK.API;
 using Vintagestory.API.Client;
@@ -12,7 +13,7 @@ using Vintagestory.GameContent;
 
 namespace SFK.Steamworks.Boiler
 {
-  public class BEBoiler : BlockEntityContainer, IHeatSource
+  public class BEBoiler : BlockEntityContainer, IHeatSource, ILiquidFLow
   {
     ILoadedSound ambientSound;
     public int CapacityLitresInput { get; set; } = 50;
@@ -32,6 +33,14 @@ namespace SFK.Steamworks.Boiler
     public int steamProductionCoefitient => 1; // To use float coefitient need to think on portions logic and balance;
     bool clientSidePrevBurning;
     bool shouldRedraw;
+
+    #region Liquid faces
+
+    public BlockFacing[] LiquidPullFaces { get; set; } = new BlockFacing[1] { BlockFacing.EAST }; // Default just in case
+    public BlockFacing[] LiquidPushFaces { get; set; } = new BlockFacing[0];
+    public BlockFacing[] AcceptLiquidFromFaces { get; set; } = new BlockFacing[0];
+
+    #endregion
 
     #region Config
 
@@ -75,12 +84,19 @@ namespace SFK.Steamworks.Boiler
         (inventory[2] as ItemSlotGasOnly).CapacityLitres = CapacityLitresOutput;
       }
 
+      InitSides();
+
       if (api.Side == EnumAppSide.Server)
       {
         RegisterGameTickListener(OnBurnTick, 100);
         RegisterGameTickListener(On500msTick, 500);
         RegisterGameTickListener(ProduceTick, 1000);
       }
+    }
+
+    private void InitSides()
+    {
+      LiquidPullFaces[0] = BlockFacing.FromCode(Block.Variant["side"]);
     }
 
     public void ToggleAmbientSounds(bool on)
@@ -410,6 +426,8 @@ namespace SFK.Steamworks.Boiler
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
     {
+      InitSides();
+
       base.FromTreeAttributes(tree, worldForResolving);
       Inventory.FromTreeAttributes(tree.GetTreeAttribute("inventory"));
 

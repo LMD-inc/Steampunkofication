@@ -2,6 +2,7 @@ using System.Linq;
 
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Datastructures;
 
 using SFK.API;
 
@@ -19,6 +20,9 @@ namespace SFK.Transportation.Pipe
     private void InitLiquidFlowFromType()
     {
       string type = Block.Variant["type"];
+
+      if (type == "empty") return;
+
       BlockFacing[] faces = new BlockFacing[type.Length];
 
       for (int i = 0; i < type.Length; i++)
@@ -59,6 +63,13 @@ namespace SFK.Transportation.Pipe
       }
 
       base.TryPullFrom(inputFace);
+    }
+
+    public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
+    {
+      InitLiquidFlowFromType();
+
+      base.FromTreeAttributes(tree, worldForResolving);
     }
   }
 }

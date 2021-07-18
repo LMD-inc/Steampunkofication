@@ -11,17 +11,24 @@
 		}
 	],
 	"attributes": {
+		"inventoryClassName": "steamengine-mp",
+		"gasPipeConnectByType": {
+			"*-north": { "south": true },
+			"*-east": { "west": true },
+			"*-south": { "north": true },
+			"*-west": { "east": true }
+		},
 		"pullGasFacesByType": {
-			"steamengine-mp-east": ["east"],
-			"steamengine-mp-west": ["west"],
-			"steamengine-mp-north": ["north"],
-			"steamengine-mp-south": ["south"]
+			"*-east": ["east"],
+			"*-west": ["west"],
+			"*-north": ["north"],
+			"*-south": ["south"]
 		},
 		"acceptGasFromFacesByType": {
-			"steamengine-mp-east": ["east"],
-			"steamengine-mp-west": ["west"],
-			"steamengine-mp-north": ["north"],
-			"steamengine-mp-south": ["south"]
+			"*-east": ["east"],
+			"*-west": ["west"],
+			"*-north": ["north"],
+			"*-south": ["south"]
 		}
 	},
 	"shape": { "base": "game:block/basic/nothing" },

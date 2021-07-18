@@ -10,11 +10,18 @@
 		}
 	],
 	"attributes": {
+		"inventoryClassName": "boiler-mp",
+		"gasPipeConnectByType": {
+			"*-north": { "south": true },
+			"*-east": { "west": true },
+			"*-south": { "north": true },
+			"*-west": { "east": true }
+		},
 		"pushGasFacesByType": {
-			"boiler-mp-east": ["east"],
-			"boiler-mp-west": ["west"],
-			"boiler-mp-north": ["north"],
-			"boiler-mp-south": ["south"]
+			"*-east": ["east"],
+			"*-west": ["west"],
+			"*-north": ["north"],
+			"*-south": ["south"]
 		}
 	},
 	"shape": { "base": "game:block/basic/nothing" },

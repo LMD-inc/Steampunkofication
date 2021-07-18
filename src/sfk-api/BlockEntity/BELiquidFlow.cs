@@ -10,7 +10,7 @@ using Vintagestory.GameContent;
 
 namespace SFK.API
 {
-  public class BlockEntityLiquidFlow : BlockEntityContainer
+  public class BlockEntityLiquidFlow : BlockEntityContainer, ILiquidFLow
   {
     internal InventoryGeneric inventory;
     public override InventoryBase Inventory => inventory;
@@ -18,9 +18,9 @@ namespace SFK.API
     public override string InventoryClassName => inventoryClassName;
     public string LiquidFlowObjectLangCode = "liquidholder-contents";
 
-    public BlockFacing[] LiquidPullFaces = new BlockFacing[0];
-    public BlockFacing[] LiquidPushFaces = new BlockFacing[0];
-    public BlockFacing[] AcceptLiquidFromFaces = new BlockFacing[0];
+    public BlockFacing[] LiquidPullFaces { get; set; } = new BlockFacing[0];
+    public BlockFacing[] LiquidPushFaces { get; set; } = new BlockFacing[0];
+    public BlockFacing[] AcceptLiquidFromFaces { get; set; } = new BlockFacing[0];
 
     public int QuantitySlots = 1;
     public int[] CapacityLitresPerSlot = new int[1] { 10 };

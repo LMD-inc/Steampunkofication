@@ -10,7 +10,13 @@
 	],
 	"attributes": {
 		"capacityLitresInput": 50,
-		"capacityLitresOutput": 100
+		"capacityLitresOutput": 100,
+		"liquidPipeConnectByType": {
+			"*-north": { "north": true },
+			"*-east": { "east": true },
+			"*-south": { "south": true },
+			"*-west": { "west": true }
+		}
 	},
 	"variantgroups": [
 		{

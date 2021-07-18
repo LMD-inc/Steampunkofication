@@ -10,7 +10,7 @@ using Vintagestory.GameContent;
 
 namespace SFK.API
 {
-  public class BlockEntityGasFlow : BlockEntityContainer
+  public class BlockEntityGasFlow : BlockEntityContainer, IGasFLow
   {
     internal InventoryGeneric inventory;
     public override InventoryBase Inventory => inventory;
@@ -18,9 +18,9 @@ namespace SFK.API
     public override string InventoryClassName => inventoryClassName;
     public string GasFlowObjectLangCode = "gasholder-contents";
 
-    public BlockFacing[] GasPullFaces = new BlockFacing[0];
-    public BlockFacing[] GasPushFaces = new BlockFacing[0];
-    public BlockFacing[] AcceptGasFromFaces = new BlockFacing[0];
+    public BlockFacing[] GasPullFaces { get; set; } = new BlockFacing[0];
+    public BlockFacing[] GasPushFaces { get; set; } = new BlockFacing[0];
+    public BlockFacing[] AcceptGasFromFaces { get; set; } = new BlockFacing[0];
 
     public int QuantitySlots = 1;
     public int[] CapacityLitresPerSlot = new int[1] { 10 };

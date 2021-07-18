@@ -1,5 +1,9 @@
+using System.Linq;
+
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+
+using SFK.API;
 
 namespace SFK.Transportation.Pipe
 {
@@ -7,7 +11,9 @@ namespace SFK.Transportation.Pipe
   {
     public override bool ShouldConnectAt(IWorldAccessor world, BlockPos ownPos, BlockFacing side)
     {
-      Block block = world.BlockAccessor.GetBlock(ownPos.AddCopy(side));
+      BlockPos pos = ownPos.AddCopy(side);
+      Block block = world.BlockAccessor.GetBlock(pos);
+
 
       bool attrExists = block.Attributes?["gasPipeConnect"][side.Code].Exists == true;
 
@@ -16,9 +22,15 @@ namespace SFK.Transportation.Pipe
         return block.Attributes["gasPipeConnect"][side.Code].AsBool(true);
       }
 
-      return block is BlockGasPipe
-        || block.EntityClass == "GasFlow"
-        || block.EntityClass == "MultiblockGasFlow";
+      if (world.BlockAccessor.GetBlockEntity(pos) is IGasFLow beFlow)
+      {
+        return block is BlockGasPipe
+          || beFlow.GasPullFaces.Contains(side)
+          || beFlow.GasPushFaces.Contains(side)
+          || beFlow.AcceptGasFromFaces.Contains(side);
+      };
+
+      return false;
     }
   }
 }
