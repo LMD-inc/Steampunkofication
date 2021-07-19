@@ -9,6 +9,7 @@ namespace SFK.API
 
     public override int GetRemainingSlotSpace(ItemStack forItemstack)
     {
+      // Use waterTightProps from forItemstack in future when gas have not 1:1 item-litres.
       return Math.Max(0, CapacityLitres - StackSize);
     }
 

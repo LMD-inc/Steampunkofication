@@ -13,6 +13,7 @@
 	"creativeinventoryByType": {
 		"*-east": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
+	"maxstacksize": 1,
 	"shape": {
 		"base": "block/machine/steamengine",
 		"rotateYByType": {

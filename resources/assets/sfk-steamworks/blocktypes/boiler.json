@@ -27,6 +27,7 @@
 	"creativeinventoryByType": {
 		"*-north": { "general": ["*"], "sfk-steamworks": ["*"] }
 	},
+	"maxstacksize": 1,
 	"shape": {
 		"base": "block/machine/boiler",
 		"rotateYByType": {

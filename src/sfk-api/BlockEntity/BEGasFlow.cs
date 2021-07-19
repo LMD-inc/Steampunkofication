@@ -94,6 +94,8 @@ namespace SFK.API
         inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, CapacityLitresPerSlot[id]));
 
         inventory.SlotModified += OnSlotModified;
+        inventory.OnGetAutoPushIntoSlot = GetAutoPushIntoSlot;
+        inventory.OnGetAutoPullFromSlot = GetAutoPullFromSlot;
       }
     }
 
@@ -215,7 +217,7 @@ namespace SFK.API
     {
       BlockPos OutputPosition = Pos.AddCopy(outputFace);
 
-      if (Api.World.BlockAccessor.GetBlockEntity(OutputPosition) is BlockEntityGasFlow beContainer)
+      if (Api.World.BlockAccessor.GetBlockEntity(OutputPosition) is BlockEntityGasFlow beFlow)
       {
         ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotGasOnly && !slot.Empty);
         if ((sourceSlot?.Itemstack?.StackSize ?? 0) == 0) return false;  //seems FirstOrDefault() method can sometimes give a slot with stacksize == 0, weird
@@ -223,12 +225,12 @@ namespace SFK.API
         int tubeDir = sourceSlot.Itemstack.Attributes.GetInt("tubeDir");
         sourceSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
 
-        ItemSlot targetSlot = beContainer.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
-        BlockEntityGasFlow beFlow = beContainer as BlockEntityGasFlow;
+        ItemSlot targetSlot = beFlow.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
+        BEGasContainer beCont = beFlow as BEGasContainer;
 
         if (targetSlot != null && targetSlot is ItemSlotGasOnly)
         {
-          if (!targetSlot.Empty && targetSlot.Itemstack.Item.Code != sourceSlot.Itemstack.Item.Code) return false;
+          if (beCont != null && !targetSlot.Empty && targetSlot.Itemstack.Item.Code != sourceSlot.Itemstack.Item.Code) return false;
 
           if (targetSlot.StackSize >= sourceSlot.StackSize) return false;
 
@@ -239,13 +241,13 @@ namespace SFK.API
 
           if (qmoved > 0)
           {
-            if (beFlow != null)
+            if (beCont != null)
             {
-              targetSlot.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
+              targetSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
             }
             else
             {
-              targetSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+              targetSlot.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
             }
 
             sourceSlot.MarkDirty();

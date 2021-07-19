@@ -2,6 +2,7 @@ using System.Linq;
 
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 using SFK.API;
 
@@ -24,6 +25,7 @@ namespace SFK.Transportation.Pipe
       if (world.BlockAccessor.GetBlockEntity(pos) is ILiquidFLow beFlow)
       {
         return block is BlockLiquidPipe
+          || block is BlockLiquidContainerBase
           || beFlow.LiquidPullFaces.Contains(side)
           || beFlow.LiquidPushFaces.Contains(side)
           || beFlow.AcceptLiquidFromFaces.Contains(side);
