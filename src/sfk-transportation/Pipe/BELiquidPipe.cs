@@ -21,7 +21,7 @@ namespace SFK.Transportation.Pipe
     {
       string type = Block.Variant["type"];
 
-      if (type == "empty") return;
+      if (type == null || type == "empty") return;
 
       BlockFacing[] faces = new BlockFacing[type.Length];
 

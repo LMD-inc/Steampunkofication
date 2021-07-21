@@ -38,7 +38,7 @@ namespace SFK.Steamworks.Boiler
 
     public BlockFacing[] LiquidPullFaces { get; set; } = new BlockFacing[1] { BlockFacing.EAST }; // Default just in case
     public BlockFacing[] LiquidPushFaces { get; set; } = new BlockFacing[0];
-    public BlockFacing[] AcceptLiquidFromFaces { get; set; } = new BlockFacing[0];
+    public BlockFacing[] AcceptLiquidFromFaces { get; set; } = new BlockFacing[1] { BlockFacing.EAST }; // Default just in case
 
     #endregion
 
@@ -96,7 +96,7 @@ namespace SFK.Steamworks.Boiler
 
     private void InitSides()
     {
-      LiquidPullFaces[0] = BlockFacing.FromCode(Block.Variant["side"]);
+      AcceptLiquidFromFaces[0] = LiquidPullFaces[0] = BlockFacing.FromCode(Block.Variant["side"]);
     }
 
     public void ToggleAmbientSounds(bool on)
@@ -137,6 +137,9 @@ namespace SFK.Steamworks.Boiler
           invDialog?.Update();
         }
       }
+
+      MarkDirty();
+      Api.World.BlockAccessor.GetChunkAtBlockPos(Pos)?.MarkModified();
     }
 
     #region Burning
@@ -498,7 +501,7 @@ namespace SFK.Steamworks.Boiler
       if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
       {
         // Water input face
-        if (atBlockFace == BlockFacing.FromCode(Block.LastCodePart()).Opposite)
+        if (atBlockFace == BlockFacing.FromCode(Block.Variant["side"]).Opposite)
         {
           return inputSlot;
         }

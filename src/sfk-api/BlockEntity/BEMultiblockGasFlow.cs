@@ -6,7 +6,7 @@ using Vintagestory.GameContent;
 
 namespace SFK.API
 {
-  public class BEMultiblockGasFlow : BlockEntityGasFlow, IBEMPMultiblock
+  public class BEMultiblockGasFlow : BEGasContainer, IBEMPMultiblock
   {
     internal BlockPos principal;
     public BlockPos Principal

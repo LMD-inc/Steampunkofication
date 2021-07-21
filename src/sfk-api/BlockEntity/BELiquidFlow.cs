@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -94,6 +95,8 @@ namespace SFK.API
         inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotLiquidOnly(self, CapacityLitresPerSlot[id]));
 
         inventory.SlotModified += OnSlotModified;
+        inventory.OnGetAutoPullFromSlot = GetAutoPullFromSlot;
+        inventory.OnGetAutoPushIntoSlot = GetAutoPushIntoSlot;
       }
     }
 
@@ -174,109 +177,106 @@ namespace SFK.API
 
       BlockEntity beInput = Api.World.BlockAccessor.GetBlockEntity(InputPosition);
 
-      if (beInput is BlockEntityLiquidFlow || beInput is BlockEntityContainer)
+      if (beInput is BlockEntityContainer beContainer)
       {
-        ItemSlot sourceSlot;
+        ItemSlot sourceSlot = beContainer.Inventory.GetAutoPullFromSlot(inputFace.Opposite);
 
-        if (beInput is BlockEntityLiquidFlow)
+        if (sourceSlot is ItemSlotLiquidOnly sourceSlotLiq)
         {
-          BlockEntityLiquidFlow beFlow = beInput as BlockEntityLiquidFlow;
-          sourceSlot = beFlow.GetAutoPullFromSlot(inputFace.Opposite);
-        }
-        else
-        {
-          BlockEntityContainer beFlow = beInput as BlockEntityContainer;
-          sourceSlot = beFlow.Inventory.GetAutoPullFromSlot(inputFace.Opposite);
-        }
+          ItemSlot targetSlot = sourceSlot == null ? null : Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly);
+          BlockEntityLiquidFlow beFlow = beContainer as BlockEntityLiquidFlow;
 
-        ItemSlot targetSlot = sourceSlot == null ? null : Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly);
-
-        if (sourceSlot != null && targetSlot != null && (beInput == null || targetSlot.Empty))
-        {
-          if (sourceSlot.StackSize >= targetSlot.StackSize) return;
-
-          ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, (int)liquidFlowAccum);
-
-          int qmoved = sourceSlot.TryPutInto(targetSlot, ref op);
-          if (qmoved > 0)
+          if (sourceSlot != null && targetSlot != null)
           {
-            if (beInput != null)
+            // Temporary stub, sine ItemSlotLiquidOnly.TryPutInto works wrong.
+            if (sourceSlotLiq.StackSize >= sourceSlotLiq.CapacityLitres) return;
+            // Tubes must balance themselves until push at their max.
+            if (beFlow != null && sourceSlot.StackSize >= targetSlot.StackSize) return;
+
+            ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, (int)liquidFlowAccum);
+
+            int qmoved = (sourceSlot as ItemSlotLiquidOnly).TryPutInto(targetSlot, ref op);
+
+            if (qmoved > 0)
             {
-              targetSlot.Itemstack.Attributes.SetInt("tubeDir", inputFace.Opposite.Index);
-            }
-            else
-            {
-              targetSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+              if (beFlow != null)
+              {
+                targetSlot.Itemstack.Attributes.SetInt("tubeDir", inputFace.Opposite.Index);
+              }
+              else
+              {
+                targetSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+              }
+
+              sourceSlot.MarkDirty();
+              targetSlot.MarkDirty();
+              MarkDirty(false);
+              beContainer?.MarkDirty();
             }
 
-            sourceSlot.MarkDirty();
-            targetSlot.MarkDirty();
-            MarkDirty(false);
-            beInput?.MarkDirty();
-          }
-
-          if (qmoved > 0 && Api.World.Rand.NextDouble() < 0.2)
-          {
-            liquidFlowAccum -= qmoved;
+            if (qmoved > 0 && Api.World.Rand.NextDouble() < 0.2)
+            {
+              liquidFlowAccum -= qmoved;
+            }
           }
         }
       }
     }
 
-
     private bool TryPushInto(BlockFacing outputFace)
     {
       BlockPos OutputPosition = Pos.AddCopy(outputFace);
       BlockEntity beOutput = Api.World.BlockAccessor.GetBlockEntity(OutputPosition);
+      Block blockOutput = Api.World.BlockAccessor.GetBlock(OutputPosition);
 
-      if (beOutput is BlockEntityLiquidFlow || beOutput is BlockEntityContainer)
+      if (beOutput is BlockEntityContainer beContainer)
       {
-        ItemSlot targetSlot;
         ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly && !slot.Empty);
-
         if ((sourceSlot?.Itemstack?.StackSize ?? 0) == 0) return false;  //seems FirstOrDefault() method can sometimes give a slot with stacksize == 0, weird
-
-        if (beOutput is BlockEntityLiquidFlow)
-        {
-          BlockEntityLiquidFlow beFlow = beOutput as BlockEntityLiquidFlow;
-          targetSlot = beFlow.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
-        }
-        else
-        {
-          BlockEntityContainer beFlow = beOutput as BlockEntityContainer;
-          targetSlot = beFlow.Inventory.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
-        }
 
         int tubeDir = sourceSlot.Itemstack.Attributes.GetInt("tubeDir");
         sourceSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
 
+        ItemSlot targetSlot = beContainer.Inventory.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
+        BlockEntityLiquidFlow beFlow = beOutput as BlockEntityLiquidFlow;
+        BlockLiquidContainerBase blockLiqCont = blockOutput as BlockLiquidContainerBase;
 
-        if (targetSlot != null && targetSlot is ItemSlotLiquidOnly)
+        if (targetSlot != null && targetSlot is ItemSlotLiquidOnly targetSlotLiq)
         {
-          if (!targetSlot.Empty && targetSlot.Itemstack.Item.Code != sourceSlot.Itemstack.Item.Code) return false;
-
-          if (targetSlot.StackSize >= sourceSlot.StackSize) return false;
+          // Temporary stub, sine ItemSlotLiquidOnly.TryPutInto works wrong.
+          if (targetSlotLiq.Itemstack?.StackSize >= targetSlotLiq.CapacityLitres) return false;
+          // Tubes must balance themselves until push at their max.
+          if (beFlow != null && sourceSlot.StackSize <= targetSlotLiq.StackSize) return false;
 
           int quantity = (int)liquidFlowAccum;
           ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity);
 
-          int qmoved = sourceSlot.TryPutInto(targetSlot, ref op);
+          int qmoved = 0;
+          if (blockLiqCont != null)
+          {
+            qmoved = blockLiqCont.TryPutContent(Api.World, OutputPosition, sourceSlot.Itemstack, quantity);
+            sourceSlot.TakeOut(qmoved);
+          }
+          else
+          {
+            qmoved = sourceSlot.TryPutInto(targetSlotLiq, ref op);
+          }
 
           if (qmoved > 0)
           {
-            if (beOutput != null)
+            if (beFlow != null)
             {
-              targetSlot.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
+              targetSlotLiq.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
             }
             else
             {
-              targetSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+              targetSlotLiq.Itemstack.Attributes.RemoveAttribute("tubeDir");
             }
 
             sourceSlot.MarkDirty();
-            targetSlot.MarkDirty();
+            targetSlotLiq.MarkDirty();
             MarkDirty(false);
-            beOutput?.MarkDirty(false);
+            beFlow?.MarkDirty(false);
 
             liquidFlowAccum -= qmoved;
 

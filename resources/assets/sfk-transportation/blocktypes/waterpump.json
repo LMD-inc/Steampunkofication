@@ -1,0 +1,115 @@
+{
+	"code": "waterpump",
+	"class": "WaterPump",
+	"entityClass": "WaterPump",
+	"entityBehaviors": [{ "name": "WaterPump" }],
+	"behaviors": [{ "name": "HorizontalOrientable" }],
+	"attributes": {
+		"liquidPipeConnectByType": {
+			"*-north": { "west": true },
+			"*-east": { "north": true },
+			"*-south": { "east": true },
+			"*-west": { "south": true }
+		},
+		"pushLiquidFacesByType": {
+			"*-east": ["south"],
+			"*-west": ["north"],
+			"*-north": ["east"],
+			"*-south": ["west"]
+		}
+	},
+	"variantgroups": [
+		{
+			"code": "side",
+			"loadFromProperties": "abstract/horizontalorientation"
+		}
+	],
+	"creativeinventoryByType": {
+		"*-west": {
+			"general": ["*"],
+			"sfk-transportation": ["*"]
+		}
+	},
+	"shape": {
+		"base": "block/machine/waterpump/axle",
+		"rotateYByType": {
+			"*-north": 180,
+			"*-east": 90,
+			"*-south": 0,
+			"*-west": 270
+		}
+	},
+	"shapeInventory": {
+		"base": "block/machine/waterpump/inventory"
+	},
+	"textures": {
+		"iron": { "base": "game:block/metal/plate/iron" },
+		"brass": { "base": "game:block/metal/plate/brass" }
+	},
+	"blockmaterial": "metal",
+	"sidesolid": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"resistance": 1.5,
+	"collisionSelectionBoxes": [
+		{
+			"x1": 0.2505,
+			"y1": 0,
+			"z1": 0.252,
+			"x2": 0.7505,
+			"y2": 0.9002,
+			"z2": 0.7354,
+			"rotateYByType": {
+				"*-north": 270,
+				"*-east": 180,
+				"*-south": 90,
+				"*-west": 0
+			}
+		},
+		{
+			"x1": 0.75,
+			"y1": 0.75,
+			"z1": 0.25,
+			"x2": 0.25,
+			"y2": 0.25,
+			"22": 0,
+			"rotateYByType": {
+				"*-north": 270,
+				"*-east": 180,
+				"*-south": 90,
+				"*-west": 0
+			}
+		},
+		{
+			"x1": 0,
+			"y1": 0.4113,
+			"z1": 0.4118,
+			"x2": 1,
+			"y2": 0.5862,
+			"z2": 0.5872,
+			"rotateYByType": {
+				"*-north": 270,
+				"*-east": 180,
+				"*-south": 90,
+				"*-west": 0
+			}
+		},
+		{
+			"x1": 0.4065,
+			"y1": 0.0441,
+			"z1": 0.75,
+			"x2": 0.5877,
+			"y2": 0.3125,
+			"z2": 1.125,
+			"rotateYByType": {
+				"*-north": 270,
+				"*-east": 180,
+				"*-south": 90,
+				"*-west": 0
+			}
+		}
+	]
+}
