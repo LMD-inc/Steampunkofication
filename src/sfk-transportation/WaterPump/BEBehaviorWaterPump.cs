@@ -11,14 +11,33 @@ namespace SFK.Transportation.WaterPump
   public class BEBehaviorWaterPump : BEBehaviorMPBase
   {
     ICoreClientAPI capi;
+    protected BlockFacing ownFacing;
 
     public BEBehaviorWaterPump(BlockEntity blockentity) : base(blockentity)
     {
+      Blockentity = blockentity;
+
+      string orientation = blockentity.Block.Variant["side"];
+      ownFacing = BlockFacing.FromCode(orientation);
+      OutFacingForNetworkDiscovery = ownFacing.Opposite;
     }
 
     public override void Initialize(ICoreAPI api, JsonObject properties)
     {
       base.Initialize(api, properties);
+
+      switch (ownFacing.Code)
+      {
+        case "north":
+        case "south":
+          AxisSign = new int[] { 0, 0, -1 };
+          break;
+
+        case "east":
+        case "west":
+          AxisSign = new int[] { -1, 0, 0 };
+          break;
+      }
 
       if (api.Side == EnumAppSide.Client)
       {
