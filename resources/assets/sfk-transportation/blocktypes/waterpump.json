@@ -2,20 +2,20 @@
 	"code": "waterpump",
 	"class": "WaterPump",
 	"entityClass": "WaterPump",
-	"entityBehaviors": [{ "name": "MPConsumer" }],
+	"entityBehaviors": [{ "name": "WaterPump" }],
 	"behaviors": [{ "name": "HorizontalOrientable" }],
 	"attributes": {
 		"liquidPipeConnectByType": {
-			"*-north": { "north": true },
-			"*-east": { "east": true },
-			"*-south": { "south": true },
-			"*-west": { "west": true }
+			"*-north": { "west": true },
+			"*-east": { "north": true },
+			"*-south": { "east": true },
+			"*-west": { "south": true }
 		},
 		"pushLiquidFacesByType": {
-			"*-east": ["west"],
-			"*-west": ["east"],
-			"*-north": ["south"],
-			"*-south": ["north"]
+			"*-east": ["south"],
+			"*-west": ["north"],
+			"*-north": ["east"],
+			"*-south": ["west"]
 		}
 	},
 	"variantgroups": [
@@ -24,22 +24,34 @@
 			"loadFromProperties": "abstract/horizontalorientation"
 		}
 	],
-	"creativeinventory": {
-		"general": ["*-east"],
-		"sfk-transportation": ["*-east"]
+	"creativeinventoryByType": {
+		"*-west": {
+			"general": ["*"],
+			"sfk-transportation": ["*"]
+		}
 	},
-	"drawtype": "Cube",
-	"textures": { "all": { "base": "game:block/metal/plate/brass" } },
-	"blockmaterial": "Metal",
+	"shape": {
+		"base": "block/machine/waterpump/axle",
+		"rotateYByType": {
+			"*-north": 180,
+			"*-east": 90,
+			"*-south": 0,
+			"*-west": 270
+		}
+	},
+	"shapeInventory": {
+		"base": "block/machine/waterpump/inventory"
+	},
+	"textures": {
+		"iron": { "base": "game:block/metal/plate/iron" },
+		"brass": { "base": "game:block/metal/plate/brass" }
+	},
+	"blockmaterial": "metal",
 	"sidesolid": {
-		"all": false,
-		"down": true
+		"all": false
 	},
 	"sideopaque": {
-		"all": false,
-		"down": true
+		"all": false
 	},
-	"lightAbsorption": 1,
-	"replaceable": 600,
 	"resistance": 1.5
 }

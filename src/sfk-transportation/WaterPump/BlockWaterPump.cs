@@ -13,7 +13,46 @@ namespace SFK.Transportation.WaterPump
 
     public override bool HasMechPowerConnectorAt(IWorldAccessor world, BlockPos pos, BlockFacing face)
     {
-      return face == BlockFacing.FromCode(Variant["side"]).GetCW();
+      BlockFacing orient = BlockFacing.FromCode(Variant["side"]);
+      return face == orient || face == orient.Opposite;
+    }
+
+    public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
+    {
+      if (!CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
+      {
+        return false;
+      }
+
+      foreach (BlockFacing face in BlockFacing.HORIZONTALS)
+      {
+        if (CheckHasWater(world, blockSel.Position, face))
+        {
+          AssetLocation loc = new AssetLocation($"sfk-transportation:{FirstCodePart()}-{face.Code}");
+          Block toPlaceBlock = world.GetBlock(loc);
+
+          if (toPlaceBlock.DoPlaceBlock(world, byPlayer, blockSel, itemstack))
+          {
+            WasPlaced(world, blockSel.Position, null);
+            return true;
+          }
+          return false;
+        }
+
+      }
+
+      failureCode = "requirefullwater";
+      return false;
+    }
+
+    public bool CheckHasWater(IWorldAccessor world, BlockPos pos, BlockFacing face)
+    {
+      BlockPos posToCheck = pos.AddCopy(face.GetCCW()).AddCopy(BlockFacing.DOWN);
+      Block block = world.BlockAccessor.GetBlock(posToCheck) as Block;
+
+      if (block == null) return false;
+      if (block.IsLiquid() && block.LiquidLevel == 7 && block.LiquidCode.Contains("water")) return true;
+      return false;
     }
   }
 }
