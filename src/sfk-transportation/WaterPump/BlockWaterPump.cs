@@ -1,3 +1,5 @@
+using System;
+
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent.Mechanics;
@@ -24,7 +26,13 @@ namespace SFK.Transportation.WaterPump
         return false;
       }
 
-      foreach (BlockFacing face in BlockFacing.HORIZONTALS)
+      // Checking player's look at side first
+      BlockFacing orient = SuggestedHVOrientation(byPlayer, blockSel)[0];
+      BlockFacing[] faces = BlockFacing.HORIZONTALS;
+      Array.Sort(faces, (a, b) => a == orient ? 1 : -1);
+      System.Console.WriteLine($"[SFK]: orient {orient}");
+
+      foreach (BlockFacing face in faces)
       {
         if (CheckHasWater(world, blockSel.Position, face))
         {
