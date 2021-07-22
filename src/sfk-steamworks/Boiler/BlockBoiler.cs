@@ -2,9 +2,11 @@ using System.Text;
 using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
+using SFK.API;
 
 namespace SFK.Steamworks.Boiler
 {
@@ -65,7 +67,31 @@ namespace SFK.Steamworks.Boiler
       return 1;
     }
 
-    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) { }
+    public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+    {
+      StringBuilder stb = new StringBuilder();
+
+      BEBoiler beboiler = world.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
+
+
+
+      if (beboiler.inputSlot.Empty && beboiler.outputSlot.Empty) return "Empty";
+
+      stb.AppendLine(Lang.Get("Contents:"));
+
+      foreach (ItemSlot slot in beboiler.Inventory)
+      {
+        if (!slot.Empty && (slot is ItemSlotLiquidOnly || slot is ItemSlotGasOnly))
+        {
+          // TODO workaround GetCurrentLitres when use not 1:1 litres-item ratio liquids
+          stb.AppendLine(Lang.Get("{0} litres of {1}", slot.Itemstack.StackSize, GetIncontentString(slot.Itemstack)));
+        }
+      }
+
+      return stb.ToString();
+    }
+
+    private string GetIncontentString(ItemStack stack) => Lang.Get("incontainer-" + stack.Class.ToString().ToLowerInvariant() + "-" + stack.Collectible.Code.Path);
 
     #endregion
 
@@ -215,6 +241,7 @@ namespace SFK.Steamworks.Boiler
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
     {
+      // Multiblock broke
       BlockFacing baseBlockFacing = BlockFacing.FromCode(api.World.BlockAccessor.GetBlock(pos).LastCodePart());
       Block mpBlock = api.World.BlockAccessor.GetBlock(pos.AddCopy(baseBlockFacing));
 
@@ -223,7 +250,29 @@ namespace SFK.Steamworks.Boiler
         world.BlockAccessor.SetBlock(0, pos.AddCopy(baseBlockFacing));
       }
 
-      base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+      // Override to drop the barrel empty and drop its contents instead
+      if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative))
+      {
+        ItemStack[] drops = new ItemStack[] { new ItemStack(this) };
+
+        for (int i = 0; i < drops.Length; i++)
+        {
+          world.SpawnItemEntity(drops[i], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5), null);
+        }
+
+        world.PlaySoundAt(Sounds.GetBreakSound(byPlayer), pos.X, pos.Y, pos.Z, byPlayer);
+      }
+
+      if (EntityClass != null)
+      {
+        BlockEntity entity = world.BlockAccessor.GetBlockEntity(pos);
+        if (entity != null)
+        {
+          entity.OnBlockBroken();
+        }
+      }
+
+      world.BlockAccessor.SetBlock(0, pos);
     }
 
     #endregion

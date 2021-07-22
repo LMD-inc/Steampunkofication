@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using System.Linq;
 
 using SFK.API;
 using Vintagestory.API.Client;
@@ -586,12 +585,7 @@ namespace SFK.Steamworks.Boiler
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
     {
       sb.Clear();
-
-      if (!inputSlot.Empty)
-      {
-        sb.AppendLine("Contentns:");
-        sb.AppendLine($"{inputStack.StackSize} litres of {Lang.Get($"incontent-{inputStack.GetName()}")}");
-      }
+      sb.Append(Block.GetPlacedBlockInfo(Api.World, Pos, forPlayer));
     }
 
     ~BEBoiler()
