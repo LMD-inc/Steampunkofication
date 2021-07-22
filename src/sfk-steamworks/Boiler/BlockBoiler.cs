@@ -73,7 +73,7 @@ namespace SFK.Steamworks.Boiler
 
       BEBoiler beboiler = world.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
 
-
+      if (beboiler == null) return "n/a be";
 
       if (beboiler.inputSlot.Empty && beboiler.outputSlot.Empty) return "Empty";
 
@@ -91,7 +91,10 @@ namespace SFK.Steamworks.Boiler
       return stb.ToString();
     }
 
-    private string GetIncontentString(ItemStack stack) => Lang.Get("incontainer-" + stack.Class.ToString().ToLowerInvariant() + "-" + stack.Collectible.Code.Path);
+    private string GetIncontentString(ItemStack stack)
+    {
+      return Lang.Get(stack.Collectible.Code.Domain + ":incontainer-" + stack.Class.ToString().ToLowerInvariant() + "-" + stack.Collectible.Code.Path);
+    }
 
     #endregion
 

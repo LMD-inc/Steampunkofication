@@ -1,6 +1,9 @@
 {
 	"block-pipe-gas-*": "Газовая труба",
 	"block-pipe-liquid-*": "Жидкостная труба",
+	"block-waterpump-*": "Водяной насос",
+
+	"item-pipesection-brass": "Латунный сегмент трубы",
 
 	"game:tabname-sfk-transportation": "[SFK] Transportation"
 }
