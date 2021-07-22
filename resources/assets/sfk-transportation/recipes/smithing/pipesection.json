@@ -1,0 +1,16 @@
+[
+	{
+		"ingredient": {
+			"type": "item",
+			"code": "game:ingot-*",
+			"name": "metal",
+			"allowedVariants": ["brass"]
+		},
+		"pattern": [
+			["#####", "#___#", "#___#", "#___#", "#####"],
+			["#####", "#___#", "#___#", "#___#", "#####"]
+		],
+		"name": "pipesection",
+		"output": { "type": "item", "code": "pipesection-{metal}" }
+	}
+]
