@@ -53,6 +53,29 @@
 	"sideopaque": {
 		"all": false
 	},
+	"heldTpIdleAnimation": "holdbothhandslarge",
+	"heldTpUseAnimation": "twohandplaceblock",
+	"guiTransform": {
+		"rotation": { "x": -22, "y": 135, "z": 0 },
+		"origin": { "x": 0.5, "y": 0.5, "z": 0.6 },
+		"scale": 1.3
+	},
+	"tpHandTransform": {
+		"translation": { "x": -0.8, "y": -0.6, "z": -0.34 },
+		"rotation": { "x": -81, "y": 7, "z": -106 },
+		"scale": 0.67
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0.5 },
+		"rotation": { "x": 0, "y": 135, "z": 0 },
+		"scale": 1.5
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 2.8
+	},
 	"resistance": 1.5,
 	"collisionSelectionBoxes": [
 		{
