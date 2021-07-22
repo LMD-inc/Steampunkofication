@@ -1,0 +1,21 @@
+[
+	{
+		"ingredientPattern": "I,I",
+		"ingredients": {
+			"I": { "type": "item", "code": "pipesection-brass" }
+		},
+		"width": 2,
+		"height": 1,
+		"output": { "type": "block", "code": "pipe-liquid-ew" }
+	},
+	{
+		"ingredientPattern": "I,R,I",
+		"ingredients": {
+			"I": { "type": "item", "code": "pipesection-brass" },
+			"R": { "type": "item", "code": "game:resin" }
+		},
+		"width": 3,
+		"height": 1,
+		"output": { "type": "block", "code": "pipe-gas-ew" }
+	}
+]
