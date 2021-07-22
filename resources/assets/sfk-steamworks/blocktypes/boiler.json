@@ -38,15 +38,26 @@
 		}
 	},
 	"heldTpIdleAnimation": "holdunderarm",
+	"guiTransform": {
+		"origin": { "x": 0.5, "y": 0.5, "z": 0.1 },
+		"scale": 0.9
+	},
 	"tpHandTransform": {
 		"translation": { "x": -1.1, "y": -0.7, "z": -0.6 },
-		"rotation": { "x": 14, "y": 0, "z": -14 },
+		"rotation": { "x": 0, "y": -90, "z": 0 },
+		"origin": { "x": 0.8, "y": 0.5, "z": 0.4 },
 		"scale": 0.6
 	},
 	"fpHandTransform": {
 		"translation": { "x": 0, "y": -0.15, "z": 1.3 },
-		"rotation": { "x": 0, "y": -135, "z": 0 },
-		"scale": 1.5
+		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"scale": 1.7
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": 0, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 4
 	},
 	"blockmaterial": "metal",
 	"drawtype": "json",
@@ -55,6 +66,16 @@
 	},
 	"sideopaque": {
 		"all": "false"
+	},
+	"textures": {
+		"blue1": { "base": "game:block/clay/hardened/blue1" },
+		"fire1": { "base": "game:block/clay/brick/fire1" },
+		"fire2": { "base": "game:block/clay/brick/fire2" },
+		"fire3": { "base": "game:block/clay/brick/fire3" },
+		"brass": { "base": "game:block/metal/plate/brass" },
+		"brass1": { "base": "game:block/metal/sheet/brass1" },
+		"brass2": { "base": "game:block/metal/sheet/brass2" },
+		"brass5": { "base": "game:block/metal/sheet/brass5" }
 	},
 	"resistance": 3.5,
 	"sounds": {

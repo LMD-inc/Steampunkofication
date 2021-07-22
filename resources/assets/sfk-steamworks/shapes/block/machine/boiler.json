@@ -7,14 +7,14 @@
 	"textureHeight": 16,
 	"textureSizes": {},
 	"textures": {
-		"blue1": "game:block/clay/hardened/blue1",
-		"fire2": "game:block/clay/brick/fire2",
-		"fire3": "game:block/clay/brick/fire3",
-		"fire1": "game:block/clay/brick/fire1",
-		"brass5": "game:block/metal/sheet/brass5",
-		"brass": "game:block/metal/plate/brass",
-		"brass2": "game:block/metal/sheet/brass2",
-		"brass1": "game:block/metal/sheet/brass1"
+		"blue1": "block/clay/hardened/blue1",
+		"fire2": "block/clay/brick/fire2",
+		"fire3": "block/clay/brick/fire3",
+		"fire1": "block/clay/brick/fire1",
+		"brass5": "block/metal/sheet/brass5",
+		"brass": "block/metal/plate/brass",
+		"brass2": "block/metal/sheet/brass2",
+		"brass1": "block/metal/sheet/brass1"
 	},
 	"elements": [
 		{
@@ -636,7 +636,7 @@
 						},
 						"east": {
 							"texture": "#brass5",
-							"uv": [0.0, 0.0, 16.0, 16.0],
+							"uv": [4.0, 0.0, 12.0, 16.0],
 							"autoUv": false
 						},
 						"south": {
@@ -674,7 +674,7 @@
 						},
 						"east": {
 							"texture": "#brass1",
-							"uv": [0.0, 0.0, 16.0, 16.0],
+							"uv": [4.0, 0.0, 12.0, 16.0],
 							"autoUv": false
 						},
 						"south": {
