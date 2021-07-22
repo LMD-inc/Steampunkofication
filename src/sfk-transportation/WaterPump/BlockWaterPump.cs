@@ -30,7 +30,6 @@ namespace SFK.Transportation.WaterPump
       BlockFacing orient = SuggestedHVOrientation(byPlayer, blockSel)[0];
       BlockFacing[] faces = BlockFacing.HORIZONTALS;
       Array.Sort(faces, (a, b) => a == orient ? 1 : -1);
-      System.Console.WriteLine($"[SFK]: orient {orient}");
 
       foreach (BlockFacing face in faces)
       {

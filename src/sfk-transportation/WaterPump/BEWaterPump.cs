@@ -82,12 +82,27 @@ namespace SFK.Transportation.WaterPump
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
     {
-      base.GetBlockInfo(forPlayer, dsc);
+      dsc.Clear();
 
-      // if (!hasWater)
-      // {
-      //   dsc.Append("not working. Has no water source in proper place.");
-      // }
+      bool isPowered = mpc.Network?.Speed > 0.001f;
+      hasWater = (Block as BlockWaterPump).CheckHasWater(Api.World, Pos, BlockFacing.FromCode(Block.Variant["side"]));
+
+      if (hasWater && isPowered) dsc.AppendLine("Working");
+      else
+      {
+        dsc.Append("Not working:");
+
+        if (!hasWater)
+        {
+          dsc.Append(" have no water source in proper place;");
+        }
+
+        // TODO: detect if speed or torque not enough and write it?
+        if (!isPowered)
+        {
+          dsc.Append(" need mechanical power;");
+        }
+      }
     }
   }
 }
