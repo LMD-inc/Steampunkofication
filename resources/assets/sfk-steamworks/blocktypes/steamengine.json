@@ -40,8 +40,12 @@
 		"break": "game:block/anvil"
 	},
 	"heldTpIdleAnimation": "holdunderarm",
+	"guiTransform": {
+		"translation": { "x": -9, "y": -3.3, "z": 0 },
+		"rotation": { "x": -22, "y": 45, "z": 0 }
+	},
 	"tpHandTransform": {
-		"translation": { "x": -1.1, "y": -0.7, "z": -0.6 },
+		"translation": { "x": -1.3, "y": -0.7, "z": -0.7 },
 		"rotation": { "x": 14, "y": 180, "z": 14 },
 		"scale": 0.6
 	},
@@ -49,6 +53,12 @@
 		"translation": { "x": 0, "y": 0.15, "z": 1 },
 		"rotation": { "x": 0, "y": 45, "z": 0 },
 		"scale": 1.6
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 3.5
 	},
 	"lightAbsorption": 0,
 	"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
