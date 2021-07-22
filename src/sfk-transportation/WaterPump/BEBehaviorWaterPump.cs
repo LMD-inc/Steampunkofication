@@ -47,10 +47,10 @@ namespace SFK.Transportation.WaterPump
 
     public override float GetResistance()
     {
-      //Exponentially increase hammer resistance if the network is turning faster - should almost always prevent helvehammering at crazy speeds;
+      //Exponentially increase hammer resistance if the network is turning faster - should almost always prevent pumping at crazy speeds;
       float speed = this.network == null ? 0f : Math.Abs(this.network.Speed * this.GearedRatio);
       float speedLimiter = 5f * (float)Math.Exp(speed * 2.8 - 5.0);
-      return 0.125f + speedLimiter;
+      return 0.025f + speedLimiter;
     }
 
     public override void JoinNetwork(MechanicalNetwork network)
