@@ -1,0 +1,52 @@
+{
+	"code": "funnel",
+	"maxstacksize": 16,
+	"variantgroups": [
+		{ "code": "state", "states": ["raw", "burned"] },
+		{ "code": "type", "states": ["blue"] }
+	],
+	"shape": { "base": "item/resource/funnel" },
+	"texturesByType": {
+		"*-raw-*": {
+			"blue1": { "base": "game:block/clay/{type}clay" }
+		},
+		"*-burned-*": {
+			"blue1": { "base": "game:block/clay/hardened/{type}1" }
+		}
+	},
+	"creativeinventory": { "general": ["*"], "sfk-steamworks": ["*"] },
+	"combustiblePropsByType": {
+		"funnel-raw-*": {
+			"meltingPoint": 850,
+			"meltingDuration": 7.5,
+			"smeltingType": "fire",
+			"smeltedStack": { "type": "item", "code": "funnel-burned-{type}" },
+			"requiresContainer": false
+		}
+	},
+	"materialDensity": 2600,
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": 0.2, "z": 0 },
+		"rotation": { "x": 19, "y": 16, "z": 5 },
+		"origin": { "x": 0.5, "y": 0.1, "z": 0.5 },
+		"scale": 1.94
+	},
+	"guiTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": -37, "y": -40, "z": -180 },
+		"origin": { "x": 0.5, "y": 0.32, "z": 0.5 },
+		"scale": 2.6
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": 0, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 4.65
+	},
+	"tpHandTransform": {
+		"translation": { "x": 0.1, "y": 0.4, "z": 0.5 },
+		"rotation": { "x": 0, "y": 0, "z": -86 },
+		"origin": { "x": 0, "y": 0, "z": 0 },
+		"scale": 0.8
+	}
+}
