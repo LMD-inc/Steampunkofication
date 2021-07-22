@@ -2,17 +2,19 @@
 using System.Linq;
 
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
 using SFK.API;
+using System.Text;
 
 namespace SFK.Steamworks.SteamEngine
 {
   public class BEBehaviorMPSteamEngine : BEBehaviorMPRotor
   {
-    private bool isPowered;
+    public bool isPowered;
 
     protected override AssetLocation Sound => null;
 
@@ -62,6 +64,14 @@ namespace SFK.Steamworks.SteamEngine
         isPowered = false;
         animUtil.StopAnimation("work");
       }
+    }
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
+    {
+      sb.Clear();
+
+      if (isPowered) sb.AppendLine(Lang.Get("Working"));
+      else sb.AppendLine(Lang.Get("Stale"));
     }
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor world)

@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using SFK.API;
-using Vintagestory.API.Client;
+using System.Text;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Util;
-using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
 
 namespace SFK.Steamworks.SteamEngine
@@ -82,6 +78,15 @@ namespace SFK.Steamworks.SteamEngine
       }
 
       base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+    }
+
+    public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+    {
+      StringBuilder sb = new StringBuilder(base.GetPlacedBlockInfo(world, pos, forPlayer));
+
+      world.BlockAccessor.GetBlockEntity(pos)?.GetBlockInfo(forPlayer, sb);
+
+      return sb.ToString();
     }
 
     #endregion

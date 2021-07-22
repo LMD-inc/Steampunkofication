@@ -1,7 +1,7 @@
 {
 	"code": "steamengine",
 	"class": "SteamEngine",
-	"entityClass": "GasContainer",
+	"entityClass": "SteamEngine",
 	"behaviors": [{ "name": "HorizontalOrientable" }],
 	"entityBehaviors": [{ "name": "MPSteamEngine" }, { "name": "Animatable" }],
 	"variantgroups": [

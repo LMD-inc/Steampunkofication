@@ -24,6 +24,7 @@ namespace SFK.Steamworks
       api.RegisterBlockClass("MultiblockBoiler", typeof(BlockMultiblockBoiler));
 
       api.RegisterBlockClass("SteamEngine", typeof(BlockSteamEngine));
+      api.RegisterBlockEntityClass("SteamEngine", typeof(BESteamEngine));
       api.RegisterBlockEntityBehaviorClass("MPSteamEngine", typeof(BEBehaviorMPSteamEngine));
 
       api.RegisterBlockClass("MultiblockSteamEngine", typeof(BlockMultiblockSteamEngine));
