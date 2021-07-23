@@ -1,10 +1,10 @@
 {
 	"type": "code",
 	"name": "[SFK] Api",
-	"modid": "sfk-api",
+	"modid": "sfkapi",
 	"version": "0.1.0",
 
-	"description": "Steampunk. More.",
+	"description": "Steampunk. More. It's based.",
 	"website": "https://github.com/LMD-inc/Steampunkofication",
 	"authors": ["LMD inc."],
 

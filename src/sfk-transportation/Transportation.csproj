@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <TargetFramework>net461</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyName>sfk-transportation</AssemblyName>
+    <AssemblyName>sfktransportation</AssemblyName>
     <RootNamespace>SFK.Transportation</RootNamespace>
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
@@ -13,10 +13,10 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\sfk-transportation</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Debug\sfk-transportation\</IntermediateOutputPath>
+    <OutputPath>..\..\bin\sfktransportation</OutputPath>
+    <IntermediateOutputPath>..\..\obj\Debug\sfktransportation\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,8 +27,8 @@
     <Version>0.1.0</Version>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\sfk-transportation</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Release\sfk-transportation\</IntermediateOutputPath>
+    <OutputPath>..\..\bin\sfktransportation</OutputPath>
+    <IntermediateOutputPath>..\..\obj\Release\sfktransportation\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,7 +64,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\sfk-api\Api.csproj">
-        <Name>sfk-api</Name>
+        <Name>sfkapi</Name>
         <Private>False</Private>
       </ProjectReference>
   </ItemGroup>

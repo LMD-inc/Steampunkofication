@@ -6,7 +6,7 @@ using SFK.Transportation.Pipe;
 using SFK.Transportation.WaterPump;
 
 [assembly: ModInfo("[SFK] Transportation",
-  Description = "Steampunk. More. Soon with pipes included!",
+  Description = "Steampunk. More. Now with pipes!",
   Version = "0.1.0",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new[] { "LMD inc." })]

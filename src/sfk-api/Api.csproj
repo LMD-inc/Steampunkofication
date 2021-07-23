@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <TargetFramework>net461</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyName>sfk-api</AssemblyName>
+    <AssemblyName>sfkapi</AssemblyName>
     <RootNamespace>SFK.API</RootNamespace>
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
@@ -13,10 +13,10 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\sfk-api</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Debug\sfk-api\</IntermediateOutputPath>
+    <OutputPath>..\..\bin\sfkapi</OutputPath>
+    <IntermediateOutputPath>..\..\obj\Debug\sfkapi\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,8 +27,8 @@
     <Version>0.1.0</Version>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\sfk-api</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Release\sfk-api\</IntermediateOutputPath>
+    <OutputPath>..\..\bin\sfkapi</OutputPath>
+    <IntermediateOutputPath>..\..\obj\Release\sfkapi\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -71,10 +71,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <Target Name="CopyCustomContent" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
-    <Copy SourceFiles="@(AssetsSourceFiles)" DestinationFolder="$(OutDir)/assets" SkipUnchangedFiles="true" />
-  </Target>
 
   <Target Name="Package" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
     <ZipDirectory DestinationFile="../../build/$(TargetName)-v$(Version).zip" SourceDirectory="$(TargetDir)" Overwrite="true"/>
