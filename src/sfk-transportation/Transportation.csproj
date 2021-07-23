@@ -24,6 +24,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>0.1.0</Version>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\sfk-transportation</OutputPath>
@@ -68,14 +69,6 @@
       </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <None Include="UNLICENSE" CopyToOutputDirectory="PreserveNewest"/>
-    <None Include="**">
-      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="modinfo.json" />
   </ItemGroup>
@@ -86,8 +79,14 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <None Include="$(SolutionDir)\resources\assets\$(TargetName)\**" 
+      CopyToOutputDirectory="PreserveNewest"
+      LinkBase="assets\$(TargetName)" />
+  </ItemGroup>
+
   <Target Name="Package" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
-    <ZipDirectory DestinationFile="bin/$(TargetName).zip" SourceDirectory="$(TargetDir)" Overwrite="true"/>
+    <ZipDirectory DestinationFile="../../build/$(TargetName)-v$(Version).zip" SourceDirectory="$(TargetDir)" Overwrite="true"/>
   </Target>
 
   <Target Name="CopyToBin" AfterTargets="AfterBuild">

@@ -21,20 +21,5 @@
 			"command": "dotnet",
 			"args": ["build", "SFK.sln", "-c", "Release"]
 		},
-		{
-      "label": "Pack",
-      "type": "shell",
-      "command": [
-        "rm -rf build;",
-        "mkdir -p build;",
-        "mkdir build/${workspaceFolderBasename};",
-        "cp -r resources/* build/${workspaceFolderBasename};",
-        "cp -r bin/Debug/net461/* build/${workspaceFolderBasename};"
-      ],
-      "presentation": {
-        "reveal": "silent"
-      },
-      "problemMatcher": []
-    },
 	]
 }
