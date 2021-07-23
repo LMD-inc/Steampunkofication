@@ -4,7 +4,7 @@
 	"creativeinventory": {
 		"general": ["*"],
 		"items": ["*"],
-		"sfk-transportation": ["*"]
+		"sfktransportation": ["*"]
 	},
 	"shape": { "base": "item/resource/pipesection" },
 	"textures": {

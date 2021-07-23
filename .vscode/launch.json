@@ -13,9 +13,9 @@
 				"--openWorld",
 				"[SFK] Testing world",
 				"--addModPath",
-				"${workspaceFolder}/bin/sfk-steamworks/net461/",
-				"${workspaceFolder}/bin/sfk-transportation/net461/",
-				"${workspaceFolder}/bin/sfk-api/net461/",
+				"${workspaceFolder}/bin/sfksteamworks/net461/",
+				"${workspaceFolder}/bin/sfktransportation/net461/",
+				"${workspaceFolder}/bin/sfkapi/net461/",
 				"--addOrigin",
 				"${workspaceFolder}/resources/assets/"
 			],

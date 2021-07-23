@@ -84,7 +84,7 @@
 	],
 	"creativeinventory": {
 		"general": ["*-ew"],
-		"sfk-transportation": ["*-ew"]
+		"sfktransportation": ["*-ew"]
 	},
 	"shapebytype": {
 		"*-empty": { "base": "block/metal/pipe/base" },

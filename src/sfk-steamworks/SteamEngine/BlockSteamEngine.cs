@@ -40,7 +40,7 @@ namespace SFK.Steamworks.SteamEngine
 
     private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos, BlockFacing orientation)
     {
-      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:steamengine-mp-{orientation}"));
+      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfksteamworks:steamengine-mp-{orientation}"));
 
       world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos);
     }

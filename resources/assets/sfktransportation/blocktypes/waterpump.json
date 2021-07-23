@@ -27,7 +27,7 @@
 	"creativeinventoryByType": {
 		"*-west": {
 			"general": ["*"],
-			"sfk-transportation": ["*"]
+			"sfktransportation": ["*"]
 		}
 	},
 	"shape": {

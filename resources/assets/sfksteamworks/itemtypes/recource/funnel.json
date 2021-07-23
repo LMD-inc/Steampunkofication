@@ -14,7 +14,7 @@
 			"blue1": { "base": "game:block/clay/hardened/{type}1" }
 		}
 	},
-	"creativeinventory": { "general": ["*"], "sfk-steamworks": ["*"] },
+	"creativeinventory": { "general": ["*"], "sfksteamworks": ["*"] },
 	"combustiblePropsByType": {
 		"funnel-raw-*": {
 			"meltingPoint": 850,

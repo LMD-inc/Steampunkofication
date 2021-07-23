@@ -20,7 +20,7 @@
 	"creativeinventory": {
 		"general": ["*"],
 		"items": ["*"],
-		"sfk-steamworks": ["*"]
+		"sfksteamworks": ["*"]
 	},
 	"maxstacksize": 256,
 	"materialDensity": 200,

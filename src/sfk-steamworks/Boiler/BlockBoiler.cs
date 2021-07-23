@@ -43,7 +43,7 @@ namespace SFK.Steamworks.Boiler
 
     private void PlaceFakeBlock(IWorldAccessor world, BlockPos pos, BlockFacing orientation)
     {
-      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfk-steamworks:boiler-mp-{orientation}"));
+      Block toPlaceBlock = world.GetBlock(new AssetLocation($"sfksteamworks:boiler-mp-{orientation}"));
 
       world.BlockAccessor.SetBlock(toPlaceBlock.BlockId, pos);
     }

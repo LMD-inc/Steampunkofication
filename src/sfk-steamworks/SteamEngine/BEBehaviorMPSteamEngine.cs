@@ -36,7 +36,7 @@ namespace SFK.Steamworks.SteamEngine
       if (api.World.Side == EnumAppSide.Client && animUtil != null)
       {
         float rotY = Block.Shape.rotateY;
-        animUtil.InitializeAnimator("sfk-steamworks:steamengine", new Vec3f(0, rotY, 0));
+        animUtil.InitializeAnimator("sfksteamworks:steamengine", new Vec3f(0, rotY, 0));
       }
 
       Blockentity.RegisterGameTickListener(CheckSteamPowered, 1000);
@@ -46,7 +46,7 @@ namespace SFK.Steamworks.SteamEngine
     {
       ItemSlotGasOnly steamSlot = (Blockentity as BEGasContainer).Inventory.FirstOrDefault(slot =>
       {
-        return !slot.Empty && slot.Itemstack?.Item?.Code.ToString() == "sfk-steamworks:steamportion";
+        return !slot.Empty && slot.Itemstack?.Item?.Code.ToString() == "sfksteamworks:steamportion";
       }) as ItemSlotGasOnly;
 
       if (steamSlot != null && steamSlot.StackSize > 0)

@@ -35,7 +35,7 @@ namespace SFK.Transportation.WaterPump
       {
         if (CheckHasWater(world, blockSel.Position, face))
         {
-          AssetLocation loc = new AssetLocation($"sfk-transportation:{FirstCodePart()}-{face.Code}");
+          AssetLocation loc = new AssetLocation($"sfktransportation:{FirstCodePart()}-{face.Code}");
           Block toPlaceBlock = world.GetBlock(loc);
 
           if (toPlaceBlock.DoPlaceBlock(world, byPlayer, blockSel, itemstack))

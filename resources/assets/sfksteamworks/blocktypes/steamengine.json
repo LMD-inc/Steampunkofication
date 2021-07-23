@@ -11,7 +11,7 @@
 		}
 	],
 	"creativeinventoryByType": {
-		"*-east": { "general": ["*"], "sfk-steamworks": ["*"] }
+		"*-east": { "general": ["*"], "sfksteamworks": ["*"] }
 	},
 	"maxstacksize": 1,
 	"shape": {

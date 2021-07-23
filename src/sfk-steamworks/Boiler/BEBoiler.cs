@@ -530,7 +530,7 @@ namespace SFK.Steamworks.Boiler
           // If Boiler would be able to process not only water better to use BoilerRecipe here
           if (inputStack?.Item.Code.ToString() == "game:waterportion"
             // just in case.
-            && (outputSlot.Empty || outputStack?.Item?.Code.ToString() == "sfk-steamworks:steamportion")
+            && (outputSlot.Empty || outputStack?.Item?.Code.ToString() == "sfksteamworks:steamportion")
             && inputStack.StackSize > 0
             && InputStackTemp > 100)
           {
@@ -546,11 +546,11 @@ namespace SFK.Steamworks.Boiler
 
             if (outputSlot.Empty)
             {
-              outputStack = new ItemStack(Api.World.GetItem(new AssetLocation("sfk-steamworks:steamportion")), produced);
+              outputStack = new ItemStack(Api.World.GetItem(new AssetLocation("sfksteamworks:steamportion")), produced);
             }
             else
             {
-              if (outputStack?.Item?.Code.ToString() != "sfk-steamworks:steamportion") return;
+              if (outputStack?.Item?.Code.ToString() != "sfksteamworks:steamportion") return;
               outputStack.StackSize += produced;
             }
 
