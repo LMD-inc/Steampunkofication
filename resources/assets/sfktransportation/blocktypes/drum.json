@@ -1,0 +1,61 @@
+{
+	"code": "drum",
+	"class": "Drum",
+	"entityClass": "LiquidContainer",
+	"shape": { "base": "block/metal/drum" },
+	"behaviors": [{ "name": "RightClickPickup" }],
+	"creativeinventory": { "general": ["*"], "sfktransportation": ["*"] },
+	"blockmaterial": "Metal",
+	"replaceable": 900,
+	"resistance": 1.5,
+	"maxStackSize": 1,
+	"lightAbsorption": 1,
+	"textures": {
+		"chromium": { "base": "game:block/metal/plate/chromium" },
+		"iron": { "base": "game:block/metal/plate/iron" }
+	},
+	"attributes": {
+		"capacityLitres": 100,
+		"liquidPipeConnect": {
+			"up": true
+		},
+		"acceptLiquidFromFaces": ["up"]
+	},
+	"sideao": {
+		"all": false
+	},
+	"sidesolid": {
+		"all": false
+	},
+	"emitsideao": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"collisionbox": {
+		"x1": 0,
+		"y1": 0,
+		"z1": 0,
+		"x2": 1,
+		"y2": 0.9375,
+		"z2": 1
+	},
+	"selectionbox": {
+		"x1": 0,
+		"y1": 0,
+		"z1": 0,
+		"x2": 1,
+		"y2": 0.9375,
+		"z2": 1
+	},
+	"sounds": {
+		"place": "block/anvil",
+		"hit": "block/anvil",
+		"break": "block/anvil",
+		"walk": "walk/stone"
+	},
+	"materialDensity": 600,
+	"heldTpIdleAnimation": "holdbothhandslarge",
+	"heldTpUseAnimation": "twohandplaceblock"
+}

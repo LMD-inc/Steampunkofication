@@ -23,8 +23,7 @@ namespace SFK.API
     public BlockFacing[] LiquidPushFaces { get; set; } = new BlockFacing[0];
     public BlockFacing[] AcceptLiquidFromFaces { get; set; } = new BlockFacing[0];
 
-    public int QuantitySlots = 1;
-    public int[] CapacityLitresPerSlot = new int[1] { 10 };
+    public int CapacityLitres;
     protected float liquidFlowRate = 1;
     public virtual float LiquidFlowRate => liquidFlowRate;
     public BlockFacing LastReceivedFromDir;
@@ -54,7 +53,7 @@ namespace SFK.API
       {
         if (Block.Attributes["pullLiquidFaces"].Exists)
         {
-          string[] faces = Block.Attributes["pullLiquidFaces"].AsArray<string>(null);
+          string[] faces = Block.Attributes["pullLiquidFaces"].AsArray<string>(new string[0]);
           LiquidPullFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
@@ -64,7 +63,7 @@ namespace SFK.API
 
         if (Block.Attributes["pushLiquidFaces"].Exists)
         {
-          string[] faces = Block.Attributes["pushLiquidFaces"].AsArray<string>(null);
+          string[] faces = Block.Attributes["pushLiquidFaces"].AsArray<string>(new string[0]);
           LiquidPushFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
@@ -74,7 +73,7 @@ namespace SFK.API
 
         if (Block.Attributes["acceptLiquidFromFaces"].Exists)
         {
-          string[] faces = Block.Attributes["acceptLiquidFromFaces"].AsArray<string>(null);
+          string[] faces = Block.Attributes["acceptLiquidFromFaces"].AsArray<string>(new string[0]);
           AcceptLiquidFromFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
@@ -86,13 +85,12 @@ namespace SFK.API
         liquidCheckRateMs = Block.Attributes["liquid-checkrateMs"].AsInt(200);
         inventoryClassName = Block.Attributes["inventoryClassName"].AsString(inventoryClassName);
         LiquidFlowObjectLangCode = Block.Attributes["liquidFlowObjectLangCode"].AsString(LiquidFlowObjectLangCode);
-        QuantitySlots = Block.Attributes["quantitySlots"].AsInt(QuantitySlots);
-        CapacityLitresPerSlot = Block.Attributes["capacityLitresPerSlot"].AsArray<int>(CapacityLitresPerSlot);
+        CapacityLitres = Block.Attributes["capacityLitres"].AsInt(10);
       }
 
       if (Inventory == null)
       {
-        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotLiquidOnly(self, CapacityLitresPerSlot[id]));
+        inventory = new InventoryGeneric(1, null, null, (id, self) => new ItemSlotLiquidOnly(self, CapacityLitres));
 
         inventory.SlotModified += OnSlotModified;
         inventory.OnGetAutoPullFromSlot = GetAutoPullFromSlot;
@@ -110,7 +108,7 @@ namespace SFK.API
       return null;
     }
 
-    // Return the slot where a chute may push items into. Return null if it shouldn't move items into this inventory.
+    // Return the slot where a pipe may push items into. Return null if it shouldn't move items into this inventory.
     public ItemSlot GetAutoPushIntoSlot(BlockFacing atBlockFace, ItemSlot fromSlot)
     {
       if (LiquidPullFaces.Contains(atBlockFace) || AcceptLiquidFromFaces.Contains(atBlockFace))
@@ -246,7 +244,7 @@ namespace SFK.API
           // Temporary stub, sine ItemSlotLiquidOnly.TryPutInto works wrong.
           if (targetSlotLiq.Itemstack?.StackSize >= targetSlotLiq.CapacityLitres) return false;
           // Tubes must balance themselves until push at their max.
-          if (beFlow != null && sourceSlot.StackSize <= targetSlotLiq.StackSize) return false;
+          if (beFlow != null && blockLiqCont == null && sourceSlot.StackSize <= targetSlotLiq.StackSize) return false;
 
           int quantity = (int)liquidFlowAccum;
           ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity);
@@ -264,7 +262,7 @@ namespace SFK.API
 
           if (qmoved > 0)
           {
-            if (beFlow != null)
+            if (beFlow != null && blockLiqCont == null)
             {
               targetSlotLiq.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
             }

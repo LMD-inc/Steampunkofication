@@ -13,7 +13,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\sfktransportation</OutputPath>
     <IntermediateOutputPath>..\..\obj\Debug\sfktransportation\</IntermediateOutputPath>
