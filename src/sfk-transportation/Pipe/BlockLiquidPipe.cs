@@ -20,9 +20,9 @@ namespace SFK.Transportation.Pipe
 
       if (liquidPipeConnect?.Exists == true)
       {
-        if (liquidPipeConnect[side.Code].Exists == true)
+        if (liquidPipeConnect[side.Opposite.Code].Exists == true)
         {
-          return liquidPipeConnect[side.Code].AsBool(true);
+          return liquidPipeConnect[side.Opposite.Code].AsBool(true);
         }
 
         return false;

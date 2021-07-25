@@ -3,6 +3,7 @@
 	"class": "Drum",
 	"entityClass": "LiquidContainer",
 	"shape": { "base": "block/metal/drum" },
+	"variantgroups": [{ "code": "material", "states": ["iron"] }],
 	"behaviors": [{ "name": "RightClickPickup" }],
 	"creativeinventory": { "general": ["*"], "sfktransportation": ["*"] },
 	"blockmaterial": "Metal",
@@ -15,11 +16,13 @@
 		"iron": { "base": "game:block/metal/plate/iron" }
 	},
 	"attributes": {
-		"capacityLitres": 100,
 		"liquidPipeConnect": {
 			"up": true
 		},
-		"acceptLiquidFromFaces": ["up"]
+		"acceptLiquidFromFaces": ["up"],
+		"capacityLitresByType": {
+			"*-iron": 100
+		}
 	},
 	"sideao": {
 		"all": false

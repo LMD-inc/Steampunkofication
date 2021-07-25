@@ -6,6 +6,7 @@ namespace SFK.API
   public class BELiquidContainer : BlockEntityLiquidFlow
   {
     public override string InventoryClassName => "liquidcontainer";
+
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
     {
       dsc.Clear();

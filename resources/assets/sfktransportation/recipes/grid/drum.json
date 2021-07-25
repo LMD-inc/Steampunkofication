@@ -1,0 +1,28 @@
+[
+	{
+		"ingredientPattern": "HP,SP,_P",
+		"ingredients": {
+			"H": {
+				"type": "item",
+				"code": "game:hammer-*",
+				"isTool": true,
+				"toolDurabilityCost": 100
+			},
+			"S": {
+				"type": "item",
+				"code": "game:shears-*",
+				"isTool": true,
+				"toolDurabilityCost": 50
+			},
+			"P": {
+				"type": "item",
+				"code": "game:metalplate-*",
+				"allowedVariants": ["iron"],
+				"name": "material"
+			}
+		},
+		"width": 2,
+		"height": 3,
+		"output": { "type": "block", "code": "drum-{material}", "quantity": 1 }
+	}
+]

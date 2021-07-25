@@ -15,11 +15,11 @@ namespace SFK.Transportation.Pipe
       Block block = world.BlockAccessor.GetBlock(pos);
 
 
-      bool attrExists = block.Attributes?["gasPipeConnect"][side.Code].Exists == true;
+      bool attrExists = block.Attributes?["gasPipeConnect"][side.Opposite.Code].Exists == true;
 
       if (attrExists)
       {
-        return block.Attributes["gasPipeConnect"][side.Code].AsBool(true);
+        return block.Attributes["gasPipeConnect"][side.Opposite.Code].AsBool(true);
       }
 
       if (world.BlockAccessor.GetBlockEntity(pos) is IGasFLow beFlow)
