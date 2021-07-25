@@ -1,0 +1,81 @@
+{
+	"code": "drum",
+	"class": "Drum",
+	"entityClass": "LiquidContainer",
+	"shape": { "base": "block/metal/drum" },
+	"variantgroups": [{ "code": "material", "states": ["iron"] }],
+	"behaviors": [{ "name": "RightClickPickup" }],
+	"creativeinventory": { "general": ["*"], "sfktransportation": ["*"] },
+	"blockmaterial": "Metal",
+	"replaceable": 900,
+	"resistance": 1.5,
+	"maxStackSize": 1,
+	"lightAbsorption": 1,
+	"textures": {
+		"chromium": { "base": "game:block/metal/plate/chromium" },
+		"iron": { "base": "game:block/metal/plate/iron" }
+	},
+	"attributes": {
+		"liquidPipeConnect": {
+			"up": true
+		},
+		"acceptLiquidFromFaces": ["up"],
+		"capacityLitresByType": {
+			"*-iron": 100
+		}
+	},
+	"sideao": {
+		"all": false
+	},
+	"sidesolid": {
+		"all": false
+	},
+	"emitsideao": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"collisionbox": {
+		"x1": 0.1003,
+		"y1": 0,
+		"z1": 0.1003,
+		"x2": 0.8997,
+		"y2": 1,
+		"z2": 0.8997
+	},
+	"selectionBox": {
+		"x1": 0.1003,
+		"y1": 0,
+		"z1": 0.1003,
+		"x2": 0.8997,
+		"y2": 1,
+		"z2": 0.8997
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": 0.1, "z": 0.5 },
+		"rotation": { "x": 18, "y": -45, "z": 0 },
+		"scale": 1.45
+	},
+	"sounds": {
+		"place": "block/anvil",
+		"hit": "block/anvil",
+		"break": "block/anvil",
+		"walk": "walk/stone"
+	},
+	"tpHandTransform": {
+		"translation": { "x": 0.43, "y": 0.43, "z": 0.87 },
+		"rotation": { "x": 14, "y": 15, "z": -88 },
+		"origin": { "x": 0, "y": 0, "z": 0 },
+		"scale": 0.63
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 2.5
+	},
+	"materialDensity": 600,
+	"heldTpIdleAnimation": "holdbothhandslarge",
+	"heldTpUseAnimation": "twohandplaceblock"
+}

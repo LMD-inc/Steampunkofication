@@ -4,6 +4,7 @@ using Vintagestory.API.Server;
 
 using SFK.Transportation.Pipe;
 using SFK.Transportation.WaterPump;
+using SFK.Transportation.Drum;
 
 [assembly: ModInfo("[SFK] Transportation",
   Description = "Steampunk. More. Now with pipes!",
@@ -28,6 +29,8 @@ namespace SFK.Transportation
       api.RegisterBlockClass("WaterPump", typeof(BlockWaterPump));
       api.RegisterBlockEntityClass("WaterPump", typeof(BEWaterPump));
       api.RegisterBlockEntityBehaviorClass("WaterPump", typeof(BEBehaviorWaterPump));
+
+      api.RegisterBlockClass("Drum", typeof(BlockDrum));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

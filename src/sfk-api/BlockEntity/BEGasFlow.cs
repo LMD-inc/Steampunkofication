@@ -22,8 +22,7 @@ namespace SFK.API
     public BlockFacing[] GasPushFaces { get; set; } = new BlockFacing[0];
     public BlockFacing[] AcceptGasFromFaces { get; set; } = new BlockFacing[0];
 
-    public int QuantitySlots = 1;
-    public int[] CapacityLitresPerSlot = new int[1] { 10 };
+    public int CapacityLitres;
     protected float gasFlowRate = 1;
     public virtual float GasFlowRate => gasFlowRate;
     public BlockFacing LastReceivedFromDir;
@@ -85,13 +84,12 @@ namespace SFK.API
         gasCheckRateMs = Block.Attributes["gas-checkrateMs"].AsInt(200);
         inventoryClassName = Block.Attributes["inventoryClassName"].AsString(inventoryClassName);
         GasFlowObjectLangCode = Block.Attributes["gasFlowObjectLangCode"].AsString(GasFlowObjectLangCode);
-        QuantitySlots = Block.Attributes["quantitySlots"].AsInt(QuantitySlots);
-        CapacityLitresPerSlot = Block.Attributes["capacityLitresPerSlot"].AsArray<int>(CapacityLitresPerSlot);
+        CapacityLitres = Block.Attributes["capacityLitres"].AsInt(CapacityLitres);
       }
 
       if (Inventory == null)
       {
-        inventory = new InventoryGeneric(QuantitySlots, null, null, (id, self) => new ItemSlotGasOnly(self, CapacityLitresPerSlot[id]));
+        inventory = new InventoryGeneric(1, null, null, (id, self) => new ItemSlotGasOnly(self, CapacityLitres));
 
         inventory.SlotModified += OnSlotModified;
         inventory.OnGetAutoPushIntoSlot = GetAutoPushIntoSlot;

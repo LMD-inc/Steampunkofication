@@ -52,7 +52,7 @@ namespace SFK.Transportation.WaterPump
 
         ItemSlot slot = Inventory[0];
 
-        if (slot.Itemstack?.StackSize >= CapacityLitresPerSlot[0]) return;
+        if (slot.Itemstack?.StackSize >= CapacityLitres) return;
 
         float nwspeed = mpc.Network?.Speed ?? 0;
         nwspeed = Math.Abs(nwspeed * 3f) * mpc.GearedRatio;

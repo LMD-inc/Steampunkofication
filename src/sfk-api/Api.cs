@@ -23,6 +23,7 @@ namespace SFK.API
       api.RegisterBlockEntityClass("GasContainer", typeof(BEGasContainer));
 
       api.RegisterBlockEntityClass("LiquidFlow", typeof(BlockEntityLiquidFlow));
+      api.RegisterBlockEntityClass("LiquidContainer", typeof(BELiquidContainer));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

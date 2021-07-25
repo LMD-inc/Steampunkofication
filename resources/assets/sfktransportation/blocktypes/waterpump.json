@@ -6,16 +6,16 @@
 	"behaviors": [{ "name": "HorizontalOrientable" }],
 	"attributes": {
 		"liquidPipeConnectByType": {
-			"*-north": { "west": true },
-			"*-east": { "north": true },
-			"*-south": { "east": true },
-			"*-west": { "south": true }
+			"*-north": { "east": true },
+			"*-east": { "south": true },
+			"*-south": { "west": true },
+			"*-west": { "north": true }
 		},
 		"pushLiquidFacesByType": {
-			"*-east": ["south"],
-			"*-west": ["north"],
 			"*-north": ["east"],
-			"*-south": ["west"]
+			"*-east": ["south"],
+			"*-south": ["west"],
+			"*-west": ["north"]
 		}
 	},
 	"variantgroups": [
