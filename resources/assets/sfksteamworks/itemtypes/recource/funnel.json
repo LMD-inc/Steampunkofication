@@ -1,6 +1,26 @@
 {
 	"code": "funnel",
-	"maxstacksize": 16,
+	"behaviors": [
+		{
+			"name": "GroundStorable",
+			"properties": {
+				"layout": "Quadrants",
+				"collisionBox": {
+					"x1": 0,
+					"y1": 0,
+					"z1": 0,
+					"x2": 1,
+					"y2": 0.125,
+					"z2": 1
+				}
+			}
+		},
+		{
+			"name": "Unplaceable",
+			"__comment": "The ground storable obsoletes this being a block. Should be an item, but is kept a block for backwards compatibility"
+		},
+		{ "name": "RightClickPickup" }
+	],
 	"variantgroups": [
 		{ "code": "state", "states": ["raw", "burned"] },
 		{ "code": "type", "states": ["blue"] }
@@ -24,6 +44,7 @@
 			"requiresContainer": false
 		}
 	},
+	"maxstacksize": 16,
 	"materialDensity": 2600,
 	"fpHandTransform": {
 		"translation": { "x": 0, "y": 0.2, "z": 0 },
