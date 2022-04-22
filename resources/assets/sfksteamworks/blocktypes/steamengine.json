@@ -10,6 +10,9 @@
 			"loadFromProperties": "abstract/horizontalorientation"
 		}
 	],
+	"attributes": {
+		"inventoryClassName": "steamengine"
+	},
 	"creativeinventoryByType": {
 		"*-east": { "general": ["*"], "sfksteamworks": ["*"] }
 	},
