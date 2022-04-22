@@ -57,12 +57,12 @@ namespace SFK.Steamworks.Boiler
      * Cool if this method allows to put different types of liquids from bucket to proper slots.
      * Also, maybe it can be used in liquid transportation stuff (pipes)?
      */
-    public override int GetContainerSlotId(IWorldAccessor world, BlockPos pos)
+    public override int GetContainerSlotId(BlockPos pos)
     {
       return 1;
     }
 
-    public override int GetContainerSlotId(IWorldAccessor world, ItemStack containerStack)
+    public override int GetContainerSlotId(ItemStack containerStack)
     {
       return 1;
     }
@@ -129,7 +129,7 @@ namespace SFK.Steamworks.Boiler
 
     }
 
-    public override int TryPutContent(IWorldAccessor world, ItemStack containerStack, ItemStack contentStack, int desiredItems)
+    public override int TryPutLiquid(ItemStack containerStack, ItemStack contentStack, float desiredItems)
     {
       return 0;
     }

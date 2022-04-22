@@ -300,7 +300,7 @@ namespace SFK.API
       Api.World.BlockAccessor.GetChunkAtBlockPos(Pos)?.MarkModified();
     }
 
-    public override void OnBlockBroken()
+    public override void OnBlockBroken(IPlayer byPlayer)
     {
       if (Api.World is IServerWorldAccessor)
       {
@@ -318,7 +318,7 @@ namespace SFK.API
         }
       }
 
-      base.OnBlockBroken();
+      base.OnBlockBroken(byPlayer);
     }
 
     public override void OnReceivedServerPacket(int packetid, byte[] data)

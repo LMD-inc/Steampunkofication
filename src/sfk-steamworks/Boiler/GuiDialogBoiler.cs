@@ -58,11 +58,11 @@ namespace SFK.Steamworks.Boiler
           .BeginChildElements(bgBounds)
               .AddDynamicCustomDraw(boilerBounds, OnBgDraw, "symbolDrawer")
               .AddItemSlotGrid(Inventory, SendInvPacket, 1, new int[] { 0 }, fuelSlotBounds, "fuelSlot")
-              .AddDynamicText("", CairoFont.WhiteDetailText(), EnumTextOrientation.Left, fuelSlotBounds.RightCopy(5, 16).WithFixedSize(60, 30), "fueltemp")
+              .AddDynamicText("", CairoFont.WhiteDetailText().WithOrientation(EnumTextOrientation.Center), fuelSlotBounds.RightCopy(5, 16).WithFixedSize(60, 30), "fueltemp")
 
               .AddInset(inputFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
               .AddDynamicCustomDraw(inputFullnessMeterBounds, createFullnessMeterDraw(1, 50), "inputBar")
-              .AddDynamicText("", CairoFont.WhiteDetailText(), EnumTextOrientation.Center, inputFullnessMeterBounds.BelowCopy(-10, 5).WithFixedSize(60, 30), "inputtemp")
+              .AddDynamicText("", CairoFont.WhiteDetailText().WithOrientation(EnumTextOrientation.Center), inputFullnessMeterBounds.BelowCopy(-10, 5).WithFixedSize(60, 30), "inputtemp")
 
               .AddInset(outputFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
               .AddDynamicCustomDraw(outputFullnessMeterBounds, createFullnessMeterDraw(2, 100), "outputBar")
@@ -91,7 +91,7 @@ namespace SFK.Steamworks.Boiler
         BEBoiler beboiler = capi.World.BlockAccessor.GetBlockEntity(BlockEntityPosition) as BEBoiler;
         float itemsPerLitre = 1f;
 
-        WaterTightContainableProps props = BlockLiquidContainerBase.GetInContainerProps(liquidSlot.Itemstack);
+        WaterTightContainableProps props = BlockLiquidContainerBase.GetContainableProps(liquidSlot.Itemstack);
         if (props != null)
         {
           itemsPerLitre = props.ItemsPerLitre;
@@ -113,7 +113,7 @@ namespace SFK.Steamworks.Boiler
           ctx.Matrix = m;
 
           AssetLocation loc = tex.Base.Clone().WithPathAppendixOnce(".png");
-          GuiElement.fillWithPattern(capi, ctx, loc.Path, true, false);
+          GuiElement.fillWithPattern(capi, ctx, new AssetLocation(loc.Path), true, false);
           ctx.Restore();
         }
       };

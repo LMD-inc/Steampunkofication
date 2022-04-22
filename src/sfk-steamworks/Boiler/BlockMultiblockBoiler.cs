@@ -68,7 +68,7 @@ namespace SFK.Steamworks.Boiler
       return principalBlock.GetParticleBreakBox(blockAccess, be.Principal, facing);
     }
 
-    public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing)
+    public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing, int rndIndex)
     {
       IBlockAccessor blockAccess = capi.World.BlockAccessor;
       BEMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMultiblockGasFlow;
