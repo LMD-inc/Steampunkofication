@@ -84,7 +84,7 @@ namespace SFK.API
         gasCheckRateMs = Block.Attributes["gas-checkrateMs"].AsInt(200);
         inventoryClassName = Block.Attributes["inventoryClassName"].AsString(inventoryClassName);
         GasFlowObjectLangCode = Block.Attributes["gasFlowObjectLangCode"].AsString(GasFlowObjectLangCode);
-        CapacityLitres = Block.Attributes["capacityLitres"].AsInt(CapacityLitres);
+        CapacityLitres = Block.Attributes["capacityLitres"].AsInt(10);
       }
 
       if (Inventory == null)
