@@ -26,6 +26,9 @@ namespace SFK.Steamworks.Boiler
 
     public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack = null)
     {
+      BlockPos npos = blockPos.AddCopy(BlockFacing.FromCode(Variant["side"]));
+      world.BlockAccessor.GetBlock(npos).OnNeighbourBlockChange(world, npos, blockPos);
+
       base.OnBlockPlaced(world, blockPos, byItemStack);
     }
 
@@ -68,7 +71,7 @@ namespace SFK.Steamworks.Boiler
       return principalBlock.GetParticleBreakBox(blockAccess, be.Principal, facing);
     }
 
-    public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing)
+    public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing, int rndIndex)
     {
       IBlockAccessor blockAccess = capi.World.BlockAccessor;
       BEMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMultiblockGasFlow;
