@@ -26,13 +26,15 @@ namespace SFK.Steamworks.SteamEngine
 
     public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack = null)
     {
+      BlockPos npos = blockPos.AddCopy(BlockFacing.FromCode(Variant["side"]));
+      world.BlockAccessor.GetBlock(npos).OnNeighbourBlockChange(world, npos, blockPos);
+
       base.OnBlockPlaced(world, blockPos, byItemStack);
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1f)
     {
-      BEMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(pos) as BEMultiblockGasFlow;
-      if (be == null || be.Principal == null)
+      if (!(world.BlockAccessor.GetBlockEntity(pos) is BEMultiblockGasFlow be) || be == null || be.Principal == null)
       {
         // being broken by other game code (including on breaking the steam engine base block): standard block breaking treatment
         base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
@@ -58,8 +60,7 @@ namespace SFK.Steamworks.SteamEngine
 
     public override Cuboidf GetParticleBreakBox(IBlockAccessor blockAccess, BlockPos pos, BlockFacing facing)
     {
-      BEMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMultiblockGasFlow;
-      if (be == null || be.Principal == null)
+      if (!(blockAccess.GetBlockEntity(pos) is BEMultiblockGasFlow be) || be == null || be.Principal == null)
       {
         return base.GetParticleBreakBox(blockAccess, pos, facing);
       }
@@ -71,8 +72,7 @@ namespace SFK.Steamworks.SteamEngine
     public override int GetRandomColor(ICoreClientAPI capi, BlockPos pos, BlockFacing facing, int rndIndex)
     {
       IBlockAccessor blockAccess = capi.World.BlockAccessor;
-      BEMultiblockGasFlow be = blockAccess.GetBlockEntity(pos) as BEMultiblockGasFlow;
-      if (be == null || be.Principal == null)
+      if (!(blockAccess.GetBlockEntity(pos) is BEMultiblockGasFlow be) || be == null || be.Principal == null)
       {
         return 0;
       }
