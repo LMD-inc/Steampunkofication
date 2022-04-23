@@ -61,11 +61,11 @@ namespace SFK.Steamworks.Boiler
               .AddDynamicText("", CairoFont.WhiteDetailText().WithOrientation(EnumTextOrientation.Center), fuelSlotBounds.RightCopy(5, 16).WithFixedSize(60, 30), "fueltemp")
 
               .AddInset(inputFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
-              .AddDynamicCustomDraw(inputFullnessMeterBounds, createFullnessMeterDraw(1, 50), "inputBar")
+              .AddDynamicCustomDraw(inputFullnessMeterBounds, CreateFullnessMeterDraw(1, 50), "inputBar")
               .AddDynamicText("", CairoFont.WhiteDetailText().WithOrientation(EnumTextOrientation.Center), inputFullnessMeterBounds.BelowCopy(-10, 5).WithFixedSize(60, 30), "inputtemp")
 
               .AddInset(outputFullnessMeterBounds.ForkBoundingParent(2, 2, 2, 2), 2)
-              .AddDynamicCustomDraw(outputFullnessMeterBounds, createFullnessMeterDraw(2, 100), "outputBar")
+              .AddDynamicCustomDraw(outputFullnessMeterBounds, CreateFullnessMeterDraw(2, 100), "outputBar")
           .EndChildElements()
           .Compose()
       ;
@@ -81,24 +81,22 @@ namespace SFK.Steamworks.Boiler
 
     #region Drawings
 
-    private DrawDelegateWithBounds createFullnessMeterDraw(int slotId, float capacity)
+    private DrawDelegateWithBounds CreateFullnessMeterDraw(int slotId, float capacityLitres)
     {
       return (ctx, surface, currentBounds) =>
       {
         ItemSlot liquidSlot = Inventory[slotId];
         if (liquidSlot.Empty) return;
 
-        BEBoiler beboiler = capi.World.BlockAccessor.GetBlockEntity(BlockEntityPosition) as BEBoiler;
         float itemsPerLitre = 1f;
 
         WaterTightContainableProps props = BlockLiquidContainerBase.GetContainableProps(liquidSlot.Itemstack);
         if (props != null)
         {
           itemsPerLitre = props.ItemsPerLitre;
-          capacity = Math.Max(capacity, props.MaxStackSize);
         }
 
-        float fullnessRelative = liquidSlot.StackSize / itemsPerLitre / capacity;
+        float fullnessRelative = liquidSlot.StackSize / itemsPerLitre / capacityLitres;
 
         double offY = (1 - fullnessRelative) * currentBounds.InnerHeight;
 

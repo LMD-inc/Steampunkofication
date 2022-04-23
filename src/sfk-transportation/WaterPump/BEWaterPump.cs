@@ -1,10 +1,7 @@
 using System;
-using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Util;
-using Vintagestory.GameContent.Mechanics;
+using Vintagestory.GameContent;
 using SFK.API;
 using System.Text;
 
@@ -52,8 +49,6 @@ namespace SFK.Transportation.WaterPump
 
         ItemSlot slot = Inventory[0];
 
-        if (slot.Itemstack?.StackSize >= CapacityLitres) return;
-
         float nwspeed = mpc.Network?.Speed ?? 0;
         nwspeed = Math.Abs(nwspeed * 3f) * mpc.GearedRatio;
 
@@ -65,14 +60,16 @@ namespace SFK.Transportation.WaterPump
 
           if (slot.Empty)
           {
-            slot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("game:waterportion")), 1);
+            slot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("game:waterportion")), 0);
           }
-          else
+          
+          float itemsPerLitre = BlockLiquidContainerBase.GetContainableProps(slot.Itemstack)?.ItemsPerLitre ?? 1f;
+
+          if (slot.Itemstack?.StackSize >= CapacityLitres * itemsPerLitre) return;
+
+          if (slot.Itemstack?.Item?.Code.ToString() == "game:waterportion")
           {
-            if (slot.Itemstack?.Item?.Code.ToString() == "game:waterportion")
-            {
-              slot.Itemstack.StackSize += 1;
-            }
+            slot.Itemstack.StackSize += (int)(1 * itemsPerLitre); // +1L
           }
         }
 
@@ -83,6 +80,8 @@ namespace SFK.Transportation.WaterPump
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
     {
       dsc.Clear();
+
+      base.GetBlockInfo(forPlayer, dsc);
 
       bool isPowered = mpc.Network?.Speed > 0.001f;
       hasWater = (Block as BlockWaterPump).CheckHasWater(Api.World, Pos, BlockFacing.FromCode(Block.Variant["side"]));
@@ -103,6 +102,8 @@ namespace SFK.Transportation.WaterPump
           dsc.Append(" need mechanical power;");
         }
       }
+
+      
     }
   }
 }

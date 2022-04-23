@@ -53,7 +53,7 @@ namespace SFK.API
       {
         if (Block.Attributes["pullLiquidFaces"].Exists)
         {
-          string[] faces = Block.Attributes["pullLiquidFaces"].AsArray<string>(new string[0]);
+          string[] faces = Block.Attributes["pullLiquidFaces"].AsArray(new string[0]);
           LiquidPullFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
@@ -63,7 +63,7 @@ namespace SFK.API
 
         if (Block.Attributes["pushLiquidFaces"].Exists)
         {
-          string[] faces = Block.Attributes["pushLiquidFaces"].AsArray<string>(new string[0]);
+          string[] faces = Block.Attributes["pushLiquidFaces"].AsArray(new string[0]);
           LiquidPushFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
@@ -73,7 +73,7 @@ namespace SFK.API
 
         if (Block.Attributes["acceptLiquidFromFaces"].Exists)
         {
-          string[] faces = Block.Attributes["acceptLiquidFromFaces"].AsArray<string>(new string[0]);
+          string[] faces = Block.Attributes["acceptLiquidFromFaces"].AsArray(new string[0]);
           AcceptLiquidFromFaces = new BlockFacing[faces.Length];
           for (int i = 0; i < faces.Length; i++)
           {
@@ -121,12 +121,15 @@ namespace SFK.API
 
     public void MoveLiquid(float dt)
     {
-      liquidFlowAccum = Math.Min(liquidFlowAccum + LiquidFlowRate, Math.Max(1, LiquidFlowRate * 1));
-      if (liquidFlowAccum < 1) return;
-
-      if (LiquidPushFaces != null && LiquidPushFaces.Length > 0 && Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly && !slot.Empty) != null)
+      if (LiquidPushFaces != null && LiquidPushFaces.Length > 0 && Inventory.FirstOrDefault(s => s is ItemSlotLiquidOnly && !s.Empty) != null)
       {
         ItemStack stack = Inventory.First(slot => slot is ItemSlotLiquidOnly && !slot.Empty).Itemstack;
+
+        liquidFlowRate = BlockLiquidContainerBase.GetContainableProps(stack).ItemsPerLitre;
+        liquidFlowAccum = Math.Min(liquidFlowAccum + LiquidFlowRate, Math.Max(1, LiquidFlowRate * 1));
+
+        if (liquidFlowAccum < 1) return;
+
 
         BlockFacing outputFace = LiquidPushFaces[Api.World.Rand.Next(LiquidPushFaces.Length)];
         int dir = stack.Attributes.GetInt("tubeDir", -1);
@@ -241,8 +244,8 @@ namespace SFK.API
 
         if (targetSlot != null && targetSlot is ItemSlotLiquidOnly targetSlotLiq)
         {
-          // Temporary stub, sine ItemSlotLiquidOnly.TryPutInto works wrong.
-          if (targetSlotLiq.Itemstack?.StackSize >= targetSlotLiq.CapacityLitres) return false;
+          // Temporary stub, since ItemSlotLiquidOnly.TryPutInto works wrong.
+          // if (targetSlotLiq.Itemstack?.StackSize >= targetSlotLiq.CapacityLitres) return false;
           // Tubes must balance themselves until push at their max.
           if (beFlow != null && blockLiqCont == null && sourceSlot.StackSize <= targetSlotLiq.StackSize) return false;
 
@@ -381,8 +384,10 @@ namespace SFK.API
         {
           if (slot.Empty) continue;
 
+          float itemsPerLitre = BlockLiquidContainerBase.GetContainableProps(slot.Itemstack).ItemsPerLitre;
+
           // TODO: localize and pluralize
-          dsc.AppendLine($"{slot.Itemstack.StackSize} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotLiquidOnly).CapacityLitres}");
+          dsc.AppendLine($"{slot.Itemstack.StackSize / itemsPerLitre} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotLiquidOnly).CapacityLitres}");
         }
       }
       else
