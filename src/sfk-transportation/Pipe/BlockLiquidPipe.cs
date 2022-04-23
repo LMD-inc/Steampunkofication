@@ -28,14 +28,12 @@ namespace SFK.Transportation.Pipe
         return false;
       }
 
-      ILiquidFLow beFlow = world.BlockAccessor.GetBlockEntity(pos) as ILiquidFLow;
-
-      if (beFlow != null)
+      if (world.BlockAccessor.GetBlockEntity(pos) is ILiquidFLow beFlow && beFlow != null)
       {
         return block is BlockLiquidPipe
-            || beFlow.LiquidPullFaces.Contains(side)
-            || beFlow.LiquidPushFaces.Contains(side)
-            || beFlow.AcceptLiquidFromFaces.Contains(side);
+          || beFlow.LiquidPullFaces.Contains(side)
+          || beFlow.LiquidPushFaces.Contains(side)
+          || beFlow.AcceptLiquidFromFaces.Contains(side);
       }
 
       return false;

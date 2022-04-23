@@ -26,6 +26,9 @@ namespace SFK.Steamworks.Boiler
 
     public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack = null)
     {
+      BlockPos npos = blockPos.AddCopy(BlockFacing.FromCode(Variant["side"]));
+      world.BlockAccessor.GetBlock(npos).OnNeighbourBlockChange(world, npos, blockPos);
+
       base.OnBlockPlaced(world, blockPos, byItemStack);
     }
 
