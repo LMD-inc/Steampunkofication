@@ -540,7 +540,7 @@ namespace SFK.Steamworks.Boiler
               return;
             }
 
-            int consumed = ((int)Math.Round(1 + InputStackTemp / 500));
+            int consumed = (int)Math.Round(1 + InputStackTemp / 500); // in litres
             int produced = consumed * steamProductionCoefitient; // Need for future to use coefficient
 
 
@@ -554,7 +554,8 @@ namespace SFK.Steamworks.Boiler
               outputStack.StackSize += produced;
             }
 
-            inputSlot.TakeOut(consumed);
+            float inputItemsPerLitre = BlockLiquidContainerBase.GetContainableProps(inputStack).ItemsPerLitre;
+            inputSlot.TakeOut((int)(consumed  * inputItemsPerLitre));
 
             MarkDirty(true);
             Api.World.BlockAccessor.MarkBlockEntityDirty(Pos);

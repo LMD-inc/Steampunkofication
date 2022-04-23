@@ -83,8 +83,9 @@ namespace SFK.Steamworks.Boiler
       {
         if (!slot.Empty && (slot is ItemSlotLiquidOnly || slot is ItemSlotGasOnly))
         {
+          float itemsPerLitre = GetContainableProps(slot.Itemstack).ItemsPerLitre;
           // TODO workaround GetCurrentLitres when use not 1:1 litres-item ratio liquids
-          stb.AppendLine(Lang.Get("{0} litres of {1}", slot.Itemstack.StackSize, GetIncontentString(slot.Itemstack)));
+          stb.AppendLine(Lang.Get("{0} litres of {1}", slot.Itemstack.StackSize / itemsPerLitre, GetIncontentString(slot.Itemstack)));
         }
       }
 
