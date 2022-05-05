@@ -1,0 +1,54 @@
+{
+  "code": "belt",
+  "class": "Belt",
+  "variantgroups": [
+    { "code": "variant", "states": ["normal", "withaxle"] },
+    {
+      "code": "type",
+      "states": ["n", "e", "s", "w", "ns", "ew"]
+    }
+  ],
+  "creativeinventory": {
+    "general": ["*-ew"],
+    "sfktransportation": ["*-ew"]
+  },
+  "shapebytype": {
+    "*normal-n": { "base": "block/leather/belt/s", "rotateY": 180 },
+    "*normal-e": { "base": "block/leather/belt/s", "rotateY": 90 },
+    "*normal-s": { "base": "block/leather/belt/s", "rotateY": 0 },
+    "*normal-w": { "base": "block/leather/belt/s", "rotateY": 270 },
+
+    "*normal-ns": { "base": "block/leather/belt/ns", "rotateY": 0 },
+    "*normal-ew": { "base": "block/leather/belt/ns", "rotateY": 180 },
+
+    "*withaxle-n": { "base": "block/leather/belt/withaxle-s", "rotateY": 180 },
+    "*withaxle-e": { "base": "block/leather/belt/withaxle-s", "rotateY": 90 },
+    "*withaxle-s": { "base": "block/leather/belt/withaxle-s", "rotateY": 0 },
+    "*withaxle-w": { "base": "block/leather/belt/withaxle-s", "rotateY": 270 },
+
+    "*withaxle-ns": { "base": "block/leather/belt/withaxle-ns", "rotateY": 0 },
+    "*withaxle-ew": { "base": "block/leather/belt/withaxle-ns", "rotateY": 180 }
+  },
+
+  "textures": {
+    "wood": { "base": "game:block/wood/planks/generic" },
+    "leather-black": { "base": "game:block/leather-black" }
+  },
+  "blockmaterial": "Cloth",
+  "lightAbsorption": 0,
+  "drawtype": "json",
+  "replaceable": 160,
+  "resistance": 1.75,
+  "sidesolid": {
+    "all": false
+  },
+  "sideopaque": {
+    "all": false
+  },
+  "sounds": {
+    "place": "block/leather",
+    "break": "block/leather",
+    "hit": "block/leather",
+    "walk": "game:walk/stone"
+  }
+}
