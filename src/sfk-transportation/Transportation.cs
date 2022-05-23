@@ -35,6 +35,9 @@ namespace SFK.Transportation
 
       api.RegisterItemClass("Belt", typeof(ItemBelt));
       api.RegisterBlockClass("Belt", typeof(BlockBelt));
+      api.RegisterBlockClass("BeltWithAxle", typeof(BlockBeltWithAxle));
+      api.RegisterBlockEntityClass("Belt", typeof(BEBelt));
+      api.RegisterBlockEntityBehaviorClass("BeltWithAxle", typeof(BEBehaviorBeltWithAxle));
     }
 
     public override void StartClientSide(ICoreClientAPI api)
