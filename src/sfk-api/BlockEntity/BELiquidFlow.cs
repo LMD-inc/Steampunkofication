@@ -172,6 +172,8 @@ namespace SFK.API
       }
     }
 
+    // gets the liquid from containers that can't push it themselves
+    // also sets tubeDir to the direction it came from
     public virtual void TryPullFrom(BlockFacing inputFace)
     {
       BlockPos InputPosition = Pos.AddCopy(inputFace);
@@ -235,8 +237,10 @@ namespace SFK.API
         ItemSlot sourceSlot = Inventory.FirstOrDefault(slot => slot is ItemSlotLiquidOnly && !slot.Empty);
         if ((sourceSlot?.Itemstack?.StackSize ?? 0) == 0) return false;  //seems FirstOrDefault() method can sometimes give a slot with stacksize == 0, weird
 
-        int tubeDir = sourceSlot.Itemstack.Attributes.GetInt("tubeDir");
+        int tubeDir = sourceSlot.Itemstack.Attributes.GetInt("tubeDir", -1);
+        int vertPower = sourceSlot.Itemstack.Attributes.GetInt("vertPower", 0);
         sourceSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+        sourceSlot.Itemstack.Attributes.RemoveAttribute("vertPower");
 
         ItemSlot targetSlot = beContainer.Inventory.GetAutoPushIntoSlot(outputFace.Opposite, sourceSlot);
         BlockEntityLiquidFlow beFlow = beOutput as BlockEntityLiquidFlow;
@@ -253,25 +257,46 @@ namespace SFK.API
           ItemStackMoveOperation op = new ItemStackMoveOperation(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity);
 
           int qmoved = 0;
-          if (blockLiqCont != null)
+          // check if it goes UP needs to have at least 1 vertical power
+          if (outputFace != BlockFacing.UP || vertPower >= 1)
           {
-            qmoved = blockLiqCont.TryPutLiquid(OutputPosition, sourceSlot.Itemstack, quantity);
-            sourceSlot.TakeOut(qmoved);
-          }
-          else
-          {
-            qmoved = sourceSlot.TryPutInto(targetSlotLiq, ref op);
-          }
-
-          if (qmoved > 0)
-          {
-            if (beFlow != null && blockLiqCont == null)
+            if (blockLiqCont != null)
             {
-              targetSlotLiq.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
+              qmoved = blockLiqCont.TryPutLiquid(OutputPosition, sourceSlot.Itemstack, quantity);
+              sourceSlot.TakeOut(qmoved);
             }
             else
             {
+              qmoved = sourceSlot.TryPutInto(targetSlotLiq, ref op);
+            }
+          }
+
+          // successfully moved some liquid
+          if (qmoved > 0)
+          {
+            // if its not a container, set the tubeDir to the direction it came from
+            if (beFlow != null && blockLiqCont == null)
+            {
+              targetSlotLiq.Itemstack.Attributes.SetInt("tubeDir", outputFace.Index);
+
+              // if it tries to go up and not come from this tube
+              if (outputFace == BlockFacing.UP && tubeDir != 5)
+              {
+                vertPower = Math.Min(vertPower - 1, 0);
+              } 
+              else if (outputFace == BlockFacing.DOWN)
+              {
+                vertPower++;
+              }
+
+              // after successful pushing into a tube, set the vertical power
+              targetSlotLiq.Itemstack.Attributes.SetInt("vertPower", vertPower);
+            }
+            else
+            {
+              // we got into a container, remove the attributes
               targetSlotLiq.Itemstack.Attributes.RemoveAttribute("tubeDir");
+              targetSlotLiq.Itemstack.Attributes.RemoveAttribute("vertPower");
             }
 
             sourceSlot.MarkDirty();
@@ -385,9 +410,13 @@ namespace SFK.API
           if (slot.Empty) continue;
 
           float itemsPerLitre = BlockLiquidContainerBase.GetContainableProps(slot.Itemstack).ItemsPerLitre;
+          int vertPower = slot.Itemstack.Attributes.GetInt("vertPower", 0);
+          int tubeDir = slot.Itemstack.Attributes.GetInt("tubeDir", -1);
 
           // TODO: localize and pluralize
           dsc.AppendLine($"{slot.Itemstack.StackSize / itemsPerLitre} litres of {slot.Itemstack.GetName()} / Max: {(slot as ItemSlotLiquidOnly).CapacityLitres}");
+          dsc.AppendLine($"Vertical Power: {vertPower}");
+          dsc.AppendLine($"Tube Direction: {tubeDir}");
         }
       }
       else
