@@ -18,6 +18,7 @@ namespace SFK.Transportation.WaterPump
     public override string InventoryClassName => "waterpump";
     private bool hasWater = false;
     public bool HasWater => hasWater;
+    public static int VertPower => 4; // How many blocks above the pump can the water flow
 
     #endregion
 
@@ -61,6 +62,8 @@ namespace SFK.Transportation.WaterPump
           if (slot.Empty)
           {
             slot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("game:waterportion")), 0);
+            slot.Itemstack.Attributes.SetInt("tubeDir", BlockFacing.FromCode(Block.Variant["side"]).Index);
+            slot.Itemstack.Attributes.SetInt("vertPower", VertPower);
           }
           
           float itemsPerLitre = BlockLiquidContainerBase.GetContainableProps(slot.Itemstack)?.ItemsPerLitre ?? 1f;

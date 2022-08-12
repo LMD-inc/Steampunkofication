@@ -209,6 +209,7 @@ namespace SFK.API
               else
               {
                 targetSlot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+                targetSlot.Itemstack.Attributes.RemoveAttribute("vertPower");
               }
 
               sourceSlot.MarkDirty();
@@ -312,6 +313,7 @@ namespace SFK.API
           {
             //If the push failed, re-apply original tubeDir so that the itemStack still has it for next push attempt
             sourceSlot.Itemstack.Attributes.SetInt("tubeDir", tubeDir);
+            sourceSlot.Itemstack.Attributes.SetInt("vertPower", vertPower);
           }
         }
       }
@@ -360,8 +362,8 @@ namespace SFK.API
         {
           if (slot.Itemstack == null) continue;
 
-          slot.Itemstack.Attributes.RemoveAttribute("tubeQHTravelled");
           slot.Itemstack.Attributes.RemoveAttribute("tubeDir");
+          slot.Itemstack.Attributes.RemoveAttribute("vertPower");
 
           Api.World.SpawnItemEntity(slot.Itemstack, epos);
           slot.Itemstack = null;
