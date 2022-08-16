@@ -34,21 +34,21 @@ namespace Vintagestory.GameContent
 
     public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
     {
-        if (meshref == null) return;
+      if (meshref == null) return;
 
-        BlockPos pos = be.Pos;
-        IRenderAPI rpi = api.Render;
-        Vec3d camPos = api.World.Player.Entity.CameraPos;
+      BlockPos pos = be.Pos;
+      IRenderAPI rpi = api.Render;
+      Vec3d camPos = api.World.Player.Entity.CameraPos;
 
-        IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
+      // IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
 
-        prog.ModelMatrix = ModelMat
-          .Identity()
-          .Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z)
-          .Translate(0.5f, 11f / 16f, 0.5f)
-          .RotateY(AngleRad)
-          .Translate(-0.5f, 0, -0.5f)
-          .Values;
+      // prog.ModelMatrix = ModelMat
+      //   .Identity()
+      //   .Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z)
+      //   .Translate(0.5f, 11f / 16f, 0.5f)
+      //   .RotateY(AngleRad)
+      //   .Translate(-0.5f, 0, -0.5f)
+      //   .Values;
 
       // be.
     }

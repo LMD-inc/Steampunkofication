@@ -24,7 +24,7 @@ namespace SFK.Transportation.Belt
     public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
     {
       handling = EnumHandHandling.PreventDefault;
-      Block targetBlock = api.World.BlockAccessor.GetBlock(blockSel.Position);
+      Block targetBlock = api.World.BlockAccessor.GetBlock(blockSel?.Position);
 
       IServerPlayer srvpl = api.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID) as IServerPlayer;
 

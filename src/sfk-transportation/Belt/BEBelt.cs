@@ -18,9 +18,9 @@ namespace SFK.Transportation.Belt
 
       if (api is ICoreClientAPI capi)
       {
-        renderer = new BeltRenderer(capi, this, GetBeltMesh(), mpb);
+        // renderer = new BeltRenderer(capi, this, GetBeltMesh(), mpb);
 
-        capi.Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "belt");
+        // capi.Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "belt");
       }
     }
 
