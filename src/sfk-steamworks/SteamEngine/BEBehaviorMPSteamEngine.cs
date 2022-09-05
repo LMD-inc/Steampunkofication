@@ -27,6 +27,11 @@ namespace SFK.Steamworks.SteamEngine
 
     public BEBehaviorMPSteamEngine(BlockEntity blockentity) : base(blockentity)
     {
+      Blockentity = blockentity;
+
+      string orientation = blockentity.Block.Variant["side"];
+      ownFacing = BlockFacing.FromCode(orientation).GetCCW();
+      OutFacingForNetworkDiscovery = ownFacing.Opposite;
     }
 
     public override void Initialize(ICoreAPI api, JsonObject properties)

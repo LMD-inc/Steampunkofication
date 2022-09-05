@@ -55,7 +55,9 @@ namespace SFK.Steamworks.SteamEngine
     }
     public override bool HasMechPowerConnectorAt(IWorldAccessor world, BlockPos pos, BlockFacing face)
     {
-      return face == BlockFacing.FromCode(LastCodePart()).GetCCW();
+      BlockFacing orient = BlockFacing.FromCode(LastCodePart()).GetCCW();
+
+      return face == orient || face == orient.Opposite;
     }
 
     #endregion
