@@ -6,7 +6,7 @@
 			"type": "mono",
 			"request": "launch",
 			"preLaunchTask": "Build (Debug)",
-			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
+			"program": "${env:VINTAGE_STORY_DEV}/Vintagestory.exe",
 			"args": [
 				"--playStyle",
 				"preset-creativeandbuild",
@@ -27,7 +27,7 @@
 			"type": "clr",
 			"request": "launch",
 			"preLaunchTask": "Build (Debug)",
-			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
+			"program": "${env:VINTAGE_STORY_DEV}/Vintagestory.exe",
 			"args": [
 				"--playStyle",
 				"creativeandbuild",
@@ -48,7 +48,7 @@
 			"type": "clr",
 			"request": "launch",
 			"preLaunchTask": "Build (Debug)",
-			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
+			"program": "${env:VINTAGE_STORY_DEV}/Vintagestory.exe",
 			"args": [
 				"--playStyle",
 				"creativeandbuild",

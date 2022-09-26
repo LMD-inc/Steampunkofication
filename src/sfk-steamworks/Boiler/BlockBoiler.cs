@@ -257,7 +257,7 @@ namespace SFK.Steamworks.Boiler
       // Override to drop the barrel empty and drop its contents instead
       if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative))
       {
-        ItemStack[] drops = new ItemStack[] { new ItemStack(this) };
+        ItemStack[] drops = new ItemStack[] {};
 
         for (int i = 0; i < drops.Length; i++)
         {
@@ -272,11 +272,13 @@ namespace SFK.Steamworks.Boiler
         BlockEntity entity = world.BlockAccessor.GetBlockEntity(pos);
         if (entity != null)
         {
-          entity.OnBlockBroken();
+          entity.OnBlockBroken(byPlayer);
         }
       }
 
       world.BlockAccessor.SetBlock(0, pos);
+
+      base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
     }
 
     #endregion

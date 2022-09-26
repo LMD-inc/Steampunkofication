@@ -37,6 +37,9 @@
 			"*-west": 90
 		}
 	},
+	"drops": [
+    { "type": "block", "code": "boiler-north", "quantity": { "avg": 1 } }
+  ],
 	"heldTpIdleAnimation": "holdunderarm",
 	"guiTransform": {
 		"origin": { "x": 0.5, "y": 0.5, "z": 0.1 },
