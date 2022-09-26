@@ -32,9 +32,15 @@ namespace SFK.Steamworks.SteamEngine
       base.OnBlockPlaced(world, blockPos, byItemStack);
     }
 
+    public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+    {
+      return null;
+    }
+
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1f)
     {
-      if (!(world.BlockAccessor.GetBlockEntity(pos) is BEMultiblockGasFlow be) || be == null || be.Principal == null)
+      BEMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(pos) as BEMultiblockGasFlow;
+      if (be == null || be.Principal == null)
       {
         // being broken by other game code (including on breaking the steam engine base block): standard block breaking treatment
         base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
