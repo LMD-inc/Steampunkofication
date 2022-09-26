@@ -6,7 +6,7 @@ using SFK.Steamworks.SteamEngine;
 
 [assembly: ModInfo("[SFK] Steamworks",
   Description = "Steampunk. More. Now with machines!",
-  Version = "0.1.2",
+  Version = "0.1.3",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new[] { "LMD inc." })]
 
