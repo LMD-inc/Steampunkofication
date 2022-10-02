@@ -22,6 +22,9 @@
       "*-west": 90
     }
   },
+  "shapeInventory": {
+    "base": "block/machine/rollingmachine/inventory"
+  },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "wood",
