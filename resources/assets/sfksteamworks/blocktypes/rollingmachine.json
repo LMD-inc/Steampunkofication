@@ -1,0 +1,167 @@
+{
+  "code": "rollingmachine",
+  "class": "RollingMachine",
+  "entityClass": "BERollingMachine",
+  "behaviors": [{ "name": "HorizontalOrientable" }, { "name": "Animatable" }],
+  "variantgroups": [
+    {
+      "code": "side",
+      "loadFromProperties": "abstract/horizontalorientation"
+    }
+  ],
+  "creativeinventoryByType": {
+    "*-north": { "general": ["*"], "sfksteamworks": ["*"] }
+  },
+  "maxstacksize": 1,
+  "shape": {
+    "base": "block/machine/rollingmachine/stand",
+    "rotateYByType": {
+      "*-north": 0,
+      "*-east": 270,
+      "*-south": 180,
+      "*-west": 90
+    }
+  },
+  "heldTpIdleAnimation": "holdbothhandslarge",
+  "heldTpUseAnimation": "twohandplaceblock",
+  "blockmaterial": "wood",
+  "drawtype": "json",
+  "sidesolid": {
+    "all": false
+  },
+  "sideopaque": {
+    "all": false
+  },
+  "textures": {
+    "oak": { "base": "game:block/wood/debarked/oak" },
+
+    "roller-copper": { "base": "game:block/metal/plate/copper" },
+    "roller-tinbronze": { "base": "game:block/metal/plate/tinbronze" },
+    "roller-bismuthbronze": { "base": "game:block/metal/plate/bismuthbronze" },
+    "roller-blackbronze": { "base": "game:block/metal/plate/blackbronze" },
+    "roller-iron": { "base": "game:block/metal/plate/iron" },
+    "roller-meteoriciron": { "base": "game:block/metal/plate/meteoriciron" },
+    "roller-steel": { "base": "game:block/metal/plate/steel" }
+  },
+  "resistance": 3.5,
+  "sounds": {
+    "hit": "game:block/planks",
+    "break": "game:block/planks",
+    "place": "game:block/planks",
+    "walk": "game:walk/wood"
+  },
+  "tpHandTransform": {
+    "translation": { "x": -1.7, "y": -0.8, "z": -0.6 },
+    "rotation": { "x": 101, "y": -28, "z": -82 },
+    "scale": 0.41
+  },
+  "fpHandTransform": {
+    "rotation": { "x": 0, "y": -34, "z": 0 },
+    "scale": 1.44
+  },
+  "groundTransform": {
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0, "y": -45, "z": 0 },
+    "origin": { "x": 0.5, "y": 0, "z": 0.5 },
+    "scale": 2
+  },
+  "selectionboxesbytype": {
+    "*-north": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 270
+      }
+    ],
+    "*-east": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 180
+      }
+    ],
+    "*-south": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 90
+      }
+    ],
+    "*-west": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 0
+      }
+    ]
+  },
+  "collisionboxesbytype": {
+    "*-north": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872
+      }
+    ],
+    "*-east": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 90
+      }
+    ],
+    "*-south": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 180
+      }
+    ],
+    "*-west": [
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+      {
+        "x1": 0.0877,
+        "y1": 0.5,
+        "z1": 1,
+        "x2": 0.9123,
+        "y2": 1.3125,
+        "z2": 1.0872,
+        "rotateY": 270
+      }
+    ]
+  }
+}
