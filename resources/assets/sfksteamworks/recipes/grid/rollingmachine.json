@@ -1,0 +1,28 @@
+{
+  "ingredientPattern": "DHR,PCP,PPP",
+  "ingredients": {
+    "H": {
+      "type": "item",
+      "code": "game:hammer-*",
+      "isTool": true,
+      "toolDurabilityCost": 40
+    },
+    "C": {
+      "type": "item",
+      "code": "game:chisel-*",
+      "isTool": true,
+      "toolDurabilityCost": 10
+    },
+    "P": {
+      "type": "item",
+      "code": "game:plank-*",
+      "name": "wood",
+      "quantity": 2
+    },
+    "D": { "type": "item", "code": "cross-handle" },
+    "R": { "type": "item", "code": "game:resin" }
+  },
+  "width": 3,
+  "height": 3,
+  "output": { "type": "block", "code": "rollingmachine-north", "quantity": 1 }
+}

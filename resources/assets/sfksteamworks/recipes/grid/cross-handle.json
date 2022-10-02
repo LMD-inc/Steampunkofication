@@ -1,0 +1,17 @@
+{
+  "ingredientPattern": "XSR,SPS,_S_",
+  "ingredients": {
+    "X": {
+      "type": "item",
+      "code": "game:saw-*",
+      "isTool": true,
+      "toolDurabilityCost": 40
+    },
+    "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+    "S": { "type": "item", "code": "game:stick" },
+    "R": { "type": "item", "code": "game:resin" }
+  },
+  "width": 3,
+  "height": 3,
+  "output": { "type": "item", "code": "cross-handle", "quantity": 1 }
+}
