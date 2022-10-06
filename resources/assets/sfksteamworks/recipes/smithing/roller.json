@@ -1,24 +1,22 @@
-[
-  {
-    "ingredient": {
-      "type": "item",
-      "code": "game:ingot-*",
-      "name": "metal",
-      "allowedVariants": [
-        "copper",
-        "tinbronze",
-        "bismuthbronze",
-        "blackbronze",
-        "iron",
-        "meteoriciron",
-        "steel"
-      ]
-    },
-    "pattern": [
-      ["##########", "##########"],
-      ["##########", "##########"]
-    ],
-    "name": "roller",
-    "output": { "type": "item", "code": "roller-{metal}" }
-  }
-]
+{
+  "ingredient": {
+    "type": "item",
+    "code": "game:ingot-*",
+    "name": "metal",
+    "allowedVariants": [
+      "copper",
+      "tinbronze",
+      "bismuthbronze",
+      "blackbronze",
+      "iron",
+      "meteoriciron",
+      "steel"
+    ]
+  },
+  "pattern": [
+    ["##########", "##########"],
+    ["##########", "##########"]
+  ],
+  "name": "roller",
+  "output": { "type": "item", "code": "roller-{metal}" }
+}

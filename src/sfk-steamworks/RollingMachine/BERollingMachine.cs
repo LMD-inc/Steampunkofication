@@ -6,6 +6,7 @@ using Vintagestory.API.Server;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.Util;
+using System.Text;
 
 namespace SFK.Steamworks.RollingMachine
 {
@@ -20,8 +21,10 @@ namespace SFK.Steamworks.RollingMachine
     InventoryRollingMachine inv;
     public override InventoryBase Inventory => inv;
     public override string InventoryClassName => "rollingmachine";
+    public ItemSlot rollersSlot => inv[0];
+    public ItemSlot workItemSlot => inv[1];
 
-    public bool HasRollers => !inv[0].Empty;
+    public bool HasRollers => !rollersSlot.Empty;
 
     private bool isRolling;
     public bool IsRolling
@@ -55,7 +58,7 @@ namespace SFK.Steamworks.RollingMachine
       get
       {
         if (!HasRollers) return null;
-        return inv[0].Itemstack.Collectible.Variant["metal"];
+        return rollersSlot.Itemstack.Collectible.Variant["metal"];
       }
     }
     MeshData RollingMachineStandMesh
@@ -158,7 +161,7 @@ namespace SFK.Steamworks.RollingMachine
     {
       if (!HasRollers) return;
 
-      if (!inv[1].Empty)
+      if (!workItemSlot.Empty)
       {
 
       }
@@ -202,22 +205,22 @@ namespace SFK.Steamworks.RollingMachine
 
     private bool TryPut(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
     {
-      ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-      if (slot.Itemstack == null) return false;
-      ItemStack stack = slot.Itemstack;
+      ItemSlot sourceSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
+      if (sourceSlot.Itemstack == null) return false;
+      ItemStack SourceStack = sourceSlot.Itemstack;
 
       // rollers
       if (!HasRollers)
       {
-        if (stack.Collectible.FirstCodePart() == "roller")
+        if (SourceStack.Collectible.FirstCodePart() == "roller")
         {
-          if (stack.StackSize < 2)
+          if (SourceStack.StackSize < 2)
           {
             (Api as ICoreClientAPI)?.TriggerIngameError(this, "require2rollers", Lang.Get("Please add 2 rollers at the same time!"));
             return true;
           }
 
-          inv[0].Itemstack = slot.TakeOut(2);
+          rollersSlot.Itemstack = sourceSlot.TakeOut(2);
 
           if (Api is ICoreClientAPI capi && RollerMesh == null)
           {
@@ -225,7 +228,7 @@ namespace SFK.Steamworks.RollingMachine
             renderer.UpdateRollersMeshes(RollerMesh, rollertexpos);
           }
 
-          slot.MarkDirty();
+          sourceSlot.MarkDirty();
           MarkDirty(true);
         }
 
@@ -233,21 +236,57 @@ namespace SFK.Steamworks.RollingMachine
       }
 
       // work item
-      if (stack.Collectible is IAnvilWorkable workableobj)
+      if (SourceStack.Collectible is IAnvilWorkable workableobj && workItemSlot.Empty)
       {
-        int requiredTier = workableobj.GetRequiredAnvilTier(stack);
+        int requiredTier = workableobj.GetRequiredAnvilTier(SourceStack);
         if (requiredTier > RollersTier)
         {
           if (world.Side == EnumAppSide.Client)
           {
-            (Api as ICoreClientAPI).TriggerIngameError(this, "toolowtier", Lang.Get("Working this metal needs a tier {0} rollers", requiredTier));
+            (Api as ICoreClientAPI)?.TriggerIngameError(this, "toolowtier", Lang.Get("Working this metal needs a tier {0} rollers", requiredTier));
           }
 
           return false;
         }
+
+        if (workableobj.CanWork(SourceStack) && GetRecipe(SourceStack) != null)
+        {
+          // item ready to be worked and Found Recipe, put item
+          int qm = sourceSlot.TryPutInto(world, workItemSlot, 1);
+
+          if (qm > 0)
+          {
+            sourceSlot.TakeOut(qm);
+            return true;
+          }
+        }
       }
 
       return false;
+    }
+
+    public bool CanWorkCurrent
+    {
+      get { return WorkItemStack != null && (WorkItemStack.Collectible as IAnvilWorkable).CanWork(WorkItemStack); }
+    }
+
+    public ItemStack WorkItemStack
+    {
+      get { return workItemSlot.Itemstack; }
+    }
+
+    public RollingRecipe GetRecipe(ItemStack stack)
+    {
+      if (stack == null) return null;
+
+      return SFKApiAdditions.GetRollingRecipes(Api).Find(r => r.Ingredient.SatisfiesAsIngredient(stack));
+    }
+
+    public RollingRecipe GetCurrentRecipe()
+    {
+      if (WorkItemStack == null) return null;
+
+      return GetRecipe(WorkItemStack);
     }
 
     private int RollersTier
@@ -288,7 +327,7 @@ namespace SFK.Steamworks.RollingMachine
       if (!HasRollers) return null;
 
       Block tmpblock = capi.World.BlockAccessor.GetBlock(Pos);
-      Item rollerItem = inv[0].Itemstack.Item;
+      Item rollerItem = rollersSlot.Itemstack.Item;
       tmpTextureSource = capi.Tesselator.GetTexSource(tmpblock);
       rollertexpos = capi.BlockTextureAtlas.GetPosition(tmpblock, "metal");
 
@@ -400,6 +439,16 @@ namespace SFK.Steamworks.RollingMachine
       {
         UpdateRollingState();
       }
+    }
+
+    #endregion
+
+    #region Blockinfo
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb)
+    {
+      sb.Clear();
+      sb.Append(Block.GetPlacedBlockInfo(Api.World, Pos, forPlayer));
     }
 
     #endregion

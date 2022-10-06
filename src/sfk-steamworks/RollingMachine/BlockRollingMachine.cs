@@ -1,14 +1,23 @@
+using System.Text;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 
 namespace SFK.Steamworks.RollingMachine
 {
   public class BlockRollingMachine : Block
   {
+    #region Config
+
     public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos)
     {
       return true;
     }
+
+    #endregion
+
+    #region Events
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
     {
@@ -49,5 +58,36 @@ namespace SFK.Steamworks.RollingMachine
 
       return true;
     }
+
+    #endregion
+
+    #region Blockinfo
+
+    public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+    {
+      StringBuilder stb = new StringBuilder();
+
+      BERollingMachine berm = world.BlockAccessor.GetBlockEntity(pos) as BERollingMachine;
+
+      if (berm == null) return "n/a be";
+
+      if (berm.rollersSlot.Empty && berm.workItemSlot.Empty) return "Empty";
+
+      if (!berm.rollersSlot.Empty)
+      {
+        stb.AppendLine(Lang.Get("Rollers material: {0}", berm.RollersMaterial));
+      }
+
+      if (!berm.workItemSlot.Empty)
+      {
+        stb.AppendLine(Lang.Get("Current working: {0}", berm.WorkItemStack.GetName()));
+        RollingOutputStack output = berm.GetCurrentRecipe().Output;
+        stb.AppendLine(Lang.Get("Will produce: {0} of {1}", output.Quantity, output.ResolvedItemstack.GetName()));
+      }
+
+      return stb.ToString();
+    }
+      
+    #endregion
   }
 }
