@@ -21,12 +21,15 @@ namespace SFK.Steamworks.RollingMachine
     InventoryRollingMachine inv;
     public override InventoryBase Inventory => inv;
     public override string InventoryClassName => "rollingmachine";
-    public ItemSlot rollersSlot => inv[0];
-    public ItemSlot workItemSlot => inv[1];
+    public ItemSlot RollersSlot => inv[0];
+    public ItemSlot WorkItemSlot => inv[1];
 
-    public bool HasRollers => !rollersSlot.Empty;
+    public bool HasRollers => !RollersSlot.Empty;
+
+    public bool CanRoll => HasRollers;
 
     private bool isRolling;
+
     public bool IsRolling
     {
       get
@@ -46,9 +49,41 @@ namespace SFK.Steamworks.RollingMachine
       }
     }
 
-    public bool CanRoll => HasRollers;
+    internal float currentRollingProgress = 0;
+    public float CurrentRollingProgress => currentRollingProgress;
 
-    #region Render
+    public float MaxRollingProgress => 100;
+
+    public ItemStack WorkItemStack
+    {
+      get { return WorkItemSlot.Itemstack; }
+    }
+
+    public bool CanWorkCurrent
+    {
+      get { return WorkItemStack != null && (WorkItemStack.Collectible as IAnvilWorkable).CanWork(WorkItemStack); }
+    }
+
+    private int RollersTier
+    {
+      get
+      {
+        if (!HasRollers) return 0;
+
+        MetalPropertyVariant var;
+
+        if (Api.ModLoader.GetModSystem<SurvivalCoreSystem>().metalsByCode.TryGetValue(RollersMaterial, out var))
+        {
+          return var.Tier;
+        }
+
+        return 0;
+      }
+    }
+
+    ILoadedSound rollingSound;
+
+    #region Render fields
 
     public BlockFacing Facing { get; protected set; } = BlockFacing.NORTH;
     float RotateY = 0f;
@@ -58,9 +93,10 @@ namespace SFK.Steamworks.RollingMachine
       get
       {
         if (!HasRollers) return null;
-        return rollersSlot.Itemstack.Collectible.Variant["metal"];
+        return RollersSlot.Itemstack.Collectible.Variant["metal"];
       }
     }
+
     MeshData RollingMachineStandMesh
     {
       get
@@ -80,6 +116,8 @@ namespace SFK.Steamworks.RollingMachine
     MeshData HandleMesh;
 
     RollingMachineRenderer renderer;
+
+    RollingWorkItemRenderer workItemRenderer;
 
     ITexPositionSource tmpTextureSource;
 
@@ -134,8 +172,10 @@ namespace SFK.Steamworks.RollingMachine
       if (api is ICoreClientAPI capi)
       {
         renderer = new RollingMachineRenderer(capi, Pos, GenMesh("handle"), RotateY);
+        workItemRenderer = new RollingWorkItemRenderer(capi, Pos, RotateY);
 
         capi.Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "rollingmachine");
+        capi.Event.RegisterRenderer(workItemRenderer, EnumRenderStage.Opaque, "rollingmachineworkitem");
 
         if (RollingMachineStandMesh == null)
         {
@@ -151,7 +191,28 @@ namespace SFK.Steamworks.RollingMachine
         {
           RollerMesh = GenRollerMesh(capi);
           renderer.UpdateRollersMeshes(RollerMesh, rollertexpos);
+
+          if (!WorkItemSlot.Empty)
+          {
+            RollingRecipe recipe = GetRecipe(WorkItemStack);
+
+            if (recipe != null)
+            {
+              workItemRenderer.SetContents(WorkItemStack, GetRecipe(WorkItemStack).Output.ResolvedItemstack.Clone(), true);
+            }
+          }
         }
+
+        rollingSound = capi.World.LoadSound(new SoundParams()
+        {
+          Location = new AssetLocation("game:sounds/block/woodcreak_2.ogg"),
+          ShouldLoop = true,
+          Position = Pos.ToVec3f().Add(0.5f, 0.25f, 0.5f),
+          DisposeOnFinish = false,
+          Volume = 1
+        });
+
+        RegisterGameTickListener(OnClientTick, 50);
       }
     }
 
@@ -161,9 +222,41 @@ namespace SFK.Steamworks.RollingMachine
     {
       if (!HasRollers) return;
 
-      if (!workItemSlot.Empty)
+      if (!WorkItemSlot.Empty)
       {
+        if (isRolling)
+        {
+          currentRollingProgress += dt * 40;
 
+          if (CurrentRollingProgress >= MaxRollingProgress)
+          {
+            ProduceOutput();
+            currentRollingProgress = 0;
+          }
+
+          MarkDirty();
+        }
+      }
+    }
+
+    private void OnClientTick(float dt)
+    {
+      if (Api.Side == EnumAppSide.Client)
+      {
+        if (WorkItemSlot.Empty)
+        {
+          workItemRenderer?.SetContents(null, null, true);
+        }
+        else
+        {
+          RollingRecipe recipe = GetCurrentRecipe();
+
+          if (recipe != null && workItemRenderer != null)
+          {
+            workItemRenderer.SetContents(WorkItemStack, recipe.Output.ResolvedItemstack.Clone(), false);
+            workItemRenderer.progressPercent = currentRollingProgress / MaxRollingProgress;
+          }
+        }
       }
     }
 
@@ -220,7 +313,7 @@ namespace SFK.Steamworks.RollingMachine
             return true;
           }
 
-          rollersSlot.Itemstack = sourceSlot.TakeOut(2);
+          RollersSlot.Itemstack = sourceSlot.TakeOut(2);
 
           if (Api is ICoreClientAPI capi && RollerMesh == null)
           {
@@ -236,27 +329,36 @@ namespace SFK.Steamworks.RollingMachine
       }
 
       // work item
-      if (SourceStack.Collectible is IAnvilWorkable workableobj && workItemSlot.Empty)
+      if (SourceStack.Collectible is IAnvilWorkable workableobj && WorkItemSlot.Empty)
       {
         int requiredTier = workableobj.GetRequiredAnvilTier(SourceStack);
         if (requiredTier > RollersTier)
         {
           if (world.Side == EnumAppSide.Client)
           {
-            (Api as ICoreClientAPI)?.TriggerIngameError(this, "toolowtier", Lang.Get("Working this metal needs a tier {0} rollers", requiredTier));
+            (Api as ICoreClientAPI)?.TriggerIngameError(this, "toolowtier", Lang.Get("Working with this metal needs a tier {0} rollers", requiredTier));
           }
 
           return false;
         }
 
-        if (workableobj.CanWork(SourceStack) && GetRecipe(SourceStack) != null)
+        RollingRecipe recipe = GetRecipe(SourceStack);
+
+        if (workableobj.CanWork(SourceStack) && recipe != null)
         {
-          // item ready to be worked and Found Recipe, put item
-          int qm = sourceSlot.TryPutInto(world, workItemSlot, 1);
+          // item ready to be worked and found recipe, put item
+          int qm = sourceSlot.TryPutInto(world, WorkItemSlot, 1);
 
           if (qm > 0)
           {
-            sourceSlot.TakeOut(qm);
+            if (Api is ICoreClientAPI)
+            {
+              workItemRenderer.SetContents(WorkItemStack, recipe.Output.ResolvedItemstack.Clone(), true);
+            }
+
+            sourceSlot.MarkDirty();
+            WorkItemSlot.MarkDirty();
+
             return true;
           }
         }
@@ -265,14 +367,19 @@ namespace SFK.Steamworks.RollingMachine
       return false;
     }
 
-    public bool CanWorkCurrent
-    {
-      get { return WorkItemStack != null && (WorkItemStack.Collectible as IAnvilWorkable).CanWork(WorkItemStack); }
-    }
+    #region Helper methods
 
-    public ItemStack WorkItemStack
+    internal void ProduceOutput()
     {
-      get { return workItemSlot.Itemstack; }
+      if (WorkItemSlot.Empty) return;
+
+      RollingRecipe recipe = GetRecipe(WorkItemStack);
+      RollingOutputStack output = recipe.Output;
+
+      Api.World.SpawnItemEntity(output.ResolvedItemstack.Clone(), Pos.ToVec3d().Add(0.5 + Facing.Normalf.X * 0.7, 0.75, 0.5 + Facing.Normalf.Z * 0.7), new Vec3d(Facing.Normalf.X * 0.02f, 0, Facing.Normalf.Z * 0.02f));
+
+      WorkItemSlot.TakeOutWhole();
+      WorkItemSlot.MarkDirty();
     }
 
     public RollingRecipe GetRecipe(ItemStack stack)
@@ -289,22 +396,9 @@ namespace SFK.Steamworks.RollingMachine
       return GetRecipe(WorkItemStack);
     }
 
-    private int RollersTier
-    {
-      get
-      {
-        if (!HasRollers) return 0;
+    #endregion
 
-        MetalPropertyVariant var;
-
-        if (Api.ModLoader.GetModSystem<SurvivalCoreSystem>().metalsByCode.TryGetValue(RollersMaterial, out var))
-        {
-          return var.Tier;
-        }
-
-        return 0;
-      }
-    }
+    #region Render methods
 
     internal MeshData GenMesh(string type)
     {
@@ -327,7 +421,7 @@ namespace SFK.Steamworks.RollingMachine
       if (!HasRollers) return null;
 
       Block tmpblock = capi.World.BlockAccessor.GetBlock(Pos);
-      Item rollerItem = rollersSlot.Itemstack.Item;
+      Item rollerItem = RollersSlot.Itemstack.Item;
       tmpTextureSource = capi.Tesselator.GetTexSource(tmpblock);
       rollertexpos = capi.BlockTextureAtlas.GetPosition(tmpblock, "metal");
 
@@ -405,13 +499,16 @@ namespace SFK.Steamworks.RollingMachine
       {
         Api.World.BlockAccessor.MarkBlockDirty(Pos, OnRetesselated);
 
-        if (isRolling)
+        if (Api.Side == EnumAppSide.Client)
         {
-          // ambientSound?.Start();
-        }
-        else
-        {
-          // ambientSound?.Stop();
+          if (isRolling)
+          {
+            rollingSound?.Start();
+          }
+          else
+          {
+            rollingSound?.Stop();
+          }
         }
 
         if (Api.Side == EnumAppSide.Server)
@@ -422,6 +519,8 @@ namespace SFK.Steamworks.RollingMachine
 
       prevIsRolling = isRolling;
     }
+
+    #endregion
 
     #region TreeAttributes
 
@@ -435,10 +534,22 @@ namespace SFK.Steamworks.RollingMachine
         Inventory.AfterBlocksLoaded(Api.World);
       }
 
+      currentRollingProgress = tree.GetFloat("currentRollingProgress");
+
       if (worldForResolving.Side == EnumAppSide.Client)
       {
         UpdateRollingState();
       }
+    }
+
+    public override void ToTreeAttributes(ITreeAttribute tree)
+    {
+      base.ToTreeAttributes(tree);
+      ITreeAttribute invtree = new TreeAttribute();
+      Inventory.ToTreeAttributes(invtree);
+      tree["inventory"] = invtree;
+
+      tree.SetFloat("currentRollingProgress", currentRollingProgress);
     }
 
     #endregion
@@ -452,5 +563,19 @@ namespace SFK.Steamworks.RollingMachine
     }
 
     #endregion
+
+    public override void OnBlockRemoved()
+    {
+      base.OnBlockRemoved();
+
+      renderer?.Dispose();
+      renderer = null;
+
+      workItemRenderer?.Dispose();
+      workItemRenderer = null;
+
+      rollingSound.Stop();
+      rollingSound.Dispose();
+    }
   }
 }

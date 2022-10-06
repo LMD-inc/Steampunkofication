@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -71,23 +72,30 @@ namespace SFK.Steamworks.RollingMachine
 
       if (berm == null) return "n/a be";
 
-      if (berm.rollersSlot.Empty && berm.workItemSlot.Empty) return "Empty";
+      if (berm.RollersSlot.Empty && berm.WorkItemSlot.Empty) return "Empty";
 
-      if (!berm.rollersSlot.Empty)
+      if (!berm.RollersSlot.Empty)
       {
         stb.AppendLine(Lang.Get("Rollers material: {0}", berm.RollersMaterial));
       }
 
-      if (!berm.workItemSlot.Empty)
+      if (!berm.WorkItemSlot.Empty)
       {
-        stb.AppendLine(Lang.Get("Current working: {0}", berm.WorkItemStack.GetName()));
+        stb.AppendLine(Lang.Get("Currently working: {0}", berm.WorkItemStack.GetName()));
         RollingOutputStack output = berm.GetCurrentRecipe().Output;
         stb.AppendLine(Lang.Get("Will produce: {0} of {1}", output.Quantity, output.ResolvedItemstack.GetName()));
+
+        double progress = Math.Round(berm.CurrentRollingProgress / berm.MaxRollingProgress * 10);
+
+        if (progress > 0)
+        {
+          stb.AppendLine(Lang.Get($"Progress: ") + $"[{new String('█', (int)progress)}{new String('░', 10 - (int)progress)}]");
+        }
       }
 
       return stb.ToString();
     }
-      
+
     #endregion
   }
 }

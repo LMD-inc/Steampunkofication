@@ -23,6 +23,10 @@ namespace SFK.Steamworks.RollingMachine
     public float AngleRad;
     float blockRotation;
 
+    public double RenderOrder => 0.5;
+
+    public int RenderRange => 24;
+
     public RollingMachineRenderer(ICoreClientAPI coreClientAPI, BlockPos pos, MeshData handlemesh, float blockRot)
     {
       this.api = coreClientAPI;
@@ -30,13 +34,6 @@ namespace SFK.Steamworks.RollingMachine
       blockRotation = blockRot;
       handlemeshref = coreClientAPI.Render.UploadMesh(handlemesh);
     }
-
-    public double RenderOrder
-    {
-      get { return 0.5; }
-    }
-
-    public int RenderRange => 24;
 
     public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
     {
