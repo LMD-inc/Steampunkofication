@@ -6,11 +6,11 @@ using SFK.Transportation.Pipe;
 using SFK.Transportation.WaterPump;
 using SFK.Transportation.Drum;
 
-[assembly: ModInfo("[SFK] Transportation",
+[assembly: ModInfo("[SFK] Transportation", "sfktransportation",
   Description = "Steampunk. More. Now with pipes!",
-  Version = "0.1.3",
+  Version = "0.1.4",
   Website = "https://github.com/LMD-inc/Steampunkofication",
-  Authors = new[] { "LMD inc." })]
+  Authors = new string[] { "LMD inc." })]
 
 namespace SFK.Transportation
 {
