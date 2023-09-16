@@ -10,7 +10,7 @@ using SFK.API;
 
 namespace SFK.Steamworks.Boiler
 {
-  public class BlockBoiler : BlockLiquidContainerBase
+  public class BlockBoiler : BlockLiquidContainerBase, IIgnitable
   {
     #region Multiblock
 
@@ -100,7 +100,7 @@ namespace SFK.Steamworks.Boiler
     #endregion
 
     #region Ignitable
-    public override EnumIgniteState OnTryIgniteBlock(EntityAgent byEntity, BlockPos pos, float secondsIgniting)
+    public EnumIgniteState OnTryIgniteBlock(EntityAgent byEntity, BlockPos pos, float secondsIgniting)
     {
       BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
       if (beb != null && beb.fuelSlot.Empty) return EnumIgniteState.NotIgnitablePreventDefault;
@@ -109,7 +109,7 @@ namespace SFK.Steamworks.Boiler
       return secondsIgniting > 3 ? EnumIgniteState.IgniteNow : EnumIgniteState.Ignitable;
     }
 
-    public override void OnTryIgniteBlockOver(EntityAgent byEntity, BlockPos pos, float secondsIgniting, ref EnumHandling handling)
+    public void OnTryIgniteBlockOver(EntityAgent byEntity, BlockPos pos, float secondsIgniting, ref EnumHandling handling)
     {
       BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
       if (beb != null && !beb.canIgniteFuel)
@@ -257,7 +257,7 @@ namespace SFK.Steamworks.Boiler
       // Override to drop the barrel empty and drop its contents instead
       if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative))
       {
-        ItemStack[] drops = new ItemStack[] {};
+        ItemStack[] drops = new ItemStack[] { };
 
         for (int i = 0; i < drops.Length; i++)
         {

@@ -11,7 +11,6 @@ namespace SFK.Transportation.WaterPump
   {
     private BEBehaviorWaterPump mpc;
     private float accumWater;
-    bool automated;
 
     #region Config
 
@@ -62,7 +61,7 @@ namespace SFK.Transportation.WaterPump
           {
             slot.Itemstack = new ItemStack(Api.World.GetItem(new AssetLocation("game:waterportion")), 0);
           }
-          
+
           float itemsPerLitre = BlockLiquidContainerBase.GetContainableProps(slot.Itemstack)?.ItemsPerLitre ?? 1f;
 
           if (slot.Itemstack?.StackSize >= CapacityLitres * itemsPerLitre) return;
@@ -103,7 +102,7 @@ namespace SFK.Transportation.WaterPump
         }
       }
 
-      
+
     }
   }
 }
