@@ -78,7 +78,7 @@ namespace SFK.Steamworks.RollingMachine
       rpi.RenderMesh(toprollermeshref);
 
       // handle
-      prog.Tex2D = api.BlockTextureAtlas.AtlasTextureIds[0];
+      prog.Tex2D = api.BlockTextureAtlas.AtlasTextures[0].TextureId;
 
       prog.ModelMatrix = ModelMat
         .Identity()

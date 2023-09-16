@@ -95,7 +95,7 @@ namespace SFK.Steamworks.RollingMachine
           // static pos, maybe apply transformInRoller later
           .Translate(0, 0, 7 / 16f)
           // transforming during progress
-          .Translate(0, 0, - (1 - progressPercent) * (3.5f / 16f))
+          .Translate(0, 0, -(1 - progressPercent) * (3.5f / 16f))
           .Scale(1, 1, 1 - progressPercent)
           .Values;
 
@@ -116,7 +116,7 @@ namespace SFK.Steamworks.RollingMachine
           // static pos, maybe apply transformInRoller later
           .Translate(0, 0, 8 / 16f)
           // transforming during progress
-          .Translate(0, 0, - progressPercent * (4 / 16f)) // coef to move = half of pos offset in this dir
+          .Translate(0, 0, -progressPercent * (4 / 16f)) // coef to move = half of pos offset in this dir
           .Scale(1, 1, progressPercent)
           .Values;
 
@@ -153,11 +153,10 @@ namespace SFK.Steamworks.RollingMachine
       string firstCodePart = stack.Collectible.FirstCodePart();
       if (firstCodePart == "metalplate")
       {
-        tmpTextureSource = capi.Tesselator.GetTexSource(capi.World.GetBlock(new AssetLocation("game:platepile")));
+        tmpTextureSource = capi.Tesselator.GetTextureSource(capi.World.GetBlock(new AssetLocation("game:platepile")));
         shape = Shape.TryGet(capi, "game:shapes/block/stone/forge/platepile.json");
         textureId = tmpTextureSource[tmpMetal].atlasTextureId;
         capi.Tesselator.TesselateShape("block-fcr", shape, out mesh, this, null, 0, 0, 0, stack.StackSize);
-
       }
       else if (firstCodePart == "workitem")
       {
@@ -171,7 +170,7 @@ namespace SFK.Steamworks.RollingMachine
       }
       else if (firstCodePart == "ingot")
       {
-        tmpTextureSource = capi.Tesselator.GetTexSource(capi.World.GetBlock(new AssetLocation("game:ingotpile")));
+        tmpTextureSource = capi.Tesselator.GetTextureSource(capi.World.GetBlock(new AssetLocation("game:ingotpile")));
         shape = Shape.TryGet(capi, "game:shapes/block/stone/forge/ingotpile.json");
         textureId = tmpTextureSource[tmpMetal].atlasTextureId;
         capi.Tesselator.TesselateShape("block-fcr", shape, out mesh, this, null, 0, 0, 0, stack.StackSize);
@@ -181,12 +180,12 @@ namespace SFK.Steamworks.RollingMachine
         if (stack.Class == EnumItemClass.Block)
         {
           mesh = capi.TesselatorManager.GetDefaultBlockMesh(stack.Block).Clone();
-          textureId = capi.BlockTextureAtlas.AtlasTextureIds[0];
+          textureId = capi.BlockTextureAtlas.AtlasTextures[0].TextureId;
         }
         else
         {
           capi.Tesselator.TesselateItem(stack.Item, out mesh);
-          textureId = capi.ItemTextureAtlas.AtlasTextureIds[0];
+          textureId = capi.BlockTextureAtlas.AtlasTextures[0].TextureId;
         }
 
         ModelTransform tf = stack.Collectible.Attributes["inRollerTransform"].AsObject<ModelTransform>();

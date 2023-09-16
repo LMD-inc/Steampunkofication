@@ -422,7 +422,7 @@ namespace SFK.Steamworks.RollingMachine
 
       Block tmpblock = capi.World.BlockAccessor.GetBlock(Pos);
       Item rollerItem = RollersSlot.Itemstack.Item;
-      tmpTextureSource = capi.Tesselator.GetTexSource(tmpblock);
+      tmpTextureSource = capi.Tesselator.GetTextureSource(tmpblock);
       rollertexpos = capi.BlockTextureAtlas.GetPosition(tmpblock, "metal");
 
       return ObjectCacheUtil.GetOrCreate(capi, $"roller-{RollersMaterial}", () =>
@@ -574,8 +574,8 @@ namespace SFK.Steamworks.RollingMachine
       workItemRenderer?.Dispose();
       workItemRenderer = null;
 
-      rollingSound.Stop();
-      rollingSound.Dispose();
+      rollingSound?.Stop();
+      rollingSound?.Dispose();
     }
   }
 }
