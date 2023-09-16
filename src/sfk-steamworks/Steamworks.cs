@@ -5,11 +5,11 @@ using SFK.Steamworks.Boiler;
 using SFK.Steamworks.SteamEngine;
 using SFK.Steamworks.RollingMachine;
 
-[assembly: ModInfo("[SFK] Steamworks",
+[assembly: ModInfo("[SFK] Steamworks", "sfksteamworks",
   Description = "Steampunk. More. Now with machines!",
-  Version = "0.1.3",
+  Version = "0.1.4",
   Website = "https://github.com/LMD-inc/Steampunkofication",
-  Authors = new[] { "LMD inc." })]
+  Authors = new string[] { "LMD inc." })]
 
 namespace SFK.Steamworks
 {

@@ -2,14 +2,14 @@
 	"type": "code",
 	"name": "[SFK] Transportation",
 	"modid": "sfktransportation",
-	"version": "0.1.3",
+	"version": "0.1.4",
 
 	"description": "Steampunk. More. Now with pipes!",
 	"website": "https://github.com/LMD-inc/Steampunkofication",
 	"authors": ["LMD inc."],
 
 	"dependencies": {
-		"game": "1.17.4",
-		"sfkapi": "0.1.3"
+		"game": "1.18.10",
+		"sfkapi": "0.1.4"
 	}
 }

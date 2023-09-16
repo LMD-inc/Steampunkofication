@@ -41,7 +41,7 @@ namespace SFK.Steamworks.SteamEngine
       if (api.World.Side == EnumAppSide.Client && animUtil != null)
       {
         float rotY = Block.Shape.rotateY;
-        animUtil.InitializeAnimator("sfksteamworks:steamengine", new Vec3f(0, rotY, 0));
+        animUtil.InitializeAnimator("sfksteamworks:steamengine", null, null, new Vec3f(0, rotY, 0));
       }
 
       Blockentity.RegisterGameTickListener(CheckSteamPowered, 1000);
