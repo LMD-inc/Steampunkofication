@@ -1,0 +1,55 @@
+{
+  "code": "roller",
+  "variantgroups": [
+    {
+      "code": "metal",
+      "states": [
+        "copper",
+        "tinbronze",
+        "bismuthbronze",
+        "blackbronze",
+        "iron",
+        "meteoriciron",
+        "steel"
+      ]
+    }
+  ],
+  "maxstacksize": 8,
+  "shape": {
+    "base": "item/part/roller"
+  },
+  "textures": {
+    "metal": {
+      "base": "game:block/metal/plate/{metal}"
+    },
+
+    "roller-copper": { "base": "game:block/metal/plate/copper" },
+    "roller-tinbronze": { "base": "game:block/metal/plate/tinbronze" },
+    "roller-bismuthbronze": { "base": "game:block/metal/plate/bismuthbronze" },
+    "roller-blackbronze": { "base": "game:block/metal/plate/blackbronze" },
+    "roller-iron": { "base": "game:block/metal/plate/iron" },
+    "roller-meteoriciron": { "base": "game:block/metal/plate/meteoriciron" },
+    "roller-steel": { "base": "game:block/metal/plate/steel" }
+  },
+  "creativeinventory": { "general": ["*"], "sfksteamworks": ["*"] },
+  "guiTransform": {
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": -12, "y": 11, "z": 43 },
+    "scale": 2.27
+  },
+  "fpHandTransform": {
+    "rotation": { "x": 89, "y": 97, "z": -30 },
+    "scale": 2.5
+  },
+  "tpHandTransform": {
+    "translation": { "x": -1, "y": -0.6, "z": -0.6 },
+    "rotation": { "x": 0, "y": 4, "z": 7 },
+    "scale": 0.78
+  },
+  "groundTransform": {
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 90, "y": 0, "z": 0 },
+    "origin": { "x": 0.5, "y": 0.5, "z": 0.5299 },
+    "scale": 4
+  }
+}

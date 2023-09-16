@@ -25,7 +25,7 @@
 		{ "code": "state", "states": ["raw", "burned"] },
 		{ "code": "type", "states": ["blue"] }
 	],
-	"shape": { "base": "item/resource/funnel" },
+	"shape": { "base": "item/part/funnel" },
 	"texturesByType": {
 		"*-raw-*": {
 			"blue1": { "base": "game:block/clay/{type}clay" }
