@@ -3,9 +3,22 @@
 	"block-boiler-mp-*": "Steam boiler",
 
 	"block-steamengine-*": "Steam engine",
+	"block-rollingmachine-*": "Rolling machine",
 
 	"item-funnel-raw-blue": "Raw blue clay funnel",
 	"item-funnel-burned-blue": "Blue clay funnel",
+
+	"item-cross-handle": "Cross handle",
+	"item-roller-copper": "Copper roller",
+	"item-roller-tinbronze": "Tin bronze roller",
+	"item-roller-bismuthbronze": "Bismuth bronze roller",
+	"item-roller-blackbronze": "Black bronze roller",
+	"item-roller-iron": "Iron roller",
+	"item-roller-meteoriciron": "Meteoric iron roller",
+	"item-roller-steel": "Steel roller",
+
+	"Flattened stuff...": "Flattened stuff...",
+
 	"item-steamportion": "Steam",
 	"incontainer-item-steamportion": "Steam",
 

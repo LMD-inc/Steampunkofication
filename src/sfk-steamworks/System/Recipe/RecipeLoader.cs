@@ -31,7 +31,7 @@ namespace SFK.ServerMods
       classExclusiveRecipes = sapi.World.Config.GetBool("classExclusiveRecipes", true);
 
       LoadRecipes<RollingRecipe>("rolling recipe", "recipes/rolling", (r) => SFKApiAdditions.RegisterRollingRecipe(sapi, r));
-      sapi.World.Logger.StoryEvent(Lang.Get("Flattened stuff..."));
+      sapi.World.Logger.StoryEvent(Lang.Get("sfksteamworks:Flattened stuff..."));
     }
 
     // mostly copied from vssurvivalmod
