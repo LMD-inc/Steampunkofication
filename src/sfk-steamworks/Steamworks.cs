@@ -7,7 +7,7 @@ using SFK.Steamworks.RollingMachine;
 
 [assembly: ModInfo("[SFK] Steamworks", "sfksteamworks",
   Description = "Steampunk. More. Now with machines!",
-  Version = "0.1.4",
+  Version = "0.1.5",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new string[] { "LMD inc." })]
 
