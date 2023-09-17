@@ -1,74 +1,78 @@
 {
-  "code": "steamengine",
-  "class": "SteamEngine",
-  "entityClass": "SteamEngine",
-  "behaviors": [{ "name": "HorizontalOrientable" }],
-  "entityBehaviors": [{ "name": "MPSteamEngine" }, { "name": "Animatable" }],
-  "variantgroups": [
-    {
-      "code": "side",
-      "loadFromProperties": "abstract/horizontalorientation"
-    }
-  ],
-  "attributes": {
-    "inventoryClassName": "steamengine"
-  },
-  "creativeinventoryByType": {
-    "*-north": { "general": ["*"], "sfksteamworks": ["*"] }
-  },
-  "maxstacksize": 1,
-  "shape": {
-    "base": "block/machine/steamengine/axle",
-    "rotateYByType": {
-      "*-north": 90,
-      "*-east": 0,
-      "*-south": 270,
-      "*-west": 180
-    }
-  },
-  "shapeInventory": {
+	"code": "steamengine",
+	"class": "SteamEngine",
+	"entityClass": "SteamEngine",
+	"behaviors": [{ "name": "HorizontalOrientable" }],
+	"entityBehaviors": [{ "name": "MPSteamEngine" }, { "name": "Animatable" }],
+	"variantgroups": [
+		{
+			"code": "side",
+			"loadFromProperties": "abstract/horizontalorientation"
+		}
+	],
+	"attributes": {
+		"inventoryClassName": "steamengine"
+	},
+	"creativeinventoryByType": {
+		"*-north": { "general": ["*"], "sfksteamworks": ["*"] }
+	},
+	"maxstacksize": 1,
+	"shape": {
+		"base": "block/machine/steamengine/axle",
+		"rotateYByType": {
+			"*-north": 90,
+			"*-east": 0,
+			"*-south": 270,
+			"*-west": 180
+		}
+	},
+	"shapeInventory": {
 		"base": "block/machine/steamengine/inventory"
 	},
-  "blockmaterial": "metal",
-  "drops": [
-    { "type": "block", "code": "steamengine-north", "quantity": { "avg": 1 } }
-  ],
-  "sidesolid": {
-    "all": false
-  },
-  "sideopaque": {
-    "all": false
-  },
-  "rainPermeable": true,
-  "resistance": 3.5,
-  "sounds": {
-    "place": "game:block/anvil",
-    "walk": "game:walk/stone",
-    "hit": "game:block/anvil",
-    "break": "game:block/anvil"
-  },
-  "heldTpIdleAnimation": "holdunderarm",
-  "guiTransform": {
-    "translation": { "x": -10, "y": -3.3, "z": 0 },
-    "rotation": { "x": -22, "y": -45, "z": 0 }
-  },
-  "tpHandTransform": {
-    "translation": { "x": -0.3, "y": -0.5, "z": -0.6 },
-    "rotation": { "x": 14, "y": -90, "z": 14 },
-    "scale": 0.6
-  },
-  "fpHandTransform": {
-    "translation": { "x": 0, "y": 0.15, "z": 1 },
-    "rotation": { "x": 0, "y": -45, "z": 0 },
-    "scale": 1.6
-  },
-  "groundTransform": {
-    "translation": { "x": 0, "y": 0, "z": 0 },
-    "rotation": { "x": 0, "y": -45, "z": 0 },
-    "origin": { "x": 0.5, "y": 0, "z": 0.5 },
-    "scale": 3.5
-  },
-  "lightAbsorption": 0,
-  "selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
-  "collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
+	"textures": {
+		"iron": { "base": "game:block/metal/plate/iron" },
+		"brass": { "base": "game:block/metal/plate/brass" }
+	},
+	"blockmaterial": "metal",
+	"drops": [
+		{ "type": "block", "code": "steamengine-north", "quantity": { "avg": 1 } }
+	],
+	"sidesolid": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"rainPermeable": true,
+	"resistance": 3.5,
+	"sounds": {
+		"place": "game:block/anvil",
+		"walk": "game:walk/stone",
+		"hit": "game:block/anvil",
+		"break": "game:block/anvil"
+	},
+	"heldTpIdleAnimation": "holdunderarm",
+	"guiTransform": {
+		"translation": { "x": -10, "y": -3.3, "z": 0 },
+		"rotation": { "x": -22, "y": -45, "z": 0 }
+	},
+	"tpHandTransform": {
+		"translation": { "x": -0.3, "y": -0.5, "z": -0.6 },
+		"rotation": { "x": 14, "y": -90, "z": 14 },
+		"scale": 0.6
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": 0.15, "z": 1 },
+		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"scale": 1.6
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 3.5
+	},
+	"lightAbsorption": 0,
+	"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+	"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
 }
