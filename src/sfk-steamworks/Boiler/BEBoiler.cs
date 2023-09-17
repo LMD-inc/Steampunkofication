@@ -555,7 +555,7 @@ namespace SFK.Steamworks.Boiler
             }
 
             float inputItemsPerLitre = BlockLiquidContainerBase.GetContainableProps(inputStack).ItemsPerLitre;
-            inputSlot.TakeOut((int)(consumed  * inputItemsPerLitre));
+            inputSlot.TakeOut((int)(consumed * inputItemsPerLitre));
 
             MarkDirty(true);
             Api.World.BlockAccessor.MarkBlockEntityDirty(Pos);

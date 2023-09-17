@@ -12,6 +12,9 @@ namespace SFK.Steamworks.Boiler
 {
   public class BlockBoiler : BlockLiquidContainerBase, IIgnitable
   {
+    AdvancedParticleProperties[] ringParticles;
+    Vec3f[] basePos;
+
     #region Multiblock
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
@@ -201,6 +204,22 @@ namespace SFK.Steamworks.Boiler
       // World interaction help
       if (api.Side != EnumAppSide.Client) return;
 
+      ringParticles = new AdvancedParticleProperties[ParticleProperties.Length * 4];
+      basePos = new Vec3f[ringParticles.Length];
+
+      for (int i = 0; i < ParticleProperties.Length; i++)
+      {
+        for (int j = 0; j < 4; j++)
+        {
+          AdvancedParticleProperties props = ParticleProperties[i].Clone();
+
+          basePos[i * 4 + j] = new Vec3f(0, 0, 0);
+
+          ringParticles[i * 4 + j] = props;
+        }
+      }
+
+
       interactions = ObjectCacheUtil.GetOrCreate(api, "boilerInteractions", () =>
         {
           List<ItemStack> canIgniteStacks = new List<ItemStack>();
@@ -282,6 +301,38 @@ namespace SFK.Steamworks.Boiler
     }
 
     #endregion
+
+    #region Particles
+
+    public override void OnAsyncClientParticleTick(IAsyncParticleManager manager, BlockPos pos, float windAffectednessAtPos, float secondsTicking)
+    {
+      BlockBoiler blockBoiler = manager.BlockAccess.GetBlock(pos) as BlockBoiler;
+      BEBoiler beb = manager.BlockAccess.GetBlockEntity(pos) as BEBoiler;
+      bool isBurning = beb.IsBurning;
+
+      System.Console.WriteLine($"{blockBoiler.Variant.Get("burnstates", "n/a")} || {beb.IsBurning}");
+
+      if (isBurning)
+      {
+        for (int i = 0; i < ringParticles.Length; i++)
+        {
+          AdvancedParticleProperties bps = ringParticles[i];
+          bps.WindAffectednesAtPos = windAffectednessAtPos;
+          bps.basePos.X = pos.X + basePos[i].X;
+          bps.basePos.Y = pos.Y + basePos[i].Y;
+          bps.basePos.Z = pos.Z + basePos[i].Z;
+
+          manager.Spawn(bps);
+        }
+
+        return;
+      }
+
+      base.OnAsyncClientParticleTick(manager, pos, windAffectednessAtPos, secondsTicking);
+    }
+
+    #endregion
+
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
     {
