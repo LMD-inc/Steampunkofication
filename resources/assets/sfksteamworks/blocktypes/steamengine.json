@@ -3,7 +3,7 @@
 	"class": "SteamEngine",
 	"entityClass": "SteamEngine",
 	"behaviors": [{ "name": "HorizontalOrientable" }],
-	"entityBehaviors": [{ "name": "MPSteamEngine" }, { "name": "Animatable" }],
+	"entityBehaviors": [{ "name": "Animatable" }, { "name": "MPSteamEngine" }],
 	"variantgroups": [
 		{
 			"code": "side",

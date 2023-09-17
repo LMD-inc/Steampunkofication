@@ -26,8 +26,10 @@ namespace SFK.Steamworks.SteamEngine
     protected override double AccelerationFactor => 1d;
     protected override float TargetSpeed => isPowered ? 1f : 0;
     protected override float TorqueFactor => isPowered ? 1.5f : 0;
-    public override float AngleRad => 0;
-    BlockEntityAnimationUtil animUtil => Blockentity.GetBehavior<BEBehaviorAnimatable>().animUtil;
+    BlockEntityAnimationUtil animUtil
+    {
+      get { return Blockentity.GetBehavior<BEBehaviorAnimatable>()?.animUtil; }
+    }
 
     public BEBehaviorMPSteamEngine(BlockEntity blockentity) : base(blockentity)
     {
@@ -42,6 +44,19 @@ namespace SFK.Steamworks.SteamEngine
     {
       base.Initialize(api, properties);
 
+      switch (ownFacing.Code)
+      {
+        case "north":
+        case "south":
+          AxisSign = new int[] { 0, 0, -1 };
+          break;
+
+        case "east":
+        case "west":
+          AxisSign = new int[] { -1, 0, 0 };
+          break;
+      }
+
       if (api.World.Side == EnumAppSide.Client)
       {
         capi = api as ICoreClientAPI;
@@ -49,7 +64,8 @@ namespace SFK.Steamworks.SteamEngine
         if (animUtil != null)
         {
           float rotY = Block.Shape.rotateY;
-          animUtil.InitializeAnimator("sfksteamworks:steamengine", null, null, new Vec3f(0, rotY, 0));
+          Shape shape = capi.Assets.TryGet("sfksteamworks:shapes/block/machine/steamengine/base.json").ToObject<Shape>();
+          animUtil.InitializeAnimator("sfksteamworks:steamengine", shape, null, new Vec3f(0, rotY, 0));
         }
       }
 
@@ -68,15 +84,12 @@ namespace SFK.Steamworks.SteamEngine
         isPowered = true;
         steamSlot.TakeOut(1); // Consumption
 
-        if (!animUtil.activeAnimationsByAnimCode.ContainsKey("work"))
-        {
-          animUtil.StartAnimation(new AnimationMetaData() { Animation = "work", Code = "work", Weight = 10 });
-        }
+        animUtil?.StartAnimation(new AnimationMetaData() { Animation = "work", Code = "work", Weight = 10 });
       }
       else
       {
         isPowered = false;
-        animUtil.StopAnimation("work");
+        animUtil?.StopAnimation("work");
       }
     }
 
@@ -84,8 +97,8 @@ namespace SFK.Steamworks.SteamEngine
     {
       sb.Clear();
 
-      if (isPowered) sb.AppendLine(Lang.Get("Working"));
-      else sb.AppendLine(Lang.Get("Stale"));
+      if (isPowered) sb.AppendLine(Lang.Get("sfksteamworks:Working"));
+      else sb.AppendLine(Lang.Get("sfksteamworks:Stale"));
     }
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor world)
@@ -119,7 +132,10 @@ namespace SFK.Steamworks.SteamEngine
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator)
     {
-      mesher.AddMeshData(GetBaseMesh(Block.Variant["side"]));
+      if (!isPowered)
+      {
+        mesher.AddMeshData(GetBaseMesh(Block.Variant["side"]));
+      }
 
       return base.OnTesselation(mesher, tesselator);
     }
