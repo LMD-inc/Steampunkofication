@@ -18,6 +18,8 @@
 	"item-roller-steel": "Сталевий вал",
 
 	"Flattened stuff...": "Вирівнянні матеріали...",
+	"Working": "Працює",
+	"Stale": "У простої",
 	"Rollers material: {0}": "Матеріал валів: {0}",
 	"Currently working: {0}": "Зараз опрацьовується: {0}",
 	"Will produce: {0} of {1}": "Буде вироблено: {0} {1}",
