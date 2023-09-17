@@ -1,0 +1,32 @@
+{
+	"block-boiler-*": "Паровий котел",
+	"block-boiler-mp-*": "Паровий котел",
+
+	"block-steamengine-*": "Паровий двигун",
+	"block-rollingmachine-*": "Вальцювальний верстат",
+
+	"item-funnel-raw-blue": "Необсмажена вихлопна труба із блакитної глини",
+	"item-funnel-burned-blue": "Вихлопна труба із блакитної глины",
+
+	"item-cross-handle": "Крестовина",
+	"item-roller-copper": "Мідний вал",
+	"item-roller-tinbronze": "Вал з олов'яної бронзи",
+	"item-roller-bismuthbronze": "Вал з бісмутової бронзи",
+	"item-roller-blackbronze": "Вал з чорної бронзи",
+	"item-roller-iron": "Залізний вал",
+	"item-roller-meteoriciron": "Вал з метеоритного заліза",
+	"item-roller-steel": "Сталевий вал",
+
+	"Flattened stuff...": "Вирівнянні матеріали...",
+	"Working": "Працює",
+	"Stale": "У простої",
+	"Rollers material: {0}": "Матеріал валів: {0}",
+	"Currently working: {0}": "Зараз опрацьовується: {0}",
+	"Will produce: {0} of {1}": "Буде вироблено: {0} {1}",
+	"Progress: ": "Прогрес: ",
+
+	"item-steamportion": "Пар",
+	"incontainer-item-steamportion": "Пару",
+
+	"game:tabname-sfksteamworks": "[SFK] Steamworks"
+}

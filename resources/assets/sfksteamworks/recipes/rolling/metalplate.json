@@ -1,0 +1,30 @@
+{
+  "code": "roll-plate",
+  "name": "roll-plate",
+  "ingredient": {
+    "type": "item",
+    "code": "game:ingot-*",
+    "name": "metal",
+    "allowedVariants": [
+      "copper",
+      "brass",
+      "tinbronze",
+      "bismuthbronze",
+      "blackbronze",
+      "silver",
+      "gold",
+      "iron",
+      "lead",
+      "tin",
+      "zinc",
+      "bismuth",
+      "chromium",
+      "platinum",
+      "titanium",
+      "molybdochalkos",
+      "meteoriciron",
+      "steel"
+    ]
+  },
+  "output": { "type": "item", "code": "game:metalplate-{metal}", "stackSize": 1 }
+}

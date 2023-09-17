@@ -202,45 +202,45 @@ namespace SFK.Steamworks.Boiler
       if (api.Side != EnumAppSide.Client) return;
 
       interactions = ObjectCacheUtil.GetOrCreate(api, "boilerInteractions", () =>
-              {
-                List<ItemStack> canIgniteStacks = new List<ItemStack>();
+        {
+          List<ItemStack> canIgniteStacks = new List<ItemStack>();
 
-                foreach (CollectibleObject obj in api.World.Collectibles)
+          foreach (CollectibleObject obj in api.World.Collectibles)
+          {
+            string firstCodePart = obj.FirstCodePart();
+
+            if (obj is Block && (obj as Block).HasBehavior<BlockBehaviorCanIgnite>() || obj is ItemFirestarter)
+            {
+              List<ItemStack> stacks = obj.GetHandBookStacks(api as ICoreClientAPI);
+              if (stacks != null) canIgniteStacks.AddRange(stacks);
+            }
+          }
+
+          return new WorldInteraction[]
+          {
+                new WorldInteraction()
                 {
-                  string firstCodePart = obj.FirstCodePart();
-
-                  if (obj is Block && (obj as Block).HasBehavior<BlockBehaviorCanIgnite>() || obj is ItemFirestarter)
-                  {
-                    List<ItemStack> stacks = obj.GetHandBookStacks(api as ICoreClientAPI);
-                    if (stacks != null) canIgniteStacks.AddRange(stacks);
-                  }
+                    ActionLangCode = "blockhelp-boiler-ignite",
+                    MouseButton = EnumMouseButton.Right,
+                    HotKeyCode = "sneak",
+                    Itemstacks = canIgniteStacks.ToArray(),
+                    GetMatchingStacks = (wi, bs, es) => {
+                        BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(bs.Position) as BEBoiler;
+                        if (beb?.fuelSlot != null && !beb.fuelSlot.Empty && !beb.IsBurning)
+                        {
+                            return wi.Itemstacks;
+                        }
+                        return null;
+                    }
+                },
+                new WorldInteraction()
+                {
+                    ActionLangCode = "blockhelp-boiler-refuel",
+                    MouseButton = EnumMouseButton.Right,
+                    HotKeyCode = "sneak"
                 }
-
-                return new WorldInteraction[]
-                {
-                      new WorldInteraction()
-                      {
-                          ActionLangCode = "blockhelp-boiler-ignite",
-                          MouseButton = EnumMouseButton.Right,
-                          HotKeyCode = "sneak",
-                          Itemstacks = canIgniteStacks.ToArray(),
-                          GetMatchingStacks = (wi, bs, es) => {
-                              BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(bs.Position) as BEBoiler;
-                              if (beb?.fuelSlot != null && !beb.fuelSlot.Empty && !beb.IsBurning)
-                              {
-                                  return wi.Itemstacks;
-                              }
-                              return null;
-                          }
-                      },
-                      new WorldInteraction()
-                      {
-                          ActionLangCode = "blockhelp-boiler-refuel",
-                          MouseButton = EnumMouseButton.Right,
-                          HotKeyCode = "sneak"
-                      }
-                    };
-              });
+              };
+        });
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)

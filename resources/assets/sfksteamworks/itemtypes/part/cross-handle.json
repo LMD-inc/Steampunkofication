@@ -1,0 +1,32 @@
+{
+  "code": "cross-handle",
+  "maxstacksize": 1,
+  "shape": {
+    "base": "block/machine/rollingmachine/handle"
+  },
+  "textures": {
+    "oak": { "base": "game:block/wood/debarked/oak" }
+  },
+  "creativeinventory": { "general": ["*"], "sfksteamworks": ["*"] },
+  "guiTransform": {
+    "translation": { "x": 12, "y": 5, "z": 0 },
+    "rotation": { "x": 25, "y": 43, "z": 0 },
+    "scale": 2.01
+  },
+  "fpHandTransform": {
+    "translation": { "x": 0.7, "y": -0.4, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "scale": 2.14
+  },
+  "tpHandTransform": {
+    "translation": { "x": -0.7, "y": -0.8, "z": -1.03 },
+    "rotation": { "x": 0, "y": -90, "z": 0 },
+    "scale": 1.04
+  },
+  "groundTransform": {
+    "translation": { "x": 0, "y": -0.4, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": -90 },
+    "origin": { "x": 0.5, "y": 0.5, "z": 0.5299 },
+    "scale": 4.13
+  }
+}
