@@ -67,7 +67,7 @@ namespace SFK.Transportation.WaterPump
       }
     }
 
-    MeshData getBaseMesh(string orient)
+    MeshData GetBaseMesh(string orient)
     {
       return ObjectCacheUtil.GetOrCreate(Api, "waterpump-" + orient + "-base", () =>
       {
@@ -81,12 +81,11 @@ namespace SFK.Transportation.WaterPump
 
         return mesh;
       });
-
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator)
     {
-      mesher.AddMeshData(getBaseMesh(Block.Variant["side"]));
+      mesher.AddMeshData(GetBaseMesh(Block.Variant["side"]));
 
       return base.OnTesselation(mesher, tesselator);
     }

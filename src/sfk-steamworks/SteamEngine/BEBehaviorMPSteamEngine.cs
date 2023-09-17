@@ -9,11 +9,15 @@ using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
 using SFK.API;
 using System.Text;
+using Vintagestory.API.Client;
+using Vintagestory.API.Util;
 
 namespace SFK.Steamworks.SteamEngine
 {
   public class BEBehaviorMPSteamEngine : BEBehaviorMPRotor
   {
+    ICoreClientAPI capi;
+
     public bool isPowered;
 
     protected override AssetLocation Sound => null;
@@ -38,10 +42,15 @@ namespace SFK.Steamworks.SteamEngine
     {
       base.Initialize(api, properties);
 
-      if (api.World.Side == EnumAppSide.Client && animUtil != null)
+      if (api.World.Side == EnumAppSide.Client)
       {
-        float rotY = Block.Shape.rotateY;
-        animUtil.InitializeAnimator("sfksteamworks:steamengine", null, null, new Vec3f(0, rotY, 0));
+        capi = api as ICoreClientAPI;
+
+        if (animUtil != null)
+        {
+          float rotY = Block.Shape.rotateY;
+          animUtil.InitializeAnimator("sfksteamworks:steamengine", null, null, new Vec3f(0, rotY, 0));
+        }
       }
 
       Blockentity.RegisterGameTickListener(CheckSteamPowered, 1000);
@@ -90,5 +99,31 @@ namespace SFK.Steamworks.SteamEngine
       tree.SetBool("p", isPowered);
       base.ToTreeAttributes(tree);
     }
+
+    #region Tesselation
+    MeshData GetBaseMesh(string orient)
+    {
+      return ObjectCacheUtil.GetOrCreate(Api, "steamengine-" + orient + "-base", () =>
+      {
+        Shape shape = capi.Assets.TryGet("sfksteamworks:shapes/block/machine/steamengine/base.json").ToObject<Shape>();
+        MeshData mesh;
+        capi.Tesselator.TesselateShape(Block, shape, out mesh);
+
+        int angleIdx = BlockFacing.FromCode(orient).HorizontalAngleIndex;
+
+        mesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, (90 * angleIdx * GameMath.PI) / 180, 0);
+
+        return mesh;
+      });
+    }
+
+    public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator)
+    {
+      mesher.AddMeshData(GetBaseMesh(Block.Variant["side"]));
+
+      return base.OnTesselation(mesher, tesselator);
+    }
+
+    #endregion
   }
 }
