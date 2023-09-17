@@ -31,6 +31,7 @@ namespace SFK.Transportation
       api.RegisterBlockEntityBehaviorClass("WaterPump", typeof(BEBehaviorWaterPump));
 
       api.RegisterBlockClass("Drum", typeof(BlockDrum));
+      api.RegisterBlockEntityClass("Drum", typeof(BEDrum));
     }
 
     public override void StartClientSide(ICoreClientAPI api)
