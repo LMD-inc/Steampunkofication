@@ -14,6 +14,9 @@ namespace SFK.Steamworks.Boiler
   {
     public bool IsExtinct;
 
+    public BlockFacing Facing { get; protected set; } = BlockFacing.NORTH;
+    float RotateY = 0f;
+
     AdvancedParticleProperties[] ringParticles;
     Vec3f[] basePos;
 
@@ -195,6 +198,24 @@ namespace SFK.Steamworks.Boiler
     {
       base.OnLoaded(api);
 
+      Facing = BlockFacing.FromCode(Variant["side"]);
+      Facing ??= BlockFacing.NORTH;
+
+      switch (Facing.Index)
+      {
+        case 1:
+          RotateY = 270;
+          break;
+        case 2:
+          RotateY = 180;
+          break;
+        case 3:
+          RotateY = 90;
+          break;
+        default:
+          break;
+      }
+
       IsExtinct = Variant["burnstate"] != "lit";
 
       if (Attributes?["capacityLitresInput"].Exists == true)
@@ -333,7 +354,6 @@ namespace SFK.Steamworks.Boiler
     }
 
     #endregion
-
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
     {
