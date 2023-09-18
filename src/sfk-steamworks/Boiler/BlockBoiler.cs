@@ -12,6 +12,8 @@ namespace SFK.Steamworks.Boiler
 {
   public class BlockBoiler : BlockLiquidContainerBase, IIgnitable
   {
+    public bool IsExtinct;
+
     AdvancedParticleProperties[] ringParticles;
     Vec3f[] basePos;
 
@@ -193,6 +195,8 @@ namespace SFK.Steamworks.Boiler
     {
       base.OnLoaded(api);
 
+      IsExtinct = Variant["burnstate"] != "lit";
+
       if (Attributes?["capacityLitresInput"].Exists == true)
       {
         /* This prop needed for world interactions e.g. put water from bucket into boiler.
@@ -204,18 +208,21 @@ namespace SFK.Steamworks.Boiler
       // World interaction help
       if (api.Side != EnumAppSide.Client) return;
 
-      ringParticles = new AdvancedParticleProperties[ParticleProperties.Length * 4];
-      basePos = new Vec3f[ringParticles.Length];
-
-      for (int i = 0; i < ParticleProperties.Length; i++)
+      if (!IsExtinct)
       {
-        for (int j = 0; j < 4; j++)
+        ringParticles = new AdvancedParticleProperties[ParticleProperties.Length * 4];
+        basePos = new Vec3f[ringParticles.Length];
+
+        for (int i = 0; i < ParticleProperties.Length; i++)
         {
-          AdvancedParticleProperties props = ParticleProperties[i].Clone();
+          for (int j = 0; j < 4; j++)
+          {
+            AdvancedParticleProperties props = ParticleProperties[i].Clone();
 
-          basePos[i * 4 + j] = new Vec3f(0, 0, 0);
+            basePos[i * 4 + j] = new Vec3f(0, 0, 0);
 
-          ringParticles[i * 4 + j] = props;
+            ringParticles[i * 4 + j] = props;
+          }
         }
       }
 
@@ -306,13 +313,7 @@ namespace SFK.Steamworks.Boiler
 
     public override void OnAsyncClientParticleTick(IAsyncParticleManager manager, BlockPos pos, float windAffectednessAtPos, float secondsTicking)
     {
-      BlockBoiler blockBoiler = manager.BlockAccess.GetBlock(pos) as BlockBoiler;
-      BEBoiler beb = manager.BlockAccess.GetBlockEntity(pos) as BEBoiler;
-      bool isBurning = beb.IsBurning;
-
-      System.Console.WriteLine($"{blockBoiler.Variant.Get("burnstates", "n/a")} || {beb.IsBurning}");
-
-      if (isBurning)
+      if (!IsExtinct)
       {
         for (int i = 0; i < ringParticles.Length; i++)
         {

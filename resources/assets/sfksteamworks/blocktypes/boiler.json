@@ -20,12 +20,20 @@
 	},
 	"variantgroups": [
 		{
+			"code": "burnstate",
+			"states": [
+				"extinct", 
+				"lit", 
+				"cold"
+			]
+		},
+		{
 			"code": "side",
 			"loadFromProperties": "abstract/horizontalorientation"
 		}
 	],
 	"creativeinventoryByType": {
-		"*-north": { "general": ["*"], "sfksteamworks": ["*"] }
+		"*-extinct-north": { "general": ["*"], "sfksteamworks": ["*"] }
 	},
 	"maxstacksize": 1,
 	"shape": {
@@ -38,95 +46,97 @@
 		}
 	},
 	"drops": [
-		{ "type": "block", "code": "boiler-north", "quantity": { "avg": 1 } }
+		{ "type": "block", "code": "boiler-extinct-north", "quantity": { "avg": 1 } }
 	],
 	"heldTpIdleAnimation": "holdunderarm",
-	"particleProperties": [
-		{
-			"__comment": "Smoke quads left funnel",
-			"hsvaColor": [
-				{ "avg": 0, "var": 0 },
-				{ "avg": 0, "var": 0 },
-				{ "avg": 70, "var": 30 },
-				{ "avg": 220, "var": 50 }
-			],
-			"opacityEvolve": { "transform": "linear", "factor": -255 },
-			"gravityEffect": { "avg": 0, "var": 0 },
-			"posOffset": [
-				{ "avg": 0.4, "var": 0 },
-				{ "avg": 0.1, "var": 0 },
-				{ "avg": -0.25, "var": 0 }
-			],
-			"velocity": [
-				{ "avg": 0, "var": 0.025 },
-				{ "avg": 0.2, "var": 0.05 },
-				{ "avg": 0, "var": 0.025 }
-			],
-			"quantity": { "avg": 0.3 },
-			"size": { "avg": 0.3, "var": 0.05 },
-			"sizeEvolve": { "transform": "linear", "factor": 1.5 },
-			"particleModel": "Quad",
-			"lifeLength": { "avg": 18 },
-			"selfPropelled": true,
-			"windAffectednes": 0.7
-		},
-		{
-			"__comment": "Smoke quads right funnel",
-			"hsvaColor": [
-				{ "avg": 0, "var": 0 },
-				{ "avg": 0, "var": 0 },
-				{ "avg": 70, "var": 30 },
-				{ "avg": 220, "var": 50 }
-			],
-			"opacityEvolve": { "transform": "linear", "factor": -255 },
-			"gravityEffect": { "avg": 0, "var": 0 },
-			"posOffset": [
-				{ "avg": 0.4, "var": 0 },
-				{ "avg": 0.1, "var": 0 },
-				{ "avg": 0.25, "var": 0 }
-			],
-			"velocity": [
-				{ "avg": 0, "var": 0.025 },
-				{ "avg": 0.2, "var": 0.05 },
-				{ "avg": 1, "var": 0.025 }
-			],
-			"quantity": { "avg": 0.3 },
-			"size": { "avg": 0.3, "var": 0.05 },
-			"sizeEvolve": { "transform": "linear", "factor": 1.5 },
-			"particleModel": "Quad",
-			"lifeLength": { "avg": 18 },
-			"selfPropelled": true,
-			"windAffectednes": 0.7
-		},
-		{
-			"__comment": "Fire quads",
-			"hsvaColor": [
-				{ "avg": 20, "var": 20 },
-				{ "avg": 255, "var": 50 },
-				{ "avg": 255, "var": 50 },
-				{ "avg": 255, "var": 0 }
-			],
-			"opacityEvolve": { "transform": "quadratic", "factor": -16 },
-			"gravityEffect": { "avg": 0, "var": 0 },
-			"posOffset": [
-				{ "avg": -1.1, "var": 0.1 },
-				{ "avg": -0.9, "var": 0 },
-				{ "avg": 0, "var": 0.1 }
-			],
-			"velocity": [
-				{ "avg": 0, "var": 0.1 },
-				{ "avg": 0.125, "var": 0.05 },
-				{ "avg": 0, "var": 0.1 }
-			],
-			"quantity": { "avg": 0.1 },
-			"size": { "avg": 0.35, "var": 0.05 },
-			"lifeLength": { "avg": 0.25 },
-			"sizeEvolve": { "transform": "linear", "factor": 0.25 },
-			"particleModel": "Quad",
-			"vertexFlags": 128,
-			"windAffectednes": 0.5
-		}
-	],
+	"particlePropertiesByType": {
+		"boiler-lit-*": [
+			{
+				"__comment": "Smoke quads left funnel",
+				"hsvaColor": [
+					{ "avg": 0, "var": 0 },
+					{ "avg": 0, "var": 0 },
+					{ "avg": 70, "var": 30 },
+					{ "avg": 220, "var": 50 }
+				],
+				"opacityEvolve": { "transform": "linear", "factor": -255 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [
+					{ "avg": 0.4, "var": 0 },
+					{ "avg": 0.1, "var": 0 },
+					{ "avg": -0.25, "var": 0 }
+				],
+				"velocity": [
+					{ "avg": 0, "var": 0.025 },
+					{ "avg": 0.2, "var": 0.05 },
+					{ "avg": 0, "var": 0.025 }
+				],
+				"quantity": { "avg": 0.1 },
+				"size": { "avg": 0.3, "var": 0.05 },
+				"sizeEvolve": { "transform": "linear", "factor": 1.5 },
+				"particleModel": "Quad",
+				"lifeLength": { "avg": 18 },
+				"selfPropelled": true,
+				"windAffectednes": 0.7
+			},
+			{
+				"__comment": "Smoke quads right funnel",
+				"hsvaColor": [
+					{ "avg": 0, "var": 0 },
+					{ "avg": 0, "var": 0 },
+					{ "avg": 70, "var": 30 },
+					{ "avg": 220, "var": 50 }
+				],
+				"opacityEvolve": { "transform": "linear", "factor": -255 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [
+					{ "avg": 0.4, "var": 0 },
+					{ "avg": 0.1, "var": 0 },
+					{ "avg": 0.25, "var": 0 }
+				],
+				"velocity": [
+					{ "avg": 0, "var": 0.025 },
+					{ "avg": 0.2, "var": 0.05 },
+					{ "avg": 1, "var": 0.025 }
+				],
+				"quantity": { "avg": 0.1 },
+				"size": { "avg": 0.3, "var": 0.05 },
+				"sizeEvolve": { "transform": "linear", "factor": 1.5 },
+				"particleModel": "Quad",
+				"lifeLength": { "avg": 18 },
+				"selfPropelled": true,
+				"windAffectednes": 0.7
+			},
+			{
+				"__comment": "Fire quads",
+				"hsvaColor": [
+					{ "avg": 20, "var": 20 },
+					{ "avg": 255, "var": 50 },
+					{ "avg": 255, "var": 50 },
+					{ "avg": 255, "var": 0 }
+				],
+				"opacityEvolve": { "transform": "quadratic", "factor": -16 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [
+					{ "avg": -1.1, "var": 0.1 },
+					{ "avg": -0.9, "var": 0 },
+					{ "avg": 0, "var": 0.1 }
+				],
+				"velocity": [
+					{ "avg": 0, "var": 0.1 },
+					{ "avg": 0.125, "var": 0.05 },
+					{ "avg": 0, "var": 0.1 }
+				],
+				"quantity": { "avg": 0.1 },
+				"size": { "avg": 0.35, "var": 0.05 },
+				"lifeLength": { "avg": 0.25 },
+				"sizeEvolve": { "transform": "linear", "factor": 0.25 },
+				"particleModel": "Quad",
+				"vertexFlags": 128,
+				"windAffectednes": 0.5
+			}
+		]
+	},
 	"guiTransform": {
 		"origin": { "x": 0.5, "y": 0.5, "z": 0.1 },
 		"scale": 0.9
