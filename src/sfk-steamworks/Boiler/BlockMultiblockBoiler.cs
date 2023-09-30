@@ -146,6 +146,8 @@ namespace SFK.Steamworks.Boiler
 
       Block block = world.BlockAccessor.GetBlock(be.Principal);
 
+      block ??= world.BlockAccessor.GetBlock(new AssetLocation("sfksteamworks:boiler-extinct-north"));
+
       return new ItemStack(block);
     }
   }
