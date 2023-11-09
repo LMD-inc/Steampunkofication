@@ -8,6 +8,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace SFK.Steamworks.Boiler
@@ -500,7 +501,7 @@ namespace SFK.Steamworks.Boiler
       if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
       {
         // Water input face
-        if (atBlockFace == BlockFacing.FromCode(Block.Variant["side"]).Opposite)
+        if (atBlockFace == BlockFacing.FromCode(Block.Variant.Get("side", "north")).Opposite)
         {
           return inputSlot;
         }
