@@ -359,5 +359,10 @@ namespace SFK.Steamworks.Boiler
     {
       return interactions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
     }
+
+    public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+    {
+      return new ItemStack(world.BlockAccessor.GetBlock(new AssetLocation("sfksteamworks:boiler-extinct-north")));
+    }
   }
 }

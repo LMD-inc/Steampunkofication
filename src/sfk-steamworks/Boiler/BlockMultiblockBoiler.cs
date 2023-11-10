@@ -142,13 +142,8 @@ namespace SFK.Steamworks.Boiler
 
     public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
     {
-      BEMultiblockGasFlow be = world.BlockAccessor.GetBlockEntity(pos) as BEMultiblockGasFlow;
-
-      Block block = world.BlockAccessor.GetBlock(be.Principal);
-
-      block ??= world.BlockAccessor.GetBlock(new AssetLocation("sfksteamworks:boiler-extinct-north"));
-
-      return new ItemStack(block);
+      if (world.BlockAccessor.GetBlockEntity(pos) is not BEMultiblockGasFlow be || be.Principal == null) return null;
+      return world.BlockAccessor.GetBlock(be.Principal).OnPickBlock(world, be.Principal);
     }
   }
 }
