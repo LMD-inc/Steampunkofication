@@ -8,7 +8,7 @@ using SFK.Transportation.Drum;
 
 [assembly: ModInfo("[SFK] Transportation", "sfktransportation",
   Description = "Steampunk. More. Now with pipes!",
-  Version = "0.1.5",
+  Version = "0.1.6",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new string[] { "LMD inc." })]
 
@@ -31,6 +31,7 @@ namespace SFK.Transportation
       api.RegisterBlockEntityBehaviorClass("WaterPump", typeof(BEBehaviorWaterPump));
 
       api.RegisterBlockClass("Drum", typeof(BlockDrum));
+      api.RegisterBlockEntityClass("Drum", typeof(BEDrum));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

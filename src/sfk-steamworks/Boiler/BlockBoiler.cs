@@ -12,6 +12,14 @@ namespace SFK.Steamworks.Boiler
 {
   public class BlockBoiler : BlockLiquidContainerBase, IIgnitable
   {
+    public bool IsExtinct;
+
+    public BlockFacing Facing { get; protected set; } = BlockFacing.NORTH;
+    float RotateY = 0f;
+
+    AdvancedParticleProperties[] ringParticles;
+    Vec3f[] basePos;
+
     #region Multiblock
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
@@ -190,6 +198,26 @@ namespace SFK.Steamworks.Boiler
     {
       base.OnLoaded(api);
 
+      Facing = BlockFacing.FromCode(Variant["side"]);
+      Facing ??= BlockFacing.NORTH;
+
+      switch (Facing.Index)
+      {
+        case 1:
+          RotateY = 270;
+          break;
+        case 2:
+          RotateY = 180;
+          break;
+        case 3:
+          RotateY = 90;
+          break;
+        default:
+          break;
+      }
+
+      IsExtinct = Variant["burnstate"] != "lit";
+
       if (Attributes?["capacityLitresInput"].Exists == true)
       {
         /* This prop needed for world interactions e.g. put water from bucket into boiler.
@@ -200,6 +228,25 @@ namespace SFK.Steamworks.Boiler
 
       // World interaction help
       if (api.Side != EnumAppSide.Client) return;
+
+      if (!IsExtinct)
+      {
+        ringParticles = new AdvancedParticleProperties[ParticleProperties.Length * 4];
+        basePos = new Vec3f[ringParticles.Length];
+
+        for (int i = 0; i < ParticleProperties.Length; i++)
+        {
+          for (int j = 0; j < 4; j++)
+          {
+            AdvancedParticleProperties props = ParticleProperties[i].Clone();
+
+            basePos[i * 4 + j] = new Vec3f(0, 0, 0);
+
+            ringParticles[i * 4 + j] = props;
+          }
+        }
+      }
+
 
       interactions = ObjectCacheUtil.GetOrCreate(api, "boilerInteractions", () =>
         {
@@ -283,9 +330,39 @@ namespace SFK.Steamworks.Boiler
 
     #endregion
 
+    #region Particles
+
+    public override void OnAsyncClientParticleTick(IAsyncParticleManager manager, BlockPos pos, float windAffectednessAtPos, float secondsTicking)
+    {
+      if (!IsExtinct)
+      {
+        for (int i = 0; i < ringParticles.Length; i++)
+        {
+          AdvancedParticleProperties bps = ringParticles[i];
+          bps.WindAffectednesAtPos = windAffectednessAtPos;
+          bps.basePos.X = pos.X + basePos[i].X;
+          bps.basePos.Y = pos.Y + basePos[i].Y;
+          bps.basePos.Z = pos.Z + basePos[i].Z;
+
+          manager.Spawn(bps);
+        }
+
+        return;
+      }
+
+      base.OnAsyncClientParticleTick(manager, pos, windAffectednessAtPos, secondsTicking);
+    }
+
+    #endregion
+
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
     {
       return interactions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+    }
+
+    public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+    {
+      return new ItemStack(world.BlockAccessor.GetBlock(new AssetLocation("sfksteamworks:boiler-extinct-north")));
     }
   }
 }

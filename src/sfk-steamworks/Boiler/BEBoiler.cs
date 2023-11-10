@@ -8,6 +8,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace SFK.Steamworks.Boiler
@@ -183,6 +184,10 @@ namespace SFK.Steamworks.Boiler
       {
         furnaceTemperature = changeTemperature(furnaceTemperature, maxTemperature, dt);
       }
+      else
+      {
+        furnaceTemperature = changeTemperature(furnaceTemperature, enviromentTemperature(), dt);
+      }
 
       // Furnace is not burning and can burn: Ignite the fuel
       if (!IsBurning && canIgniteFuel && canSmelt())
@@ -208,6 +213,7 @@ namespace SFK.Steamworks.Boiler
 
       prevFurnaceTemperature = furnaceTemperature;
     }
+
     public float changeTemperature(float fromTemp, float toTemp, float dt)
     {
       float diff = Math.Abs(fromTemp - toTemp);
@@ -249,25 +255,15 @@ namespace SFK.Steamworks.Boiler
       float nowTemp = oldTemp;
       float meltingPoint = 100; // Water boiling temperature. Patch and get from Collectible.GetTemperature if not only water would be used.
 
-      // Only Heat. Cooling happens already in the itemstack
-      if (oldTemp < furnaceTemperature)
+      float f = (1 + GameMath.Clamp((furnaceTemperature - oldTemp) / 30, 0, 1.6f)) * dt;
+      if (nowTemp >= meltingPoint) f /= 11;
+
+      float newTemp = changeTemperature(oldTemp, furnaceTemperature, f);
+
+      if (oldTemp != newTemp)
       {
-        float f = (1 + GameMath.Clamp((furnaceTemperature - oldTemp) / 30, 0, 1.6f)) * dt;
-        if (nowTemp >= meltingPoint) f /= 11;
-
-        float newTemp = changeTemperature(oldTemp, furnaceTemperature, f);
-        // TODO: think about temperature functions.
-        // int maxTemp = 400?
-        // if (maxTemp > 0)
-        // {
-        //   newTemp = Math.Min(maxTemp, newTemp);
-        // }
-
-        if (oldTemp != newTemp)
-        {
-          InputStackTemp = newTemp;
-          nowTemp = newTemp;
-        }
+        InputStackTemp = newTemp;
+        nowTemp = newTemp;
       }
     }
 
@@ -500,7 +496,7 @@ namespace SFK.Steamworks.Boiler
       if (fromSlot.Itemstack?.Collectible.IsLiquid() == true)
       {
         // Water input face
-        if (atBlockFace == BlockFacing.FromCode(Block.Variant["side"]).Opposite)
+        if (atBlockFace == BlockFacing.FromCode(Block.Variant.Get("side", "north")).Opposite)
         {
           return inputSlot;
         }
@@ -555,7 +551,7 @@ namespace SFK.Steamworks.Boiler
             }
 
             float inputItemsPerLitre = BlockLiquidContainerBase.GetContainableProps(inputStack).ItemsPerLitre;
-            inputSlot.TakeOut((int)(consumed  * inputItemsPerLitre));
+            inputSlot.TakeOut((int)(consumed * inputItemsPerLitre));
 
             MarkDirty(true);
             Api.World.BlockAccessor.MarkBlockEntityDirty(Pos);

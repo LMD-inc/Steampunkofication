@@ -23,5 +23,5 @@
 	},
 	"width": 3,
 	"height": 3,
-	"output": { "type": "block", "code": "boiler-north", "quantity": 1 }
+	"output": { "type": "block", "code": "boiler-extinct-north", "quantity": 1 }
 }
