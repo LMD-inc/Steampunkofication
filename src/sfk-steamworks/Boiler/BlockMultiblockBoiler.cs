@@ -139,5 +139,11 @@ namespace SFK.Steamworks.Boiler
     }
 
     #endregion
+
+    public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+    {
+      if (world.BlockAccessor.GetBlockEntity(pos) is not BEMultiblockGasFlow be || be.Principal == null) return null;
+      return world.BlockAccessor.GetBlock(be.Principal).OnPickBlock(world, be.Principal);
+    }
   }
 }
