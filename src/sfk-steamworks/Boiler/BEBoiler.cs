@@ -184,6 +184,10 @@ namespace SFK.Steamworks.Boiler
       {
         furnaceTemperature = changeTemperature(furnaceTemperature, maxTemperature, dt);
       }
+      else
+      {
+        furnaceTemperature = changeTemperature(furnaceTemperature, enviromentTemperature(), dt);
+      }
 
       // Furnace is not burning and can burn: Ignite the fuel
       if (!IsBurning && canIgniteFuel && canSmelt())
@@ -209,6 +213,7 @@ namespace SFK.Steamworks.Boiler
 
       prevFurnaceTemperature = furnaceTemperature;
     }
+
     public float changeTemperature(float fromTemp, float toTemp, float dt)
     {
       float diff = Math.Abs(fromTemp - toTemp);
@@ -250,25 +255,15 @@ namespace SFK.Steamworks.Boiler
       float nowTemp = oldTemp;
       float meltingPoint = 100; // Water boiling temperature. Patch and get from Collectible.GetTemperature if not only water would be used.
 
-      // Only Heat. Cooling happens already in the itemstack
-      if (oldTemp < furnaceTemperature)
+      float f = (1 + GameMath.Clamp((furnaceTemperature - oldTemp) / 30, 0, 1.6f)) * dt;
+      if (nowTemp >= meltingPoint) f /= 11;
+
+      float newTemp = changeTemperature(oldTemp, furnaceTemperature, f);
+
+      if (oldTemp != newTemp)
       {
-        float f = (1 + GameMath.Clamp((furnaceTemperature - oldTemp) / 30, 0, 1.6f)) * dt;
-        if (nowTemp >= meltingPoint) f /= 11;
-
-        float newTemp = changeTemperature(oldTemp, furnaceTemperature, f);
-        // TODO: think about temperature functions.
-        // int maxTemp = 400?
-        // if (maxTemp > 0)
-        // {
-        //   newTemp = Math.Min(maxTemp, newTemp);
-        // }
-
-        if (oldTemp != newTemp)
-        {
-          InputStackTemp = newTemp;
-          nowTemp = newTemp;
-        }
+        InputStackTemp = newTemp;
+        nowTemp = newTemp;
       }
     }
 
