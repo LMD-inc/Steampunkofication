@@ -13,6 +13,12 @@ namespace SFK.Steamworks.Boiler
   public class GuiDialogBoiler : GuiDialogBlockEntity
   {
     long lastRedrawMs;
+    EnumPosFlag screenPos;
+
+    protected override double FloatyDialogPosition => 0.6;
+    protected override double FloatyDialogAlign => 0.8;
+
+    public override double DrawOrder => 0.2;
 
     public GuiDialogBoiler(string dialogTitle, InventoryBase Inventory, BlockPos BlockEntityPosition,
                            SyncedTreeAttribute tree, ICoreClientAPI capi)
@@ -22,15 +28,12 @@ namespace SFK.Steamworks.Boiler
 
       tree.OnModified.Add(new TreeModifiedListener() { listener = OnAttributesModified });
       Attributes = tree;
-
-      capi.World.Player.InventoryManager.OpenInventory(Inventory);
-
-      SetupDialog();
     }
 
     private void OnInventorySlotModified(int slotid)
     {
-      SetupDialog();
+      // Direct call can cause InvalidOperationException
+      capi.Event.EnqueueMainThreadTask(SetupDialog, "setupboilerdlg");
     }
 
     void SetupDialog()
@@ -48,8 +51,9 @@ namespace SFK.Steamworks.Boiler
       bgBounds.WithChildren(boilerBounds);
 
       // 3. Finally Dialog
-      ElementBounds dialogBounds = ElementStdBounds.AutosizedMainDialog.WithAlignment(EnumDialogArea.RightMiddle)
-          .WithFixedAlignmentOffset(-GuiStyle.DialogToScreenPadding, 0);
+      ElementBounds dialogBounds = ElementStdBounds.AutosizedMainDialog
+        .WithAlignment(EnumDialogArea.RightMiddle)
+        .WithFixedAlignmentOffset(-GuiStyle.DialogToScreenPadding, 0);
 
       SingleComposer = capi.Gui
           .CreateCompo("blockentityboiler" + BlockEntityPosition, dialogBounds)
@@ -181,15 +185,21 @@ namespace SFK.Steamworks.Boiler
     {
       base.OnGuiOpened();
       Inventory.SlotModified += OnInventorySlotModified;
+
+      screenPos = GetFreePos("smallblockgui");
+      OccupyPos("smallblockgui", screenPos);
+      SetupDialog();
     }
 
     public override void OnGuiClosed()
     {
       Inventory.SlotModified -= OnInventorySlotModified;
 
-      // SingleComposer.GetSlotGrid("fuelslot").OnGuiClosed(capi);
+      SingleComposer.GetSlotGrid("fuelSlot").OnGuiClosed(capi);
 
       base.OnGuiClosed();
+
+      FreePos("smallblockgui", screenPos);
     }
 
     public override bool OnEscapePressed()
