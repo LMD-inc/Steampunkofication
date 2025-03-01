@@ -16,7 +16,15 @@ namespace SFK.Transportation.WaterPump
     public override bool HasMechPowerConnectorAt(IWorldAccessor world, BlockPos pos, BlockFacing face)
     {
       BlockFacing orient = BlockFacing.FromCode(Variant["side"]);
+
       return face == orient || face == orient.Opposite;
+    }
+
+    public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos)
+    {
+      world.BlockAccessor.TriggerNeighbourBlockUpdate(pos);
+
+      base.OnNeighbourBlockChange(world, pos, neibpos);
     }
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
@@ -55,10 +63,10 @@ namespace SFK.Transportation.WaterPump
     public bool CheckHasWater(IWorldAccessor world, BlockPos pos, BlockFacing face)
     {
       BlockPos posToCheck = pos.AddCopy(face.GetCCW()).AddCopy(BlockFacing.DOWN);
-      Block block = world.BlockAccessor.GetBlock(posToCheck) as Block;
 
-      if (block == null) return false;
+      if (world.BlockAccessor.GetBlock(posToCheck) is not Block block) return false;
       if (block.IsLiquid() && block.LiquidLevel == 7 && block.LiquidCode.Contains("water")) return true;
+
       return false;
     }
   }

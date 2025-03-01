@@ -3,7 +3,7 @@
 	"class": "SteamEngine",
 	"entityClass": "SteamEngine",
 	"behaviors": [{ "name": "HorizontalOrientable" }],
-	"entityBehaviors": [{ "name": "MPSteamEngine" }, { "name": "Animatable" }],
+	"entityBehaviors": [{ "name": "Animatable" }, { "name": "MPSteamEngine" }],
 	"variantgroups": [
 		{
 			"code": "side",
@@ -14,20 +14,29 @@
 		"inventoryClassName": "steamengine"
 	},
 	"creativeinventoryByType": {
-		"*-east": { "general": ["*"], "sfksteamworks": ["*"] }
+		"*-north": { "general": ["*"], "sfksteamworks": ["*"] }
 	},
 	"maxstacksize": 1,
 	"shape": {
-		"base": "block/machine/steamengine",
+		"base": "block/machine/steamengine/axle",
 		"rotateYByType": {
-			"*-north": 180,
-			"*-east": 90,
-			"*-south": 0,
-			"*-west": 270
+			"*-north": 90,
+			"*-east": 0,
+			"*-south": 270,
+			"*-west": 180
 		}
 	},
+	"shapeInventory": {
+		"base": "block/machine/steamengine/complete"
+	},
+	"textures": {
+		"iron": { "base": "game:block/metal/plate/iron" },
+		"brass": { "base": "game:block/metal/plate/brass" }
+	},
 	"blockmaterial": "metal",
-	"drops": [],
+	"drops": [
+		{ "type": "block", "code": "steamengine-north", "quantity": { "avg": 1 } }
+	],
 	"sidesolid": {
 		"all": false
 	},
@@ -44,22 +53,22 @@
 	},
 	"heldTpIdleAnimation": "holdunderarm",
 	"guiTransform": {
-		"translation": { "x": -9, "y": -3.3, "z": 0 },
+		"translation": { "x": -10, "y": -3.3, "z": 0 },
 		"rotation": { "x": -22, "y": 45, "z": 0 }
 	},
 	"tpHandTransform": {
-		"translation": { "x": -1.3, "y": -0.7, "z": -0.7 },
-		"rotation": { "x": 14, "y": 180, "z": 14 },
+		"translation": { "x": -0.3, "y": -0.5, "z": -0.6 },
+		"rotation": { "x": 14, "y": 0, "z": 14 },
 		"scale": 0.6
 	},
 	"fpHandTransform": {
-		"translation": { "x": 0, "y": 0.15, "z": 1 },
+		"translation": { "x": 0, "y": 0.15, "z": 2 },
 		"rotation": { "x": 0, "y": 45, "z": 0 },
 		"scale": 1.6
 	},
 	"groundTransform": {
 		"translation": { "x": 0, "y": 0, "z": 0 },
-		"rotation": { "x": 0, "y": -45, "z": 0 },
+		"rotation": { "x": 0, "y": 135, "z": 0 },
 		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
 		"scale": 3.5
 	},

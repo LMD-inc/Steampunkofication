@@ -67,11 +67,12 @@ namespace SFK.Transportation.WaterPump
       }
     }
 
-    MeshData getBaseMesh(string orient)
+    MeshData GetBaseMesh(string orient)
     {
       return ObjectCacheUtil.GetOrCreate(Api, "waterpump-" + orient + "-base", () =>
       {
-        Shape shape = capi.Assets.TryGet("sfktransportation:shapes/block/machine/waterpump/base.json").ToObject<Shape>();
+        AssetLocation loc = new("sfktransportation:shapes/block/machine/waterpump/base.json");
+        Shape shape = capi.Assets.TryGet(loc).ToObject<Shape>();
         MeshData mesh;
         capi.Tesselator.TesselateShape(Block, shape, out mesh);
 
@@ -81,12 +82,11 @@ namespace SFK.Transportation.WaterPump
 
         return mesh;
       });
-
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator)
     {
-      mesher.AddMeshData(getBaseMesh(Block.Variant["side"]));
+      mesher.AddMeshData(GetBaseMesh(Block.Variant["side"]));
 
       return base.OnTesselation(mesher, tesselator);
     }

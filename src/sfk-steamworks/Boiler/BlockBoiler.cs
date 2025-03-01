@@ -10,8 +10,16 @@ using SFK.API;
 
 namespace SFK.Steamworks.Boiler
 {
-  public class BlockBoiler : BlockLiquidContainerBase
+  public class BlockBoiler : BlockLiquidContainerBase, IIgnitable
   {
+    public bool IsExtinct;
+
+    public BlockFacing Facing { get; protected set; } = BlockFacing.NORTH;
+    float RotateY = 0f;
+
+    AdvancedParticleProperties[] ringParticles;
+    Vec3f[] basePos;
+
     #region Multiblock
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
@@ -100,7 +108,7 @@ namespace SFK.Steamworks.Boiler
     #endregion
 
     #region Ignitable
-    public override EnumIgniteState OnTryIgniteBlock(EntityAgent byEntity, BlockPos pos, float secondsIgniting)
+    public EnumIgniteState OnTryIgniteBlock(EntityAgent byEntity, BlockPos pos, float secondsIgniting)
     {
       BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
       if (beb != null && beb.fuelSlot.Empty) return EnumIgniteState.NotIgnitablePreventDefault;
@@ -109,7 +117,7 @@ namespace SFK.Steamworks.Boiler
       return secondsIgniting > 3 ? EnumIgniteState.IgniteNow : EnumIgniteState.Ignitable;
     }
 
-    public override void OnTryIgniteBlockOver(EntityAgent byEntity, BlockPos pos, float secondsIgniting, ref EnumHandling handling)
+    public void OnTryIgniteBlockOver(EntityAgent byEntity, BlockPos pos, float secondsIgniting, ref EnumHandling handling)
     {
       BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
       if (beb != null && !beb.canIgniteFuel)
@@ -119,6 +127,13 @@ namespace SFK.Steamworks.Boiler
       }
 
       handling = EnumHandling.PreventDefault;
+    }
+
+    public EnumIgniteState OnTryIgniteStack(EntityAgent byEntity, BlockPos pos, ItemSlot slot, float secondsIgniting)
+    {
+      BEBoiler beb = byEntity.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
+      if (beb.IsBurning) return secondsIgniting > 3 ? EnumIgniteState.IgniteNow : EnumIgniteState.Ignitable;
+      return EnumIgniteState.NotIgnitable;
     }
 
     #endregion
@@ -190,6 +205,26 @@ namespace SFK.Steamworks.Boiler
     {
       base.OnLoaded(api);
 
+      Facing = BlockFacing.FromCode(Variant["side"]);
+      Facing ??= BlockFacing.NORTH;
+
+      switch (Facing.Index)
+      {
+        case 1:
+          RotateY = 270;
+          break;
+        case 2:
+          RotateY = 180;
+          break;
+        case 3:
+          RotateY = 90;
+          break;
+        default:
+          break;
+      }
+
+      IsExtinct = Variant["burnstate"] != "lit";
+
       if (Attributes?["capacityLitresInput"].Exists == true)
       {
         /* This prop needed for world interactions e.g. put water from bucket into boiler.
@@ -201,46 +236,65 @@ namespace SFK.Steamworks.Boiler
       // World interaction help
       if (api.Side != EnumAppSide.Client) return;
 
+      if (!IsExtinct)
+      {
+        ringParticles = new AdvancedParticleProperties[ParticleProperties.Length * 4];
+        basePos = new Vec3f[ringParticles.Length];
+
+        for (int i = 0; i < ParticleProperties.Length; i++)
+        {
+          for (int j = 0; j < 4; j++)
+          {
+            AdvancedParticleProperties props = ParticleProperties[i].Clone();
+
+            basePos[i * 4 + j] = new Vec3f(0, 0, 0);
+
+            ringParticles[i * 4 + j] = props;
+          }
+        }
+      }
+
+
       interactions = ObjectCacheUtil.GetOrCreate(api, "boilerInteractions", () =>
-              {
-                List<ItemStack> canIgniteStacks = new List<ItemStack>();
+        {
+          List<ItemStack> canIgniteStacks = new List<ItemStack>();
 
-                foreach (CollectibleObject obj in api.World.Collectibles)
+          foreach (CollectibleObject obj in api.World.Collectibles)
+          {
+            string firstCodePart = obj.FirstCodePart();
+
+            if (obj is Block && (obj as Block).HasBehavior<BlockBehaviorCanIgnite>() || obj is ItemFirestarter)
+            {
+              List<ItemStack> stacks = obj.GetHandBookStacks(api as ICoreClientAPI);
+              if (stacks != null) canIgniteStacks.AddRange(stacks);
+            }
+          }
+
+          return new WorldInteraction[]
+          {
+                new WorldInteraction()
                 {
-                  string firstCodePart = obj.FirstCodePart();
-
-                  if (obj is Block && (obj as Block).HasBehavior<BlockBehaviorCanIgnite>() || obj is ItemFirestarter)
-                  {
-                    List<ItemStack> stacks = obj.GetHandBookStacks(api as ICoreClientAPI);
-                    if (stacks != null) canIgniteStacks.AddRange(stacks);
-                  }
+                    ActionLangCode = "blockhelp-boiler-ignite",
+                    MouseButton = EnumMouseButton.Right,
+                    HotKeyCode = "sneak",
+                    Itemstacks = canIgniteStacks.ToArray(),
+                    GetMatchingStacks = (wi, bs, es) => {
+                        BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(bs.Position) as BEBoiler;
+                        if (beb?.fuelSlot != null && !beb.fuelSlot.Empty && !beb.IsBurning)
+                        {
+                            return wi.Itemstacks;
+                        }
+                        return null;
+                    }
+                },
+                new WorldInteraction()
+                {
+                    ActionLangCode = "blockhelp-boiler-refuel",
+                    MouseButton = EnumMouseButton.Right,
+                    HotKeyCode = "sneak"
                 }
-
-                return new WorldInteraction[]
-                {
-                      new WorldInteraction()
-                      {
-                          ActionLangCode = "blockhelp-boiler-ignite",
-                          MouseButton = EnumMouseButton.Right,
-                          HotKeyCode = "sneak",
-                          Itemstacks = canIgniteStacks.ToArray(),
-                          GetMatchingStacks = (wi, bs, es) => {
-                              BEBoiler beb = api.World.BlockAccessor.GetBlockEntity(bs.Position) as BEBoiler;
-                              if (beb?.fuelSlot != null && !beb.fuelSlot.Empty && !beb.IsBurning)
-                              {
-                                  return wi.Itemstacks;
-                              }
-                              return null;
-                          }
-                      },
-                      new WorldInteraction()
-                      {
-                          ActionLangCode = "blockhelp-boiler-refuel",
-                          MouseButton = EnumMouseButton.Right,
-                          HotKeyCode = "sneak"
-                      }
-                    };
-              });
+              };
+        });
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
@@ -257,7 +311,7 @@ namespace SFK.Steamworks.Boiler
       // Override to drop the barrel empty and drop its contents instead
       if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative))
       {
-        ItemStack[] drops = new ItemStack[] { new ItemStack(this) };
+        ItemStack[] drops = new ItemStack[] { };
 
         for (int i = 0; i < drops.Length; i++)
         {
@@ -272,11 +326,38 @@ namespace SFK.Steamworks.Boiler
         BlockEntity entity = world.BlockAccessor.GetBlockEntity(pos);
         if (entity != null)
         {
-          entity.OnBlockBroken();
+          entity.OnBlockBroken(byPlayer);
         }
       }
 
       world.BlockAccessor.SetBlock(0, pos);
+
+      base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+    }
+
+    #endregion
+
+    #region Particles
+
+    public override void OnAsyncClientParticleTick(IAsyncParticleManager manager, BlockPos pos, float windAffectednessAtPos, float secondsTicking)
+    {
+      if (!IsExtinct)
+      {
+        for (int i = 0; i < ringParticles.Length; i++)
+        {
+          AdvancedParticleProperties bps = ringParticles[i];
+          bps.WindAffectednesAtPos = windAffectednessAtPos;
+          bps.basePos.X = pos.X + basePos[i].X;
+          bps.basePos.Y = pos.Y + basePos[i].Y;
+          bps.basePos.Z = pos.Z + basePos[i].Z;
+
+          manager.Spawn(bps);
+        }
+
+        return;
+      }
+
+      base.OnAsyncClientParticleTick(manager, pos, windAffectednessAtPos, secondsTicking);
     }
 
     #endregion
@@ -284,6 +365,11 @@ namespace SFK.Steamworks.Boiler
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
     {
       return interactions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+    }
+
+    public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+    {
+      return new ItemStack(world.BlockAccessor.GetBlock(new AssetLocation("sfksteamworks:boiler-extinct-north")));
     }
   }
 }

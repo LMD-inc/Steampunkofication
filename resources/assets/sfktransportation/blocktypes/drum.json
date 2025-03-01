@@ -1,7 +1,7 @@
 {
 	"code": "drum",
 	"class": "Drum",
-	"entityClass": "LiquidContainer",
+	"entityClass": "Drum",
 	"shape": { "base": "block/metal/drum" },
 	"variantgroups": [{ "code": "material", "states": ["iron"] }],
 	"behaviors": [{ "name": "RightClickPickup" }],
@@ -18,6 +18,11 @@
 	"attributes": {
 		"liquidPipeConnect": {
 			"up": true
+		},
+		"allowHeldLiquidTransfer": true,
+		"isTopOpened": true,
+		"liquidContainerProps": {
+			"transferSizeLitres": 1
 		},
 		"acceptLiquidFromFaces": ["up"],
 		"capacityLitresByType": {

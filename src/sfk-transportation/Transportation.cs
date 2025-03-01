@@ -7,11 +7,11 @@ using SFK.Transportation.WaterPump;
 using SFK.Transportation.Drum;
 using SFK.Transportation.Belt;
 
-[assembly: ModInfo("[SFK] Transportation",
+[assembly: ModInfo("[SFK] Transportation", "sfktransportation",
   Description = "Steampunk. More. Now with pipes!",
-  Version = "0.1.1",
+  Version = "0.1.7",
   Website = "https://github.com/LMD-inc/Steampunkofication",
-  Authors = new[] { "LMD inc." })]
+  Authors = new string[] { "LMD inc." })]
 
 namespace SFK.Transportation
 {
@@ -32,6 +32,7 @@ namespace SFK.Transportation
       api.RegisterBlockEntityBehaviorClass("WaterPump", typeof(BEBehaviorWaterPump));
 
       api.RegisterBlockClass("Drum", typeof(BlockDrum));
+      api.RegisterBlockEntityClass("Drum", typeof(BEDrum));
 
       api.RegisterItemClass("Belt", typeof(ItemBelt));
       api.RegisterBlockClass("Belt", typeof(BlockBelt));

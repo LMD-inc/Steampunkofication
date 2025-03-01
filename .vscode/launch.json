@@ -1,54 +1,62 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Launch Client (Mono)",
-			"type": "mono",
-			"request": "launch",
-			"preLaunchTask": "Build (Debug)",
-			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
-			"args": [
-				"--playStyle",
-				"preset-creativeandbuild",
-				"--openWorld",
-				"[SFK] Testing world",
-				"--addModPath",
-				"${workspaceFolder}/bin/sfksteamworks/net461/",
-				"${workspaceFolder}/bin/sfktransportation/net461/",
-				"${workspaceFolder}/bin/sfkapi/net461/",
-				"--addOrigin",
-				"${workspaceFolder}/resources/assets/"
-			],
-			"console": "internalConsole",
-			"internalConsoleOptions": "openOnSessionStart"
-		},
-		{
-			"name": "Launch Client (.NET)",
-			"type": "clr",
-			"request": "launch",
-			"preLaunchTask": "Build (Debug)",
-			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
-			"args": [
-				"--playStyle",
-				"creativeandbuild",
-				"--openWorld",
-				"[SFK] Testing world",
-				"--addModPath",
-				"${workspaceFolder}/bin/sfksteamworks/net461/",
-				"${workspaceFolder}/bin/sfktransportation/net461/",
-				"${workspaceFolder}/bin/sfkapi/net461/",
-				"--addOrigin",
-				"${workspaceFolder}/resources/assets/"
-			],
-			"console": "internalConsole",
-			"internalConsoleOptions": "openOnSessionStart"
-		},
-		{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Client (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${env:VINTAGE_STORY_DEV}/Vintagestory.exe",
+            "linux": {
+                "program": "${env:VINTAGE_STORY_DEV}/Vintagestory"
+            },
+            "osx": {
+                "program": "${env:VINTAGE_STORY_DEV}/Vintagestory"
+            },
+            "preLaunchTask": "Build (Debug)",
+            "args": [
+                "--playStyle" , "preset-creativeandbuild",
+                "--openWorld" , "[SFK] Test world",
+                "--tracelog",
+                "--addModPath",
+                "${workspaceFolder}/bin/sfksteamworks/net7.0/",
+                "${workspaceFolder}/bin/sfktransportation/net7.0/",
+                "${workspaceFolder}/bin/sfkapi/net7.0/",
+                "--addOrigin",
+                "${workspaceFolder}/resources/assets/"
+            ],
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch Server",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${env:VINTAGE_STORY_DEV}/VintagestoryServer.exe",
+            "linux": {
+                "program": "${env:VINTAGE_STORY_DEV}/VintagestoryServer"
+            },
+            "osx": {
+                "program": "${env:VINTAGE_STORY_DEV}/VintagestoryServer"
+            },
+            "preLaunchTask": "Build (Debug)",
+            "args": [
+                "--tracelog",
+                "--addModPath",
+                "${workspaceFolder}/bin/sfksteamworks/net7.0/",
+                "${workspaceFolder}/bin/sfktransportation/net7.0/",
+                "${workspaceFolder}/bin/sfkapi/net7.0/",
+                "--addOrigin",
+                "${workspaceFolder}/resources/assets/"
+            ],
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
 			"name": "Launch Client (.NET) | Release",
-			"type": "clr",
+			"type": "coreclr",
 			"request": "launch",
-			"preLaunchTask": "Build (Debug)",
-			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
+			"preLaunchTask": "Build (Release)",
+			"program": "${env:VINTAGE_STORY_DEV}/Vintagestory.exe",
 			"args": [
 				"--playStyle",
 				"creativeandbuild",
@@ -60,5 +68,5 @@
 			"console": "internalConsole",
 			"internalConsoleOptions": "openOnSessionStart"
 		}
-	]
+    ]
 }
