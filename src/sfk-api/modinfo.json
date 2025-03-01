@@ -2,13 +2,13 @@
 	"type": "code",
 	"name": "[SFK] Api",
 	"modid": "sfkapi",
-	"version": "0.1.6",
+	"version": "0.1.7",
 
 	"description": "Steampunk. More. It's based.",
 	"website": "https://github.com/LMD-inc/Steampunkofication",
 	"authors": ["LMD inc."],
 
 	"dependencies": {
-		"game": "1.18.15"
+		"game": "1.20.4"
 	}
 }

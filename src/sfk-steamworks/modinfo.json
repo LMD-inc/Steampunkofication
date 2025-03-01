@@ -2,14 +2,14 @@
 	"type": "code",
 	"name": "[SFK] Steamworks",
 	"modid": "sfksteamworks",
-	"version": "0.1.6",
+	"version": "0.1.7",
 
 	"description": "Steampunk. More. Now with machines!",
 	"website": "https://github.com/LMD-inc/Steampunkofication",
 	"authors": ["LMD inc."],
 
 	"dependencies": {
-		"game": "1.18.15",
-		"sfkapi": "0.1.6"
+		"game": "1.20.4",
+		"sfkapi": "0.1.7"
 	}
 }

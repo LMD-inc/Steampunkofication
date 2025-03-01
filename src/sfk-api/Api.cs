@@ -4,7 +4,7 @@ using Vintagestory.API.Server;
 
 [assembly: ModInfo("[SFK] Api", "sfkapi",
   Description = "Steampunk. More. It's based.",
-  Version = "0.1.6",
+  Version = "0.1.7",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new string[] { "LMD inc." })]
 
