@@ -8,7 +8,7 @@ using SFK.Transportation.Drum;
 
 [assembly: ModInfo("[SFK] Transportation", "sfktransportation",
   Description = "Steampunk. More. Now with pipes!",
-  Version = "0.1.6",
+  Version = "0.1.7",
   Website = "https://github.com/LMD-inc/Steampunkofication",
   Authors = new string[] { "LMD inc." })]
 
