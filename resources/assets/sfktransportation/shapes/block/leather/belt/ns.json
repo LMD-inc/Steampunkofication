@@ -1,0 +1,119 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"leather-black": "block/leather-black"
+	},
+	"elements": [
+		{
+			"name": "Cube3",
+			"from": [ 0.0, 5.0, 8.0 ], 
+			"to": [ 16.0, 6.0, 16.0 ], 
+			"rotationOrigin": [ 8.0, 8.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+				"east": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+				"south": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+				"west": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+				"up": { "texture": "#leather-black", "uv": [ 0.0, 8.0, 16.0, 16.0 ], "autoUv": false },
+				"down": { "texture": "#leather-black", "uv": [ 0.0, 8.0, 16.0, 16.0 ] }
+			},
+			"children": [
+				{
+					"name": "Cube4",
+					"from": [ 0.0, 5.0, 0.0 ], 
+					"to": [ 16.0, 6.0, 8.0 ], 
+					"rotationOrigin": [ 0.0, 5.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+						"east": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+						"south": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+						"west": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+						"up": { "texture": "#leather-black", "uv": [ 0.0, 8.0, 16.0, 16.0 ] },
+						"down": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 8.0 ] }
+					}
+				}
+			]
+		},
+		{
+			"name": "Cube5",
+			"from": [ 0.0, 5.0, 0.0 ], 
+			"to": [ 16.0, 6.0, 8.0 ], 
+			"rotationOrigin": [ 8.0, 8.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+				"east": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+				"south": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+				"west": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+				"up": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 8.0 ] },
+				"down": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 8.0 ] }
+			},
+			"children": [
+				{
+					"name": "Cube6",
+					"from": [ 0.0, 5.0, 0.0 ], 
+					"to": [ 16.0, 6.0, 8.0 ], 
+					"rotationOrigin": [ 0.0, 5.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+						"east": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+						"south": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
+						"west": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+						"up": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 8.0 ] },
+						"down": { "texture": "#leather-black", "uv": [ 0.0, 0.0, 16.0, 8.0 ] }
+					}
+				}
+			]
+		}
+	],
+	"animations": [
+		{
+			"name": "Moving",
+			"code": "moving",
+			"quantityframes": 30,
+			"onActivityStopped": "Rewind",
+			"onAnimationEnd": "Repeat",
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"Cube3": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
+						"Cube5": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
+					}
+				},
+				{
+					"frame": 14,
+					"elements": {
+						"Cube3": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 7.5 }
+					}
+				},
+				{
+					"frame": 15,
+					"elements": {
+						"Cube3": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": -8.0 },
+						"Cube5": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 8.0 }
+					}
+				},
+				{
+					"frame": 16,
+					"elements": {
+						"Cube3": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": -7.4 }
+					}
+				},
+				{
+					"frame": 29,
+					"elements": {
+						"Cube5": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 16.0 },
+						"Cube3": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
+					}
+				}
+			]
+		}
+	]
+}

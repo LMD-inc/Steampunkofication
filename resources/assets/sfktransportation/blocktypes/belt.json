@@ -1,0 +1,79 @@
+{
+  "code": "belt",
+  "classByType": {
+    "*-normal-*": "Belt",
+    "*-withaxle-*": "BeltWithAxle"
+  },
+  "entityClass": "Belt",
+  "entityBehaviorsByType": {
+    "*-normal-*": [{ "name": "Belt" }, { "name": "Animatable" }],
+    "*-withaxle-*": [{ "name": "BeltWithAxle" }, { "name": "Animatable" }]
+  },
+  "variantgroups": [
+    { "code": "variant", "states": ["normal", "withaxle"] },
+    {
+      "code": "orient",
+      "states": ["n", "e", "s", "w", "ns", "ew"]
+    }
+  ],
+  "creativeinventory": {
+    "general": ["*-ew"],
+    "sfktransportation": ["*-ew"]
+  },
+  "shapebytype": {
+    "*normal-n": { "base": "block/leather/belt/n", "rotateY": 0 },
+    "*normal-e": { "base": "block/leather/belt/n", "rotateY": 270 },
+    "*normal-s": { "base": "block/leather/belt/n", "rotateY": 180 },
+    "*normal-w": { "base": "block/leather/belt/n", "rotateY": 90 },
+
+    "*normal-ns": { "base": "block/leather/belt/ns", "rotateY": 0 },
+    "*normal-ew": { "base": "block/leather/belt/ns", "rotateY": 90 },
+
+    "*withaxle-n": { "base": "game:block/wood/mechanics/axle", "rotateY": 0 },
+    "*withaxle-e": { "base": "game:block/wood/mechanics/axle", "rotateY": 270 },
+    "*withaxle-s": { "base": "game:block/wood/mechanics/axle", "rotateY": 180 },
+    "*withaxle-w": { "base": "game:block/wood/mechanics/axle", "rotateY": 90 },
+
+    "*withaxle-ns": { "base": "game:block/wood/mechanics/axle", "rotateY": 0 },
+    "*withaxle-ew": { "base": "game:block/wood/mechanics/axle", "rotateY": 180 }
+  },
+
+  "textures": {
+    "wood": { "base": "game:block/wood/planks/generic" },
+    "leather-black": { "base": "game:block/leather-black" },
+    "specialSecondTexture": { "base": "block/liquid/water2" }
+  },
+  "blockmaterial": "Cloth",
+  "lightAbsorption": 0,
+  "drawtype": "json",
+  "replaceable": 160,
+  "resistance": 1.75,
+  "sidesolid": {
+    "all": false
+  },
+  "sideopaque": {
+    "all": false
+  },
+  "sounds": {
+    "place": "block/leather",
+    "break": "block/leather",
+    "hit": "block/leather",
+    "walk": "game:walk/stone"
+  },
+  "selectionBox": {
+    "x1": 0,
+    "y1": 0.3125,
+    "z1": 0,
+    "x2": 1,
+    "y2": 0.6875,
+    "z2": 1
+  },
+  "collisionBox": {
+    "x1": 0,
+    "y1": 0.3125,
+    "z1": 0,
+    "x2": 1,
+    "y2": 0.6875,
+    "z2": 1
+  }
+}
