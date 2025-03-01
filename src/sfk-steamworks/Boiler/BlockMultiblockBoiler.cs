@@ -138,6 +138,21 @@ namespace SFK.Steamworks.Boiler
       }
     }
 
+    public EnumIgniteState OnTryIgniteStack(EntityAgent byEntity, BlockPos pos, ItemSlot slot, float secondsIgniting)
+    {
+      IWorldAccessor world = byEntity?.World;
+      world ??= api.World;
+
+      if (world.BlockAccessor.GetBlockEntity(pos) is not BEMultiblockGasFlow be || be.Principal == null) return EnumIgniteState.NotIgnitable;
+
+      if (world.BlockAccessor.GetBlock(be.Principal) is BlockBoiler principalBlock)
+      {
+        return principalBlock.OnTryIgniteBlock(byEntity, be.Principal, secondsIgniting);
+      }
+
+      return EnumIgniteState.NotIgnitable;
+    }
+
     #endregion
 
     public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)

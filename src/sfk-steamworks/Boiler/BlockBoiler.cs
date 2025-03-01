@@ -129,6 +129,13 @@ namespace SFK.Steamworks.Boiler
       handling = EnumHandling.PreventDefault;
     }
 
+    public EnumIgniteState OnTryIgniteStack(EntityAgent byEntity, BlockPos pos, ItemSlot slot, float secondsIgniting)
+    {
+      BEBoiler beb = byEntity.World.BlockAccessor.GetBlockEntity(pos) as BEBoiler;
+      if (beb.IsBurning) return secondsIgniting > 3 ? EnumIgniteState.IgniteNow : EnumIgniteState.Ignitable;
+      return EnumIgniteState.NotIgnitable;
+    }
+
     #endregion
 
     #region Events
