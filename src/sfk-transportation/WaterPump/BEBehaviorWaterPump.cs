@@ -71,7 +71,8 @@ namespace SFK.Transportation.WaterPump
     {
       return ObjectCacheUtil.GetOrCreate(Api, "waterpump-" + orient + "-base", () =>
       {
-        Shape shape = capi.Assets.TryGet("sfktransportation:shapes/block/machine/waterpump/base.json").ToObject<Shape>();
+        AssetLocation loc = new("sfktransportation:shapes/block/machine/waterpump/base.json");
+        Shape shape = capi.Assets.TryGet(loc).ToObject<Shape>();
         MeshData mesh;
         capi.Tesselator.TesselateShape(Block, shape, out mesh);
 
